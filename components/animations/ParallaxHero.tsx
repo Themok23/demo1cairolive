@@ -2,9 +2,6 @@
 
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import ScrollTrigger from 'gsap/dist/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface ParallaxHeroProps extends React.HTMLAttributes<HTMLDivElement> {
   speed?: number;
@@ -21,28 +18,16 @@ const ParallaxHero = React.forwardRef<HTMLDivElement, ParallaxHeroProps>(
       const element = divRef.current;
       if (!element) return;
 
-      gsap.to(element, {
-        y: (index, target) => {
-          return gsap.utils.unitize(
-            (1 - speed) *
-              ScrollTrigger.getScrollPosition() *
-              0.5
-          );
-        },
-        ease: 'none',
-        scrollTrigger: {
-          trigger: element,
-          scrub: true,
-          onUpdate: (self) => {
-            gsap.set(element, {
-              y: self.getVelocity() * speed * 0.1,
-            });
-          },
-        },
-      });
+      const handleScroll = () => {
+        const scrollPosition = window.scrollY;
+        const yOffset = scrollPosition * speed * 0.3;
+        gsap.set(element, { y: yOffset });
+      };
+
+      window.addEventListener('scroll', handleScroll);
 
       return () => {
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+        window.removeEventListener('scroll', handleScroll);
       };
     }, [divRef, speed]);
 

@@ -8,15 +8,15 @@ export interface Article {
   excerpt: string;
   authorId: string;
   authorName: string;
-  featuredImageUrl?: string;
+  featuredImageUrl?: string | null;
   status: ArticleStatus;
-  publishedAt?: Date;
+  publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  tags?: string[];
-  category?: string;
+  tags?: string[] | null;
+  category?: string | null;
   readTimeMinutes: number;
-  viewCount: number;
+  viewCount: number | null;
 }
 
 export class ArticleEntity implements Article {

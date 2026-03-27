@@ -16,7 +16,7 @@ export default function KrtkCard({ person }: KrtkCardProps) {
           <div className="h-48 w-full overflow-hidden">
             <img
               src={person.profileImageUrl}
-              alt={person.getFullName()}
+              alt={`${person.firstName} ${person.lastName}`}
               className="h-full w-full object-cover hover:scale-105 transition-transform"
             />
           </div>
@@ -24,7 +24,7 @@ export default function KrtkCard({ person }: KrtkCardProps) {
         <CardContent className="pt-4">
           <div>
             <h3 className="text-lg font-semibold text-text-primary">
-              {person.getFullName()}
+              {person.firstName} {person.lastName}
             </h3>
             {person.currentPosition && (
               <p className="text-sm text-gold font-medium">

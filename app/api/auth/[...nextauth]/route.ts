@@ -1,27 +1,13 @@
-import NextAuth from 'next-auth';
-import type { NextAuthConfig } from 'next-auth';
+import { NextRequest } from 'next/server';
 
-const authConfig = {
-  providers: [
-    // Add providers here (e.g., Google, GitHub, Email, etc.)
-    // Example:
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID!,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    // }),
-  ],
-  callbacks: {
-    authorized: async ({ auth }) => {
-      return !!auth;
-    },
-  },
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
-  },
-} satisfies NextAuthConfig;
+export async function GET(request: NextRequest) {
+  return new Response('NextAuth route - Configure in app/api/auth/[...nextauth]/auth.ts', {
+    status: 501,
+  });
+}
 
-const handler = NextAuth(authConfig);
-
-export { handler as GET, handler as POST };
+export async function POST(request: NextRequest) {
+  return new Response('NextAuth route - Configure in app/api/auth/[...nextauth]/auth.ts', {
+    status: 501,
+  });
+}
