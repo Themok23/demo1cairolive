@@ -4,28 +4,38 @@ import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
-  title: 'Demo1 Cairo Live - Egyptian Profiles & Articles',
+  title: 'Cairo Live - Every Egyptian Has a Story',
   description:
-    'Celebrating extraordinary Egyptians and inspiring stories from around the globe. Browse profiles, read articles, and connect with remarkable people.',
+    'Discover remarkable Egyptians through their stories and digital profiles. Celebrate extraordinary achievements, innovations, and personal journeys from Cairo and beyond.',
   keywords:
-    'Egyptian profiles, Cairo, people, articles, inspiration, storytelling, Egypt',
-  authors: [{ name: 'Demo1 Cairo Live' }],
+    'Egyptian profiles, Cairo, people, articles, inspiration, storytelling, Egypt, remarkable people',
+  authors: [{ name: 'Cairo Live' }],
+  creator: 'The Mok Company',
   openGraph: {
-    title: 'Demo1 Cairo Live',
+    title: 'Cairo Live - Every Egyptian Has a Story',
     description:
-      'Celebrating extraordinary Egyptians and inspiring stories from around the globe.',
+      'Discover remarkable Egyptians through their stories and digital profiles.',
     type: 'website',
-    url: 'https://demo1cairolive.com',
-    siteName: 'Demo1 Cairo Live',
+    url: 'https://cairolive.com',
+    siteName: 'Cairo Live',
+    locale: 'en_EG',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Demo1 Cairo Live',
+    title: 'Cairo Live',
     description:
-      'Celebrating extraordinary Egyptians and inspiring stories from around the globe.',
+      'Discover remarkable Egyptians through their stories and digital profiles.',
+  },
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
   },
 };
 
@@ -35,8 +45,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={inter.className}>
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+      <head>
+        <meta name="theme-color" content="#0A0A0B" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </head>
+      <body className={`${inter.className} bg-background`}>
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>

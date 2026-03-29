@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +13,15 @@ html {
 }
 
 body {
-  @apply bg-background text-text-primary;
+  @apply bg-background text-text-primary font-sans;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Arabic text support */
+:lang(ar),
+[lang="ar"] {
+  font-family: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  direction: rtl;
 }
 
 /* Custom scrollbar */
@@ -25,16 +35,115 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A2A2E;
+  background: #D4A853;
   border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3A3A3E;
+  background: #F59E0B;
 }
 
 /* Selection */
 ::selection {
   background-color: #D4A853;
   color: #0A0A0B;
+}
+
+/* Smooth transitions */
+a,
+button,
+[role="button"] {
+  @apply transition-colors duration-200;
+}
+
+/* Glass morphism utilities */
+.glass {
+  @apply bg-surface/50 backdrop-blur-md border border-border/50;
+}
+
+.glass-elevated {
+  @apply bg-surface-elevated/50 backdrop-blur-lg border border-border/30;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #D4A853 0%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover glow effect */
+.card-glow {
+  @apply transition-all duration-300;
+}
+
+.card-glow:hover {
+  box-shadow: 0 0 30px rgba(212, 168, 83, 0.2), 0 0 60px rgba(245, 158, 11, 0.1);
+  @apply border-gold/60;
+}
+
+/* Gold gradient hover */
+.gold-hover:hover {
+  @apply text-gold;
+  text-shadow: 0 0 20px rgba(212, 168, 83, 0.3);
+}
+
+/* Smooth focus rings */
+:focus-visible {
+  @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-background rounded;
+}
+
+/* Scrollbar for Firefox */
+* {
+  scrollbar-color: #D4A853 #0A0A0B;
+  scrollbar-width: thin;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-semibold tracking-tight;
+}
+
+h1 {
+  @apply text-4xl;
+}
+
+h2 {
+  @apply text-3xl;
+}
+
+h3 {
+  @apply text-2xl;
+}
+
+/* Text utility classes */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #D4A853 0%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-shadow-gold {
+  text-shadow: 0 0 20px rgba(212, 168, 83, 0.4);
+}
+
+/* Button reset for links */
+a {
+  @apply no-underline;
+}
+
+/* Code block styling */
+code {
+  @apply bg-surface rounded px-1.5 py-0.5 text-sm font-mono text-amber;
+}
+
+pre {
+  @apply bg-surface-elevated rounded-lg p-4 overflow-x-auto border border-border;
+}
+
+pre code {
+  @apply bg-transparent px-0 py-0;
 }

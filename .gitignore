@@ -33,3 +33,4 @@ out/
 .sqlite
 .sqlite3
 drizzle/
+.vercel
