@@ -27,15 +27,15 @@ export class ArticleEntity implements Article {
   excerpt: string;
   authorId: string;
   authorName: string;
-  featuredImageUrl?: string;
+  featuredImageUrl?: string | null;
   status: ArticleStatus;
-  publishedAt?: Date;
+  publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  tags?: string[];
-  category?: string;
+  tags?: string[] | null;
+  category?: string | null;
   readTimeMinutes: number;
-  viewCount: number;
+  viewCount: number | null;
 
   constructor(data: Article) {
     this.id = data.id;
@@ -82,7 +82,7 @@ export class ArticleEntity implements Article {
   incrementViewCount(): ArticleEntity {
     return new ArticleEntity({
       ...this,
-      viewCount: this.viewCount + 1,
+      viewCount: (this.viewCount || 0) + 1,
       updatedAt: new Date(),
     });
   }

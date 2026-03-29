@@ -23,15 +23,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold disabled:opacity-50 disabled:cursor-not-allowed';
+      'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold focus:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variants = {
       primary:
-        'bg-gold text-background hover:bg-amber text-text-primary shadow-md hover:shadow-lg',
+        'bg-gradient-to-r from-gold to-amber text-background hover:shadow-[0_0_30px_rgba(212,168,83,0.4)] hover:scale-105 active:scale-95',
       secondary:
-        'bg-surface-elevated text-text-primary hover:bg-surface border border-border',
-      outline: 'border border-border text-text-primary hover:bg-surface',
-      ghost: 'text-text-primary hover:bg-surface',
+        'bg-surface-elevated text-text-primary hover:bg-surface-elevated/80 border border-border hover:border-gold/50',
+      outline:
+        'border border-gold/50 text-text-primary hover:bg-gold/10 hover:border-gold',
+      ghost: 'text-text-primary hover:bg-surface-elevated/50 hover:text-gold',
     };
 
     const sizes = {

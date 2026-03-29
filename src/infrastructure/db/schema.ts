@@ -75,12 +75,16 @@ export const articles = pgTable(
     category: varchar('category', { length: 100 }),
     readTimeMinutes: integer('read_time_minutes').default(0),
     viewCount: integer('view_count').default(0),
+    malePersonId: varchar('male_person_id', { length: 36 }),
+    femalePersonId: varchar('female_person_id', { length: 36 }),
   },
   (table) => ({
     slugIdx: index('articles_slug_idx').on(table.slug),
     authorIdx: index('articles_author_idx').on(table.authorId),
     statusIdx: index('articles_status_idx').on(table.status),
     publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt),
+    malePersonIdx: index('articles_male_person_idx').on(table.malePersonId),
+    femalePersonIdx: index('articles_female_person_idx').on(table.femalePersonId),
   })
 );
 

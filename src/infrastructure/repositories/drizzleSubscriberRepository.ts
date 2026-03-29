@@ -3,7 +3,7 @@ import { db } from '../db/client';
 import { subscribers } from '../db/schema';
 import { Subscriber } from '../../domain/entities/subscriber';
 import { SubscriberRepository } from '../../domain/repositories/subscriberRepository';
-import { v4 as uuidv4 } from 'crypto';
+import { randomUUID } from 'crypto';
 
 export class DrizzleSubscriberRepository implements SubscriberRepository {
   async findById(id: string): Promise<Subscriber | null> {
@@ -28,20 +28,20 @@ export class DrizzleSubscriberRepository implements SubscriberRepository {
     const limit = options?.limit || 20;
     const offset = options?.offset || 0;
 
-    let query = db.select().from(subscribers);
+    const whereClause = options?.isActive !== undefined ? eq(subscribers.isActive, options.isActive) : undefined;
 
-    if (options?.isActive !== undefined) {
-      query = query.where(eq(subscribers.isActive, options.isActive));
-    }
-
-    const data = await query
+    const data = await db
+      .select()
+      .from(subscribers)
+      .where(whereClause)
       .orderBy(desc(subscribers.subscribedAt))
       .limit(limit)
       .offset(offset);
 
     const countResult = await db
       .select({ count: sql<number>`count(*)` })
-      .from(subscribers);
+      .from(subscribers)
+      .where(whereClause);
 
     const total = countResult[0]?.count || 0;
 
@@ -105,7 +105,7 @@ export class DrizzleSubscriberRepository implements SubscriberRepository {
     }
 
     const newSubscriber: Subscriber = {
-      id: uuidv4(),
+      id: randomUUID(),
       email,
       firstName,
       lastName,

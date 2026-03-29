@@ -1,22 +1,22 @@
 export interface Subscriber {
   id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  firstName?: string | null;
+  lastName?: string | null;
   isActive: boolean;
   subscribedAt: Date;
-  unsubscribedAt?: Date;
+  unsubscribedAt?: Date | null;
   updatedAt: Date;
 }
 
 export class SubscriberEntity implements Subscriber {
   id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  firstName?: string | null;
+  lastName?: string | null;
   isActive: boolean;
   subscribedAt: Date;
-  unsubscribedAt?: Date;
+  unsubscribedAt?: Date | null;
   updatedAt: Date;
 
   constructor(data: Subscriber) {
