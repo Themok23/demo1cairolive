@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button';
 import { db } from '@/src/infrastructure/db/client';
 import { persons, articles } from '@/src/infrastructure/db/schema';
 import { eq, desc } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import { Users, Zap, TrendingUp, ArrowRight, CheckCircle } from 'lucide-react';
 import AnimatedHero from '@/components/client/AnimatedHero';
 import ArticleCarousel from '@/components/client/ArticleCarousel';
@@ -25,9 +26,29 @@ export default async function Home({ params }: HomePageProps) {
     .from(persons)
     .limit(6);
 
+  const malePerson = alias(persons, 'malePerson');
+  const femalePerson = alias(persons, 'femalePerson');
+
   const latestArticles = await db
-    .select()
+    .select({
+      id: articles.id,
+      slug: articles.slug,
+      title: articles.title,
+      excerpt: articles.excerpt,
+      featuredImageUrl: articles.featuredImageUrl,
+      publishedAt: articles.publishedAt,
+      maleFirstName: malePerson.firstName,
+      maleLastName: malePerson.lastName,
+      maleImage: malePerson.profileImageUrl,
+      maleId: malePerson.id,
+      femaleFirstName: femalePerson.firstName,
+      femaleLastName: femalePerson.lastName,
+      femaleImage: femalePerson.profileImageUrl,
+      femaleId: femalePerson.id,
+    })
     .from(articles)
+    .leftJoin(malePerson, eq(articles.malePersonId, malePerson.id))
+    .leftJoin(femalePerson, eq(articles.femalePersonId, femalePerson.id))
     .where(eq(articles.status, 'published'))
     .orderBy(desc(articles.publishedAt))
     .limit(8);
@@ -44,7 +65,7 @@ export default async function Home({ params }: HomePageProps) {
     tier: (p.tier === 'gold' || p.tier === 'silver' || p.tier === 'platinum' ? p.tier : 'bronze') as 'platinum' | 'gold' | 'silver' | 'bronze',
   }));
 
-  // Transform articles for carousel
+  // Transform articles for carousel with tagged people
   const carouselArticles = latestArticles.map((a) => ({
     id: a.id,
     slug: a.slug,
@@ -52,6 +73,10 @@ export default async function Home({ params }: HomePageProps) {
     excerpt: a.excerpt || '',
     featuredImageUrl: a.featuredImageUrl,
     publishedAt: a.publishedAt,
+    taggedPeople: [
+      ...(a.maleId ? [{ id: a.maleId, name: `${a.maleFirstName} ${a.maleLastName}`, imageUrl: a.maleImage }] : []),
+      ...(a.femaleId ? [{ id: a.femaleId, name: `${a.femaleFirstName} ${a.femaleLastName}`, imageUrl: a.femaleImage }] : []),
+    ],
   }));
 
   return (

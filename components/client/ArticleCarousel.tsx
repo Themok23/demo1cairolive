@@ -5,6 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+interface TaggedPerson {
+  id: string;
+  name: string;
+  imageUrl: string | null;
+}
+
 interface Article {
   id: string;
   slug: string;
@@ -12,6 +18,7 @@ interface Article {
   excerpt: string;
   featuredImageUrl: string | null;
   publishedAt: Date | null;
+  taggedPeople?: TaggedPerson[];
 }
 
 interface ArticleCarouselProps {
@@ -166,6 +173,22 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
               )}
 
               <div className="absolute bottom-0 left-0 right-0 z-10 p-5">
+                {article.taggedPeople && article.taggedPeople.length > 0 && (
+                  <div className="mb-3 flex items-center gap-2">
+                    <div className="flex -space-x-2">
+                      {article.taggedPeople.map((person) => (
+                        <div key={person.id} className="h-7 w-7 rounded-full border-2 border-white/20 overflow-hidden bg-surface flex-shrink-0" title={person.name}>
+                          {person.imageUrl ? (
+                            <Image src={person.imageUrl} alt={person.name} width={28} height={28} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-gold/30 flex items-center justify-center text-[10px] font-bold text-gold">{person.name.charAt(0)}</div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <span className="text-xs text-white/60 font-medium truncate">{article.taggedPeople.map(p => p.name.split(' ')[0]).join(' & ')}</span>
+                  </div>
+                )}
                 <h3 className="text-base font-bold text-white leading-snug line-clamp-2">
                   {article.title}
                 </h3>

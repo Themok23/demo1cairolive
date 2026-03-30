@@ -2,8 +2,9 @@ import Link from 'next/link';
 import FadeIn from '@/components/animations/FadeIn';
 import StaggerChildren from '@/components/animations/StaggerChildren';
 import { db } from '@/src/infrastructure/db/client';
-import { articles } from '@/src/infrastructure/db/schema';
+import { articles, persons } from '@/src/infrastructure/db/schema';
 import { eq, desc } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import Button from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
 
@@ -15,9 +16,31 @@ interface ArticlesPageProps {
 
 export default async function ArticlesPage({ params }: ArticlesPageProps) {
   const { locale } = await params;
+  const malePerson = alias(persons, 'malePerson');
+  const femalePerson = alias(persons, 'femalePerson');
+
   const publishedArticles = await db
-    .select()
+    .select({
+      id: articles.id,
+      slug: articles.slug,
+      title: articles.title,
+      excerpt: articles.excerpt,
+      featuredImageUrl: articles.featuredImageUrl,
+      publishedAt: articles.publishedAt,
+      category: articles.category,
+      readTimeMinutes: articles.readTimeMinutes,
+      maleFirstName: malePerson.firstName,
+      maleLastName: malePerson.lastName,
+      maleImage: malePerson.profileImageUrl,
+      maleId: malePerson.id,
+      femaleFirstName: femalePerson.firstName,
+      femaleLastName: femalePerson.lastName,
+      femaleImage: femalePerson.profileImageUrl,
+      femaleId: femalePerson.id,
+    })
     .from(articles)
+    .leftJoin(malePerson, eq(articles.malePersonId, malePerson.id))
+    .leftJoin(femalePerson, eq(articles.femalePersonId, femalePerson.id))
     .where(eq(articles.status, 'published'))
     .orderBy(desc(articles.publishedAt));
 
@@ -84,6 +107,32 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                           {article.excerpt}
                         </p>
                       </div>
+
+                      {/* Tagged people */}
+                      {(article.maleId || article.femaleId) && (
+                        <div className="mb-3 flex items-center gap-2">
+                          <div className="flex -space-x-2">
+                            {[
+                              article.maleId ? { id: article.maleId, name: `${article.maleFirstName} ${article.maleLastName}`, imageUrl: article.maleImage } : null,
+                              article.femaleId ? { id: article.femaleId, name: `${article.femaleFirstName} ${article.femaleLastName}`, imageUrl: article.femaleImage } : null,
+                            ].filter(Boolean).map((person: any) => (
+                              <div key={person.id} className="h-8 w-8 rounded-full border-2 border-border/60 overflow-hidden bg-surface flex-shrink-0" title={person.name}>
+                                {person.imageUrl ? (
+                                  <img src={person.imageUrl} alt={person.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  <div className="w-full h-full bg-gold/20 flex items-center justify-center text-xs font-bold text-gold">{person.name.charAt(0)}</div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          <span className="text-sm text-text-secondary">
+                            {[
+                              article.maleId ? `${article.maleFirstName} ${article.maleLastName}` : null,
+                              article.femaleId ? `${article.femaleFirstName} ${article.femaleLastName}` : null,
+                            ].filter(Boolean).join(' & ')}
+                          </span>
+                        </div>
+                      )}
 
                       <div className="flex items-center justify-between pt-4 border-t border-border/30">
                         <div className="flex items-center gap-3 text-sm text-text-secondary">
