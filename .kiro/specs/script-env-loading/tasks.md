@@ -32,7 +32,7 @@
   - Mark task complete when tests are written, run, and passing on unfixed code
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 3. Fix for script environment loading
+- [x] 3. Fix for script environment loading
 
   - [x] 3.1 Implement conditional dotenv loading in client.ts
     - Add conditional dotenv loading at the very top of src/infrastructure/db/client.ts (before any imports)
@@ -45,7 +45,7 @@
     - _Preservation: Next.js contexts, production environments, CI/CD pipelines, and error handling must remain unchanged (Properties 2, 3, 4 from design)_
     - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 3.4_
 
-  - [-] 3.2 Verify bug condition exploration test now passes
+  - [x] 3.2 Verify bug condition exploration test now passes
     - **Property 1: Expected Behavior** - Scripts Load Environment Variables Automatically
     - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
     - The test from task 1 encodes the expected behavior
@@ -56,7 +56,7 @@
     - Verify scripts run successfully with simple `npx tsx <script-path>` commands
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [~] 3.3 Verify preservation tests still pass
+  - [x] 3.3 Verify preservation tests still pass
     - **Property 2: Preservation** - Next.js and Production Environment Loading
     - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
     - Run preservation property tests from step 2
@@ -66,7 +66,7 @@
     - Confirm error handling still works correctly
     - Confirm all tests still pass after fix (no regressions)
 
-- [~] 4. Checkpoint - Ensure all tests pass
+- [-] 4. Checkpoint - Ensure all tests pass
   - Run all tests (bug condition + preservation)
   - Verify scripts work with simple `npx tsx <script-path>` commands
   - Verify Next.js dev server and API routes work correctly
