@@ -101,7 +101,7 @@ export class SubmissionEntity implements Submission {
   }
 
   isUnderReview(): boolean {
-    return this.status === 'under_review';
+    return this.status === 'pending';
   }
 
   approve(reviewerId: string): SubmissionEntity {
@@ -128,7 +128,7 @@ export class SubmissionEntity implements Submission {
   markUnderReview(reviewerId: string): SubmissionEntity {
     return new SubmissionEntity({
       ...this,
-      status: 'under_review' as SubmissionStatus,
+      status: 'pending' as SubmissionStatus,
       reviewedBy: reviewerId,
       updatedAt: new Date(),
     });

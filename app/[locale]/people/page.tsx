@@ -137,7 +137,7 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
               {isAr ? 'لا توجد ملفات حالياً' : 'No profiles yet'}
             </p>
             <Link href={`/${locale}/submit`}>
-              <Button gap="gap-2">
+              <Button>
                 {isAr ? 'كن أول من ينضم' : 'Be the First to Join'}
                 <ArrowRight size={18} />
               </Button>

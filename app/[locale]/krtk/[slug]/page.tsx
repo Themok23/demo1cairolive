@@ -26,7 +26,8 @@ export default async function KrtkProfilePage({ params }: KrtkPageProps) {
     notFound();
   }
 
-  const currentPerson = person[0];
+  const rawPerson = person[0];
+  const currentPerson = { ...rawPerson, isVerified: rawPerson.isVerified ?? undefined, isClaimed: rawPerson.isClaimed ?? undefined };
   const isAr = params.locale === 'ar';
 
   return (

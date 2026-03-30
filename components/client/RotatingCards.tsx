@@ -19,210 +19,234 @@ interface RotatingCardsProps {
   locale?: string;
 }
 
-const tierColors = {
-  platinum: {
-    border: 'border-gold',
-    glow: 'shadow-[0_0_25px_rgba(212,168,83,0.4)]',
-    bg: 'from-gold/15 to-background',
-  },
-  gold: {
-    border: 'border-gold',
-    glow: 'shadow-[0_0_20px_rgba(212,168,83,0.3)]',
-    bg: 'from-gold/10 to-background',
-  },
-  silver: {
-    border: 'border-gray-400',
-    glow: 'shadow-[0_0_20px_rgba(180,180,180,0.2)]',
-    bg: 'from-gray-400/5 to-background',
-  },
-  bronze: {
-    border: 'border-amber-600',
-    glow: 'shadow-[0_0_20px_rgba(180,100,50,0.2)]',
-    bg: 'from-amber-600/5 to-background',
-  },
-};
-
 const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardsWrapperRef = useRef<HTMLDivElement>(null);
-  const gsapRef = useRef<any>(null);
-  const ScrollTriggerRef = useRef<any>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Dynamically import gsap with SSR: false
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    let cleanup: (() => void) | undefined;
+
     import('gsap').then((gsapModule) => {
-      import('gsap/ScrollTrigger').then((ScrollTriggerModule) => {
-        gsapRef.current = gsapModule.default;
-        ScrollTriggerRef.current = ScrollTriggerModule.default;
-
-        const gsap = gsapRef.current;
-        const ScrollTrigger = ScrollTriggerRef.current;
-
-        // Register ScrollTrigger plugin
+      import('gsap/ScrollTrigger').then((STModule) => {
+        const gsap = gsapModule.default;
+        const ScrollTrigger = STModule.default;
         gsap.registerPlugin(ScrollTrigger);
 
-        const container = containerRef.current;
-        const cardsWrapper = cardsWrapperRef.current;
+        const section = sectionRef.current;
+        const heading = headingRef.current;
+        const grid = gridRef.current;
+        if (!section || !heading || !grid) return;
 
-        if (!container || !cardsWrapper) return;
+        const cards = grid.querySelectorAll('[data-card]');
 
-        const cards = cardsWrapper.querySelectorAll('[data-rotating-card]');
+        // Heading reveal
+        gsap.fromTo(
+          heading,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 75%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
 
-        // Subtle scroll-driven entrance animation
-        cards.forEach((card, index) => {
+        // Cards stagger — alternating from left and right
+        cards.forEach((card, i) => {
+          const fromLeft = i % 2 === 0;
           gsap.fromTo(
             card,
             {
               opacity: 0,
-              y: 60,
-              scale: 0.95,
+              x: fromLeft ? -50 : 50,
+              y: 30,
             },
             {
               opacity: 1,
+              x: 0,
               y: 0,
-              scale: 1,
-              duration: 0.8,
-              delay: index * 0.15,
-              ease: 'power2.out',
+              duration: 0.75,
+              ease: 'power3.out',
               scrollTrigger: {
-                trigger: container,
-                start: 'top 80%',
-                end: 'top 30%',
-                toggleActions: 'play none none reverse',
-                markers: false,
+                trigger: card,
+                start: 'top 88%',
+                toggleActions: 'play none none none',
               },
+              delay: (i % 3) * 0.08,
             }
           );
         });
 
-        // Cleanup on unmount
-        return () => {
-          ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
+        // Subtle float animation on each card avatar after scroll-in
+        cards.forEach((card) => {
+          const avatar = card.querySelector('[data-avatar]');
+          if (!avatar) return;
+          gsap.to(avatar, {
+            y: -6,
+            duration: 2.5 + Math.random() * 1,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: Math.random() * 2,
+          });
+        });
+
+        cleanup = () => {
+          ScrollTrigger.getAll().forEach((t: any) => t.kill());
         };
       });
     });
+
+    return () => cleanup?.();
   }, [people.length]);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full bg-gradient-to-b from-background via-background/95 to-background py-20"
+    <section
+      ref={sectionRef}
+      className="relative w-full bg-gradient-to-b from-background via-background/95 to-background py-24 overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 text-center">
+      {/* Subtle background glow */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/4 top-1/3 h-96 w-96 rounded-full bg-gold/4 blur-[120px]" />
+        <div className="absolute right-1/4 bottom-1/3 h-64 w-64 rounded-full bg-gold/3 blur-[100px]" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Heading */}
+        <div ref={headingRef} className="mb-16 text-center">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-gold/70">
+            {locale === 'ar' ? 'الشخصيات' : 'The People'}
+          </p>
           <h2 className="text-4xl font-bold text-text-primary sm:text-5xl">
-            Meet the People
+            {locale === 'ar' ? (
+              <>اكتشف <span className="gradient-text">الاستثنائيين</span></>
+            ) : (
+              <>Meet the <span className="gradient-text">Remarkable</span></>
+            )}
           </h2>
-          <p className="mt-4 text-lg text-text-secondary max-w-3xl mx-auto">
+          <p className="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
             {locale === 'ar'
-              ? 'اكتشف الشخصيات البارزة والرائدة في مجتمعنا'
-              : 'Discover remarkable individuals shaping our community'}
+              ? 'شخصيات مصرية استثنائية تصنع الفرق في مجتمعاتها'
+              : 'Extraordinary Egyptians shaping their communities and the world'}
           </p>
         </div>
 
-        {/* Cards Container with 3D perspective */}
+        {/* Cards Grid */}
         <div
-          ref={cardsWrapperRef}
-          className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          ref={gridRef}
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {people.map((person, index) => {
-            const tierColor = tierColors[person.tier] || tierColors.bronze;
+          {people.map((person) => (
+            <Link
+              key={person.id}
+              href={`/${locale}/krtk/${person.id}` as any}
+              data-card
+              className="group block"
+            >
+              <div className="relative overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-b from-surface-elevated to-surface p-6 transition-all duration-400 hover:border-gold/50 hover:shadow-[0_8px_40px_rgba(212,168,83,0.15)] hover:-translate-y-1">
+                {/* Hover shimmer */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none" />
 
-            return (
-              <div
-                key={person.id}
-                data-rotating-card
-                className={`group relative rounded-xl overflow-hidden border ${tierColor.border} ${tierColor.glow} transition-all duration-300 hover:scale-105`}
-                style={{
-                  willChange: 'transform, opacity',
-                }}
-              >
-                {/* Background Gradient */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${tierColor.bg} z-0`}
-                />
-
-                {/* Image Container */}
-                <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gold/20 to-background">
-                  {person.imageUrl ? (
-                    <Image
-                      src={person.imageUrl}
-                      alt={person.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="text-center">
-                        <svg
-                          className="mx-auto h-16 w-16 text-gold/40"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                        </svg>
+                {/* Top row: avatar + tier badge */}
+                <div className="relative z-10 flex items-start justify-between mb-5">
+                  {/* Round avatar */}
+                  <div
+                    data-avatar
+                    className="relative h-20 w-20 flex-shrink-0"
+                  >
+                    {/* Gold ring */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold via-amber-400 to-gold p-[2px]">
+                      <div className="h-full w-full rounded-full overflow-hidden bg-surface">
+                        {person.imageUrl ? (
+                          <Image
+                            src={person.imageUrl}
+                            alt={person.name}
+                            fill
+                            className="object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gold/20 to-surface">
+                            <span className="text-2xl font-bold text-gold">
+                              {person.name.charAt(0)}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
+
+                    {/* Verified glow dot */}
+                    <span className="absolute bottom-0.5 right-0.5 h-4 w-4 rounded-full bg-gold border-2 border-background block" />
+                  </div>
+
+                  {/* Tier badge top-right */}
+                  <TierBadge tier={person.tier} size="sm" />
+                </div>
+
+                {/* Name + role */}
+                <div className="relative z-10 space-y-1.5">
+                  <h3 className="text-xl font-bold text-text-primary leading-tight group-hover:text-gold transition-colors duration-250">
+                    {person.name}
+                  </h3>
+                  {person.position && (
+                    <p className="text-sm font-semibold text-gold/90 leading-snug">
+                      {person.position}
+                    </p>
                   )}
-
-                  {/* Tier Badge */}
-                  <div className="absolute top-4 right-4 z-10">
-                    <TierBadge tier={person.tier} size="md" />
-                  </div>
+                  {person.company && (
+                    <p className="text-xs text-text-secondary truncate">
+                      {person.company}
+                    </p>
+                  )}
                 </div>
 
-                {/* Content Container */}
-                <div className="relative z-10 p-6 space-y-4">
-                  {/* Name */}
-                  <div>
-                    <h3 className="text-2xl font-bold text-text-primary">
-                      {person.name}
-                    </h3>
-                  </div>
+                {/* Divider */}
+                <div className="relative z-10 mt-5 h-px w-full bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
-                  {/* Position */}
-                  <div>
-                    <p className="text-gold font-semibold">{person.position}</p>
-                    <p className="text-text-secondary text-sm">{person.company}</p>
-                  </div>
-
-                  {/* Divider */}
-                  <div className="pt-4 border-t border-gold/30" />
-
-                  {/* View Profile Link */}
-                  <Link
-                    href={`/${locale}/people/${person.id}` as any}
-                    className="inline-flex items-center gap-2 text-gold font-semibold hover:gap-3 transition-all duration-300 group/link"
+                {/* CTA */}
+                <div className="relative z-10 mt-4 flex items-center gap-1.5 text-sm font-semibold text-gold/70 group-hover:text-gold transition-colors duration-250">
+                  <span>
+                    {locale === 'ar' ? 'عرض البطاقة' : 'View Profile'}
+                  </span>
+                  <svg
+                    className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-250"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
                   >
-                    <span>
-                      {locale === 'ar' ? 'عرض الملف الشخصي' : 'View Profile'}
-                    </span>
-                    <svg
-                      className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
-
-                {/* Hover Glow Effect */}
-                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-br from-gold/20 via-transparent to-transparent" />
               </div>
-            );
-          })}
+            </Link>
+          ))}
+        </div>
+
+        {/* View all link */}
+        <div className="mt-12 text-center">
+          <Link
+            href={`/${locale}/people` as any}
+            className="inline-flex items-center gap-2 rounded-full border border-gold/30 px-6 py-2.5 text-sm font-semibold text-gold/80 transition-all duration-300 hover:border-gold hover:text-gold hover:shadow-[0_0_20px_rgba(212,168,83,0.2)]"
+          >
+            {locale === 'ar' ? 'عرض جميع الشخصيات' : 'Browse All People'}
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
