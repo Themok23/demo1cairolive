@@ -118,7 +118,7 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
     return (
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl text-center">
-          <h2 className="text-4xl font-bold text-text-primary">Featured Articles</h2>
+          <h2 className="text-4xl font-bold text-text-primary">The Stories</h2>
           <p className="mt-4 text-text-secondary">No articles yet. Check back soon.</p>
         </div>
       </section>
@@ -132,10 +132,10 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-4xl font-bold text-text-primary sm:text-5xl">
-              Featured Articles
+              The Stories
             </h2>
             <p className="mt-3 text-lg text-text-secondary">
-              Discover stories and insights from remarkable Egyptians
+              Long-form stories on the people, ideas, and movements shaping Egypt.
             </p>
           </div>
 
@@ -256,10 +256,10 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
                 <ChevronRight size={24} className="text-gold" />
               </div>
               <p className="text-lg font-semibold text-text-primary group-hover:text-gold transition-colors duration-200">
-                {locale === 'ar' ? 'عرض الكل' : 'View All Articles'}
+                {locale === 'ar' ? 'المزيد من القصص' : 'Read All Stories'}
               </p>
               <p className="text-sm text-text-secondary mt-1">
-                {locale === 'ar' ? 'تصفح جميع المقالات' : 'Browse the full collection'}
+                {locale === 'ar' ? 'استكشف الأرشيف الكامل' : 'Explore the full archive'}
               </p>
             </div>
           </Link>

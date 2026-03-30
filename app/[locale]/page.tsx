@@ -106,12 +106,12 @@ export default async function Home({ params }: HomePageProps) {
           <ScrollReveal direction="up">
             <div className="mb-16 text-center">
               <h2 className="mb-4 text-4xl font-bold text-text-primary lg:text-5xl">
-                {isAr ? 'كيف يعمل' : 'How It Works'}
+                {isAr ? 'كيف تُصنع الأيقونة' : 'How It Works'}
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-text-secondary">
                 {isAr
-                  ? 'عملية بسيطة وسهلة للانضمام إلى مجتمعنا المتنامي'
-                  : 'A simple process to join our growing community'}
+                  ? 'ثلاث خطوات. إرث دائم على أكثر منصة مصرية تنظيماً.'
+                  : "Three steps. One permanent legacy on Egypt's most curated platform."}
               </p>
             </div>
           </ScrollReveal>
@@ -119,18 +119,18 @@ export default async function Home({ params }: HomePageProps) {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
               {
-                en: { title: 'Submit Profile', description: 'Share your achievements, expertise, and story with us' },
-                ar: { title: 'أرسل ملفك الشخصي', description: 'شارك إنجازاتك وخبرتك وقصتك معنا' },
+                en: { title: 'Nominate Yourself', description: 'Tell us who you are, what you’ve built, and the impact you’ve made.' },
+                ar: { title: 'رشّح نفسك', description: 'أخبرنا من أنت، وما الذي بنيته، وما الأثر الذي تركته.' },
                 icon: Users,
               },
               {
-                en: { title: 'Review Process', description: 'Our team verifies and curates your profile carefully' },
-                ar: { title: 'عملية المراجعة', description: 'يقوم فريقنا بالتحقق من ملفك بعناية' },
+                en: { title: 'Editorial Curation', description: 'Our editors craft your profile into a story worth reading — every detail, deliberate.' },
+                ar: { title: 'انتقاء تحريري', description: 'يصيغ فريقنا التحريري ملفك في قصة تستحق القراءة — كل تفصيلة، مقصودة.' },
                 icon: Zap,
               },
               {
-                en: { title: 'Get Featured', description: 'Your profile goes live and gets featured on our platform' },
-                ar: { title: 'اظهر ملفك', description: 'يظهر ملفك مباشرة على منصتنا' },
+                en: { title: 'Enter the Directory', description: "You join a permanent, searchable record of Egypt's most exceptional people." },
+                ar: { title: 'انضم إلى الدليل', description: 'تنضم إلى سجل دائم وقابل للبحث لأكثر شخصيات مصر استثنائية.' },
                 icon: TrendingUp,
               },
             ].map((step, index) => {
@@ -167,16 +167,16 @@ export default async function Home({ params }: HomePageProps) {
           <ScrollReveal direction="up">
             <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-surface-elevated via-surface to-surface-elevated p-12 text-center">
               <h3 className="mb-4 text-3xl font-bold text-text-primary lg:text-4xl">
-                {isAr ? 'ابقى على اتصال' : 'Stay Updated'}
+                {isAr ? 'لا تفوّت قصة واحدة' : 'Never Miss a Story'}
               </h3>
               <p className="mb-8 text-lg text-text-secondary">
                 {isAr
-                  ? 'اشترك في نشرتنا الإخبارية لتتلقى أحدث القصص والإلهام مباشرة في بريدك الإلكتروني'
-                  : 'Subscribe to our newsletter and get the latest stories and inspiration delivered to your inbox'}
+                  ? 'أيقونات جديدة. قصص جديدة. تُسلَّم بالعمق الذي تستحقه.'
+                  : 'New icons. New stories. Delivered with the depth they deserve.'}
               </p>
               <Link href={`/${locale}/subscribe`}>
                 <Button size="lg" className="gap-2">
-                  {isAr ? 'اشترك الآن' : 'Subscribe Now'}
+                  {isAr ? 'اشترك في النشرة' : 'Join the Inner Circle'}
                   <ArrowRight size={18} />
                 </Button>
               </Link>
@@ -196,16 +196,16 @@ export default async function Home({ params }: HomePageProps) {
                   <CheckCircle size={24} className="text-gold" />
                 </div>
                 <h3 className="mb-3 text-2xl font-bold text-text-primary">
-                  {isAr ? 'أنت ملحوظ' : 'You Are Remarkable'}
+                  {isAr ? 'قصتك تنتمي هنا' : 'Your Story Belongs Here'}
                 </h3>
                 <p className="text-text-secondary">
                   {isAr
-                    ? 'شارك إنجازاتك وخبرتك مع مجتمع يقدّر التميز والابتكار'
-                    : 'Share your achievements and expertise with a community that values excellence'}
+                    ? 'إن كان عملك يتحدث عن نفسه، دعنا نضخّم صوته. أرسل ملفك وخذ مكانك في دليل مصر النهائي.'
+                    : `If your work speaks for itself, let us amplify it. Submit your profile and claim your place in Egypt's definitive directory.`}
                 </p>
                 <Link href={`/${locale}/submit`}>
                   <Button variant="outline" className="mt-6 gap-2">
-                    {isAr ? 'أرسل قصتك' : 'Submit Your Story'}
+                    {isAr ? 'أرسل ملفك الآن' : 'Claim Your Spot'}
                     <ArrowRight size={16} />
                   </Button>
                 </Link>
@@ -216,16 +216,16 @@ export default async function Home({ params }: HomePageProps) {
                   <CheckCircle size={24} className="text-gold" />
                 </div>
                 <h3 className="mb-3 text-2xl font-bold text-text-primary">
-                  {isAr ? 'ملفات KRTK الرقمية' : 'KRTK Digital Cards'}
+                  {isAr ? 'بطاقة KRTK الرقمية' : 'Your KRTK Identity Card'}
                 </h3>
                 <p className="text-text-secondary">
                   {isAr
-                    ? 'احصل على بطاقة عمل رقمية احترافية تعرّف عنك وتشارك كل شيء في مكان واحد'
-                    : 'Get a professional digital business card that showcases who you are'}
+                    ? 'رابط واحد. كل ما أنت عليه. KRTK يحوّل ملفك إلى بطاقة هوية رقمية مصممة بدقة.'
+                    : 'One link. Everything you are. KRTK turns your profile into a precision-crafted digital identity card.'}
                 </p>
                 <Link href={`/${locale}/krtk`}>
                   <Button variant="outline" className="mt-6 gap-2">
-                    {isAr ? 'استكشف KRTK' : 'Explore KRTK'}
+                    {isAr ? 'احصل على بطاقتك' : 'Get Your Card'}
                     <ArrowRight size={16} />
                   </Button>
                 </Link>

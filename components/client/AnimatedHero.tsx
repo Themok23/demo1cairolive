@@ -24,65 +24,33 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
 
     import('gsap').then((gsapModule) => {
       const gsap = gsapModule.default;
-
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      if (prefersReducedMotion) {
-        gsap.set([badgeRef.current, headingRef.current, subtitleRef.current, buttonsRef.current], {
-          opacity: 1,
-          y: 0,
-        });
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.set([badgeRef.current, headingRef.current, subtitleRef.current, buttonsRef.current], { opacity: 1, y: 0 });
         return;
       }
 
-      const tl = gsap.timeline({ defaults: { ease: 'cubic.out' } });
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // Badge animation: fade in + slide up
       if (badgeRef.current) {
-        tl.fromTo(
-          badgeRef.current,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8 },
-          0
-        );
+        tl.fromTo(badgeRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, 0);
       }
 
-      // Heading animation: split into words
       if (headingRef.current) {
-        const headingText = headingRef.current.innerText;
-        const words = headingText.split(' ');
+        const words = headingRef.current.innerText.split(' ');
         headingRef.current.innerHTML = words
-          .map((word) => `<span class="inline-block overflow-hidden"><span class="inline-block">${word}</span></span>`)
+          .map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block">${w}</span></span>`)
           .join(' ');
-
         const wordSpans = headingRef.current.querySelectorAll('span span');
-        tl.fromTo(
-          wordSpans,
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 },
-          0.2
-        );
+        tl.fromTo(wordSpans, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.07 }, 0.2);
       }
 
-      // Subtitle animation: fade in
       if (subtitleRef.current) {
-        tl.fromTo(
-          subtitleRef.current,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.7 },
-          0.6
-        );
+        tl.fromTo(subtitleRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7 }, 0.65);
       }
 
-      // Buttons animation: slide in with stagger
       if (buttonsRef.current) {
-        const buttons = buttonsRef.current.querySelectorAll('button, a');
-        tl.fromTo(
-          buttons,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 },
-          0.8
-        );
+        const btns = buttonsRef.current.querySelectorAll('a');
+        tl.fromTo(btns, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1 }, 0.85);
       }
     });
   }, []);
@@ -93,61 +61,61 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
       className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 lg:py-40"
       style={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}
     >
-      {/* Hero Canvas Background */}
       <HeroCanvas />
 
-      {/* Semi-transparent overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-background/30 z-10 pointer-events-none" />
+      {/* Readability overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-background/40 z-10 pointer-events-none" />
 
-      {/* Content */}
       <div className="relative mx-auto max-w-7xl w-full z-20">
         <div className="text-center space-y-8">
-          {/* Badge */}
+
+          {/* Eyebrow */}
           <div
             ref={badgeRef}
-            className="inline-block rounded-full border border-gold/40 bg-gold/8 px-4 py-2 backdrop-blur-sm"
+            className="inline-block rounded-full border border-gold/40 bg-gold/8 px-5 py-2 backdrop-blur-sm"
           >
-            <p className="text-sm font-semibold text-gold">
-              {isAr ? 'كل مصري لديه قصة' : 'Every Egyptian has a story'}
+            <p className="text-sm font-semibold tracking-widest uppercase text-gold">
+              {isAr ? 'موسوعة أيقونات مصر' : "Egypt's Icons Directory"}
             </p>
           </div>
 
           {/* Main Heading */}
           <h1
             ref={headingRef}
-            className="text-5xl font-black tracking-tight text-text-primary sm:text-6xl lg:text-7xl leading-tight"
+            className="text-5xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl leading-[1.05]"
           >
-            {isAr ? 'اكتشف المصريين المتميزين' : 'Discover Remarkable Egyptians'}
+            {isAr ? 'حيث تعيش أيقونات مصر' : 'Where Egypt\'s Icons Live'}
           </h1>
 
           {/* Subtitle */}
           <p
             ref={subtitleRef}
-            className="mx-auto max-w-3xl text-xl leading-relaxed text-text-secondary sm:text-2xl"
+            className="mx-auto max-w-2xl text-lg leading-relaxed text-white/60 sm:text-xl"
           >
             {isAr
-              ? 'احتفل بالإنجازات الاستثنائية والقصص الملهمة والأشخاص المتميزين من القاهرة وخارجها. انضم إلى مجتمعنا المتنامي من المبتكرين والمبدعين وقادة الفكر.'
-              : 'Celebrate extraordinary achievements, inspiring stories, and remarkable people from Cairo and beyond. Join our growing community of innovators, creators, and thought leaders.'}
+              ? 'مجموعة مختارة بعناية من الشخصيات الاستثنائية التي تشكّل ثقافة مصر وصناعتها ومستقبلها — قصة تلو الأخرى.'
+              : 'A curated collection of the extraordinary people shaping Egypt\'s culture, industry, and future — one story at a time.'}
           </p>
 
-          {/* CTA Buttons */}
+          {/* CTAs */}
           <div
             ref={buttonsRef}
             className="flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <Button variant="primary" size="lg">
               <Link href={`/${locale}/people`} className="flex items-center gap-2">
-                {isAr ? 'تصفح الملفات' : 'Browse Profiles'}
+                {isAr ? 'استكشف الأيقونات' : 'Explore the Icons'}
                 <ArrowRight size={18} />
               </Link>
             </Button>
             <Button variant="outline" size="lg">
               <Link href={`/${locale}/articles`} className="flex items-center gap-2">
-                {isAr ? 'اقرأ القصص' : 'Read Stories'}
+                {isAr ? 'اقرأ القصص' : 'Read Their Stories'}
                 <BookOpen size={18} />
               </Link>
             </Button>
           </div>
+
         </div>
       </div>
     </section>

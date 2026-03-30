@@ -126,19 +126,19 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
         {/* Heading */}
         <div ref={headingRef} className="mb-16 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-gold/70">
-            {locale === 'ar' ? 'الشخصيات' : 'The People'}
+            {locale === 'ar' ? 'الأيقونات' : 'Icons'}
           </p>
           <h2 className="text-4xl font-bold text-text-primary sm:text-5xl">
             {locale === 'ar' ? (
-              <>اكتشف <span className="gradient-text">الاستثنائيين</span></>
+              <>أيقونات <span className="gradient-text">مصر</span></>
             ) : (
-              <>Meet the <span className="gradient-text">Remarkable</span></>
+              <>Egypt's <span className="gradient-text">Icons</span></>
             )}
           </h2>
           <p className="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
             {locale === 'ar'
-              ? 'شخصيات مصرية استثنائية تصنع الفرق في مجتمعاتها'
-              : 'Extraordinary Egyptians shaping their communities and the world'}
+              ? 'شخصيات مختارة بعناية — عملهم ورؤيتهم وإرثهم يرسمون ملامح مصر.'
+              : 'Handpicked individuals whose work, vision, and legacy define Egypt.'}
           </p>
         </div>
 
@@ -239,7 +239,7 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
             href={`/${locale}/people` as any}
             className="inline-flex items-center gap-2 rounded-full border border-gold/30 px-6 py-2.5 text-sm font-semibold text-gold/80 transition-all duration-300 hover:border-gold hover:text-gold hover:shadow-[0_0_20px_rgba(212,168,83,0.2)]"
           >
-            {locale === 'ar' ? 'عرض جميع الشخصيات' : 'Browse All People'}
+            {locale === 'ar' ? 'عرض كل الأيقونات' : 'View All Icons'}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>

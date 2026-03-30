@@ -2,297 +2,156 @@
 
 import { useEffect, useRef } from 'react';
 
-interface BokehOrb {
+interface Particle {
   x: number;
   y: number;
-  baseX: number;
-  baseY: number;
+  vx: number;
+  vy: number;
   radius: number;
   opacity: number;
-  vx: number;
-  vy: number;
-  pulsePhase: number;
-  pulseSpeed: number;
-  magneticStrength: number;
+  opacityTarget: number;
+  opacitySpeed: number;
+  glowRadius: number;
+  type: 'star' | 'orb'; // star = small sharp point, orb = soft glow blob
 }
 
-interface FloatingBox {
-  x: number;
-  y: number;
-  baseX: number;
-  baseY: number;
-  width: number;
-  height: number;
-  opacity: number;
-  vx: number;
-  vy: number;
-  rotation: number;
-  rotationSpeed: number;
-  cornerRadius: number;
-  parallaxStrength: number;
-}
+const GOLD = '212, 168, 83';
+const CONNECT_DIST = 160;
+const PARTICLE_COUNT = 55;
 
 export default function HeroCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number | null>(null);
-  const bokehOrbsRef = useRef<BokehOrb[]>([]);
-  const floatingBoxesRef = useRef<FloatingBox[]>([]);
-  const dprRef = useRef<number>(1);
-  const mouseRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef<number | null>(null);
+  const particlesRef = useRef<Particle[]>([]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio, 2);
-    dprRef.current = dpr;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let W = window.innerWidth;
+    let H = window.innerHeight;
 
-    const setCanvasSize = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
+    const resize = () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
       ctx.scale(dpr, dpr);
     };
+    resize();
 
-    setCanvasSize();
-
-    // Initialize bokeh orbs (6-7 large, very faint, gold) with cursor interaction
-    const bokehOrbs: BokehOrb[] = [];
-    for (let i = 0; i < 6; i++) {
-      const x = Math.random() * window.innerWidth;
-      const y = Math.random() * window.innerHeight;
-      bokehOrbs.push({
-        x,
-        y,
-        baseX: x,
-        baseY: y,
-        radius: 80 + Math.random() * 120,
-        opacity: 0.04 + Math.random() * 0.04,
-        vx: (Math.random() - 0.5) * 0.02,
-        vy: (Math.random() - 0.5) * 0.02,
-        pulsePhase: Math.random() * Math.PI * 2,
-        pulseSpeed: 0.001 + Math.random() * 0.001,
-        magneticStrength: 0.005 + Math.random() * 0.005,
+    // ── Spawn particles ────────────────────────────────────────────────────
+    const spawn = (): Particle[] =>
+      Array.from({ length: PARTICLE_COUNT }, (_, i) => {
+        const isOrb = i < 8; // first 8 are large glowing orbs, rest are stars
+        const speed = isOrb ? 0.12 + Math.random() * 0.1 : 0.18 + Math.random() * 0.28;
+        const angle = Math.random() * Math.PI * 2;
+        const op = 0.2 + Math.random() * 0.55;
+        return {
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: isOrb ? 2.5 + Math.random() * 2.5 : 1 + Math.random() * 1.5,
+          opacity: op,
+          opacityTarget: 0.1 + Math.random() * 0.7,
+          opacitySpeed: 0.003 + Math.random() * 0.004,
+          glowRadius: isOrb ? 40 + Math.random() * 60 : 12 + Math.random() * 20,
+          type: isOrb ? 'orb' : 'star',
+        };
       });
-    }
-    bokehOrbsRef.current = bokehOrbs;
 
-    // Initialize floating boxes (8 faded, very faint gold borders) with parallax
-    const floatingBoxes: FloatingBox[] = [];
-    for (let i = 0; i < 8; i++) {
-      const x = Math.random() * window.innerWidth;
-      const y = Math.random() * window.innerHeight;
-      floatingBoxes.push({
-        x,
-        y,
-        baseX: x,
-        baseY: y,
-        width: 40 + Math.random() * 80,
-        height: 40 + Math.random() * 80,
-        opacity: 0.03 + Math.random() * 0.02,
-        vx: (Math.random() - 0.5) * 0.01,
-        vy: (Math.random() - 0.5) * 0.01,
-        rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.0005,
-        cornerRadius: 4 + Math.random() * 8,
-        parallaxStrength: 0.02 + Math.random() * 0.03,
+    particlesRef.current = spawn();
+
+    // ── Draw loop ──────────────────────────────────────────────────────────
+    const tick = () => {
+      rafRef.current = requestAnimationFrame(tick);
+      ctx.clearRect(0, 0, W, H);
+
+      const pts = particlesRef.current;
+
+      // Move particles
+      pts.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap
+        if (p.x < -50) p.x = W + 50;
+        else if (p.x > W + 50) p.x = -50;
+        if (p.y < -50) p.y = H + 50;
+        else if (p.y > H + 50) p.y = -50;
+
+        // Breathe opacity
+        if (p.opacity < p.opacityTarget) p.opacity = Math.min(p.opacityTarget, p.opacity + p.opacitySpeed);
+        else p.opacity = Math.max(p.opacityTarget, p.opacity - p.opacitySpeed);
+        if (Math.abs(p.opacity - p.opacityTarget) < 0.01) {
+          p.opacityTarget = 0.08 + Math.random() * 0.65;
+        }
       });
-    }
-    floatingBoxesRef.current = floatingBoxes;
 
-    // Draw rounded rectangle helper
-    const drawRoundedRect = (
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      radius: number
-    ) => {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-    };
-
-    const animate = () => {
-      animationFrameRef.current = requestAnimationFrame(animate);
-
-      // Clear canvas
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      if (!prefersReducedMotion) {
-        // Update and draw bokeh orbs
-        bokehOrbs.forEach((orb) => {
-          // Calculate distance to cursor for magnetic effect
-          const dx = mouseRef.current.x - orb.baseX;
-          const dy = mouseRef.current.y - orb.baseY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const attractionRadius = 300;
-
-          // Magnetic attraction/repulsion (very subtle)
-          if (distance < attractionRadius && distance > 0) {
-            const force = (1 - distance / attractionRadius) * orb.magneticStrength;
-            orb.vx += (dx / distance) * force;
-            orb.vy += (dy / distance) * force;
+      // ── Draw connecting lines (constellation) ────────────────────────────
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECT_DIST) {
+            const lineOpacity = (1 - dist / CONNECT_DIST) * 0.12 * Math.min(pts[i].opacity, pts[j].opacity);
+            ctx.strokeStyle = `rgba(${GOLD}, ${lineOpacity})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
           }
-
-          // Damping
-          orb.vx *= 0.98;
-          orb.vy *= 0.98;
-
-          // Update position
-          orb.x += orb.vx;
-          orb.y += orb.vy;
-
-          // Soft return to base position
-          const returnForce = 0.001;
-          orb.vx += (orb.baseX - orb.x) * returnForce;
-          orb.vy += (orb.baseY - orb.y) * returnForce;
-
-          // Wrap around edges
-          if (orb.x - orb.radius > window.innerWidth) {
-            orb.x = -orb.radius;
-            orb.baseX = orb.x;
-          } else if (orb.x + orb.radius < 0) {
-            orb.x = window.innerWidth + orb.radius;
-            orb.baseX = orb.x;
-          }
-
-          if (orb.y - orb.radius > window.innerHeight) {
-            orb.y = -orb.radius;
-            orb.baseY = orb.y;
-          } else if (orb.y + orb.radius < 0) {
-            orb.y = window.innerHeight + orb.radius;
-            orb.baseY = orb.y;
-          }
-
-          // Update pulse
-          orb.pulsePhase += orb.pulseSpeed;
-          const pulseFactor = 0.95 + Math.sin(orb.pulsePhase) * 0.05;
-
-          // Draw bokeh orb with radial gradient
-          const gradient = ctx.createRadialGradient(
-            orb.x,
-            orb.y,
-            0,
-            orb.x,
-            orb.y,
-            orb.radius * pulseFactor
-          );
-          gradient.addColorStop(0, `rgba(212, 168, 83, ${orb.opacity * 1.5})`);
-          gradient.addColorStop(0.5, `rgba(212, 168, 83, ${orb.opacity * 0.5})`);
-          gradient.addColorStop(1, `rgba(212, 168, 83, 0)`);
-
-          ctx.fillStyle = gradient;
-          ctx.fillRect(
-            orb.x - orb.radius * pulseFactor,
-            orb.y - orb.radius * pulseFactor,
-            orb.radius * pulseFactor * 2,
-            orb.radius * pulseFactor * 2
-          );
-        });
-
-        // Update and draw floating boxes
-        floatingBoxes.forEach((box) => {
-          // Parallax effect based on cursor position
-          const centerX = window.innerWidth / 2;
-          const centerY = window.innerHeight / 2;
-          const cursorOffsetX = (mouseRef.current.x - centerX) * box.parallaxStrength;
-          const cursorOffsetY = (mouseRef.current.y - centerY) * box.parallaxStrength;
-
-          // Update position with gentle floating
-          box.x += box.vx;
-          box.y += box.vy;
-
-          // Apply parallax displacement
-          const displayX = box.x + cursorOffsetX;
-          const displayY = box.y + cursorOffsetY;
-
-          // Wrap around edges
-          if (box.x > window.innerWidth + 100) {
-            box.x = -100;
-            box.baseX = box.x;
-          } else if (box.x < -100) {
-            box.x = window.innerWidth + 100;
-            box.baseX = box.x;
-          }
-
-          if (box.y > window.innerHeight + 100) {
-            box.y = -100;
-            box.baseY = box.y;
-          } else if (box.y < -100) {
-            box.y = window.innerHeight + 100;
-            box.baseY = box.y;
-          }
-
-          // Update rotation
-          box.rotation += box.rotationSpeed;
-
-          // Draw floating box
-          ctx.save();
-          ctx.translate(displayX, displayY);
-          ctx.rotate(box.rotation);
-
-          ctx.strokeStyle = `rgba(212, 168, 83, ${box.opacity})`;
-          ctx.lineWidth = 1;
-          drawRoundedRect(
-            -box.width / 2,
-            -box.height / 2,
-            box.width,
-            box.height,
-            box.cornerRadius
-          );
-          ctx.stroke();
-
-          ctx.restore();
-        });
+        }
       }
+
+      // ── Draw particles ────────────────────────────────────────────────────
+      pts.forEach((p) => {
+        // Soft glow halo behind particle
+        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.glowRadius);
+        glow.addColorStop(0,   `rgba(${GOLD}, ${p.opacity * (p.type === 'orb' ? 0.22 : 0.14)})`);
+        glow.addColorStop(0.4, `rgba(${GOLD}, ${p.opacity * 0.06})`);
+        glow.addColorStop(1,   `rgba(${GOLD}, 0)`);
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.glowRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sharp particle core
+        const coreAlpha = p.type === 'orb' ? p.opacity * 0.9 : p.opacity;
+        ctx.fillStyle = `rgba(${GOLD}, ${coreAlpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Extra inner bright point for stars
+        if (p.type === 'star' && p.opacity > 0.4) {
+          ctx.fillStyle = `rgba(255, 240, 200, ${(p.opacity - 0.4) * 0.8})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
     };
 
-    // Track mouse position
-    const handleMouseMove = (event: MouseEvent) => {
-      mouseRef.current = {
-        x: event.clientX,
-        y: event.clientY,
-      };
-    };
+    tick();
 
-    animate();
+    const onResize = () => { resize(); };
+    window.addEventListener('resize', onResize);
 
-    // Handle window resize
-    const handleResize = () => {
-      setCanvasSize();
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      window.removeEventListener('resize', onResize);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
@@ -300,11 +159,7 @@ export default function HeroCanvas() {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 z-0 pointer-events-none"
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'block',
-      }}
+      style={{ display: 'block', width: '100%', height: '100%' }}
     />
   );
 }
