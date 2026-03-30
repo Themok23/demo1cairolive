@@ -152,11 +152,17 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
                 )}
               </div>
 
-              {/* Permanent base gradient — title always readable */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+              {/* Base gradient — small shadow at bottom, just enough to read the title */}
+              <div
+                className="absolute inset-0 transition-opacity duration-300 group-hover:opacity-0"
+                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 28%, transparent 55%)' }}
+              />
 
-              {/* Hover gradient — deepens shadow to reveal description */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {/* Hover gradient — deep, covers card to frame description */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0.15) 75%, transparent 100%)' }}
+              />
 
               {/* Gold ring */}
               <div className="absolute inset-0 rounded-xl ring-1 ring-transparent group-hover:ring-gold/50 transition-all duration-300" />
@@ -172,7 +178,8 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
                 </div>
               )}
 
-              <div className="absolute bottom-0 left-0 right-0 z-10 p-5">
+              {/* Content block — slides up on hover, revealing description below title */}
+              <div className="absolute bottom-0 left-0 right-0 z-10 p-5 translate-y-0 group-hover:-translate-y-[72px] transition-transform duration-300 ease-out">
                 {article.taggedPeople && article.taggedPeople.length > 0 && (
                   <div className="mb-3 flex items-center gap-2">
                     <div className="flex -space-x-2">
@@ -192,11 +199,12 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
                 <h3 className="text-base font-bold text-white leading-snug line-clamp-2">
                   {article.title}
                 </h3>
-                <p className="mt-2 text-sm text-white/75 line-clamp-3 leading-relaxed opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                {/* Description fades in as block slides up */}
+                <p className="mt-2 text-sm text-white/75 line-clamp-3 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 ease-out">
                   {article.excerpt}
                 </p>
-                <div className="mt-2.5 flex items-center gap-1.5 text-gold text-xs font-semibold uppercase tracking-wider opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-75 ease-out">
-                  <span>{locale === 'ar' ? '\u0627\u0642\u0631\u0623 \u0627\u0644\u0645\u0632\u064a\u062f' : 'Read More'}</span>
+                <div className="mt-2.5 flex items-center gap-1.5 text-gold text-xs font-semibold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-150 ease-out">
+                  <span>{locale === 'ar' ? 'اقرأ المزيد' : 'Read More'}</span>
                   <ChevronRight size={11} className="mt-px" />
                 </div>
               </div>
