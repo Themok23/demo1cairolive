@@ -38,7 +38,7 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
       if (headingRef.current) {
         const words = headingRef.current.innerText.split(' ');
         headingRef.current.innerHTML = words
-          .map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block">${w}</span></span>`)
+          .map((w) => `<span class="inline-block" style="overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em"><span class="inline-block">${w}</span></span>`)
           .join(' ');
         const wordSpans = headingRef.current.querySelectorAll('span span');
         tl.fromTo(wordSpans, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.07 }, 0.2);

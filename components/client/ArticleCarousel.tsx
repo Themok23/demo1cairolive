@@ -35,11 +35,7 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
   const scroll = (direction: 'left' | 'right') => {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = 340;
-    el.scrollBy({
-      left: direction === 'left' ? -cardWidth : cardWidth,
-      behavior: 'smooth',
-    });
+    el.scrollBy({ left: direction === 'left' ? -320 : 320, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -54,62 +50,36 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
     };
   }, []);
 
-  // Entrance animation with GSAP
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    import('gsap').then((gsapModule) => {
-      import('gsap/ScrollTrigger').then((ScrollTriggerModule) => {
-        const gsap = gsapModule.default;
-        const ScrollTrigger = ScrollTriggerModule.default;
+    import('gsap').then(({ default: gsap }) => {
+      import('gsap/ScrollTrigger').then(({ default: ScrollTrigger }) => {
         gsap.registerPlugin(ScrollTrigger);
-
         const section = sectionRef.current;
         if (!section) return;
 
-        // Animate heading
         const heading = section.querySelector('[data-heading]');
         if (heading) {
-          gsap.fromTo(
-            heading,
-            { opacity: 0, y: 30 },
+          gsap.fromTo(heading,
+            { opacity: 0, y: 28 },
             {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: section,
-                start: 'top 80%',
-                toggleActions: 'play none none reverse',
-              },
+              opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+              scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none reverse' },
             }
           );
         }
 
-        // Animate cards with stagger
         const cards = section.querySelectorAll('[data-article-card]');
-        gsap.fromTo(
-          cards,
-          { opacity: 0, y: 40, scale: 0.95 },
+        gsap.fromTo(cards,
+          { opacity: 0, y: 44, scale: 0.96 },
           {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            stagger: 0.12,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 75%',
-              toggleActions: 'play none none reverse',
-            },
+            opacity: 1, y: 0, scale: 1,
+            duration: 0.6, stagger: 0.1, ease: 'power2.out',
+            scrollTrigger: { trigger: section, start: 'top 75%', toggleActions: 'play none none reverse' },
           }
         );
 
-        return () => {
-          ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
-        };
+        return () => ScrollTrigger.getAll().forEach((t: any) => t.kill());
       });
     });
   }, [articles.length]);
@@ -127,52 +97,35 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
 
   return (
     <section ref={sectionRef} className="relative py-20 bg-background">
-      {/* Header with nav arrows */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-10" data-heading>
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-4xl font-bold text-text-primary sm:text-5xl">
-              The Stories
+              {locale === 'ar' ? '\u0627\u0644\u0642\u0635\u0635' : 'The Stories'}
             </h2>
             <p className="mt-3 text-lg text-text-secondary">
-              Long-form stories on the people, ideas, and movements shaping Egypt.
+              {locale === 'ar'
+                ? '\u0631\u0648\u0627\u064a\u0627\u062a \u0637\u0648\u064a\u0644\u0629 \u0639\u0646 \u0627\u0644\u0646\u0627\u0633 \u0648\u0627\u0644\u0623\u0641\u0643\u0627\u0631 \u0648\u0627\u0644\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u062a\u064a \u062a\u0634\u0643\u0651\u0644 \u0645\u0635\u0631.'
+                : 'Long-form stories on the people, ideas, and movements shaping Egypt.'}
             </p>
           </div>
-
-          {/* Desktop nav arrows */}
           <div className="hidden sm:flex items-center gap-2">
-            <button
-              onClick={() => scroll('left')}
-              disabled={!canScrollLeft}
+            <button onClick={() => scroll('left')} disabled={!canScrollLeft}
               className="p-2.5 rounded-full border border-border bg-surface hover:bg-surface-elevated hover:border-gold/50 text-text-secondary hover:text-gold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              disabled={!canScrollRight}
+              aria-label="Scroll left"><ChevronLeft size={20} /></button>
+            <button onClick={() => scroll('right')} disabled={!canScrollRight}
               className="p-2.5 rounded-full border border-border bg-surface hover:bg-surface-elevated hover:border-gold/50 text-text-secondary hover:text-gold transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Scroll right"
-            >
-              <ChevronRight size={20} />
-            </button>
+              aria-label="Scroll right"><ChevronRight size={20} /></button>
           </div>
         </div>
       </div>
 
-      {/* Scrollable cards row */}
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <div
           ref={scrollRef}
-          className="flex gap-5 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-4 snap-x snap-mandatory scrollbar-hide"
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-          }}
+          className="flex gap-4 overflow-x-auto px-4 sm:px-6 lg:px-8 snap-x snap-mandatory"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' } as React.CSSProperties}
         >
-          {/* Left spacer for max-w-7xl alignment on large screens */}
           <div className="hidden lg:block flex-shrink-0" style={{ width: 'calc((100vw - 80rem) / 2)' }} />
 
           {articles.map((article) => (
@@ -180,100 +133,75 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
               key={article.id}
               href={`/${locale}/articles/${article.slug}`}
               data-article-card
-              className="group relative flex-shrink-0 overflow-hidden rounded-xl border border-border/50 hover:border-gold/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(212,168,83,0.15)] snap-start"
-              style={{ width: '320px' }}
+              className="group relative flex-shrink-0 overflow-hidden rounded-xl snap-start"
+              style={{ width: '280px', height: '400px' }}
             >
-              {/* Image area */}
-              <div className="relative w-full h-48 bg-surface overflow-hidden">
+              <div className="absolute inset-0">
                 {article.featuredImageUrl ? (
-                  <Image
-                    src={article.featuredImageUrl}
-                    alt={article.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  <Image src={article.featuredImageUrl} alt={article.title} fill
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface to-surface-elevated">
-                    <svg
-                      className="h-10 w-10 text-gold/30"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
+                  <div className="w-full h-full bg-gradient-to-br from-surface to-surface-elevated" />
                 )}
-                {/* Subtle gold line at top */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              {/* Content area */}
-              <div className="p-5 bg-surface flex flex-col" style={{ minHeight: '180px' }}>
-                {/* Date */}
-                {article.publishedAt && (
-                  <p className="text-xs text-text-secondary mb-2 font-medium uppercase tracking-wider">
+              {/* Permanent base gradient — title always readable */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+
+              {/* Hover gradient — deepens shadow to reveal description */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* Gold ring */}
+              <div className="absolute inset-0 rounded-xl ring-1 ring-transparent group-hover:ring-gold/50 transition-all duration-300" />
+
+              {article.publishedAt && (
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="text-xs font-medium uppercase tracking-widest text-white/70 bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full">
                     {new Date(article.publishedAt).toLocaleDateString(
                       locale === 'ar' ? 'ar-EG' : 'en-US',
-                      { year: 'numeric', month: 'short', day: 'numeric' }
+                      { month: 'short', day: 'numeric', year: 'numeric' }
                     )}
-                  </p>
-                )}
+                  </span>
+                </div>
+              )}
 
-                {/* Title */}
-                <h3 className="text-lg font-bold text-text-primary leading-snug line-clamp-2 mb-2 group-hover:text-gold transition-colors duration-200">
+              <div className="absolute bottom-0 left-0 right-0 z-10 p-5">
+                <h3 className="text-base font-bold text-white leading-snug line-clamp-2">
                   {article.title}
                 </h3>
-
-                {/* Excerpt */}
-                <p className="text-sm text-text-secondary line-clamp-2 flex-grow">
+                <p className="mt-2 text-sm text-white/75 line-clamp-3 leading-relaxed opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
                   {article.excerpt}
                 </p>
-
-                {/* Read More */}
-                <div className="mt-4 flex items-center gap-1.5 text-gold text-sm font-semibold group-hover:gap-2.5 transition-all duration-300">
-                  <span>{locale === 'ar' ? 'اقرأ المزيد' : 'Read More'}</span>
-                  <ChevronRight size={14} className="mt-px" />
+                <div className="mt-2.5 flex items-center gap-1.5 text-gold text-xs font-semibold uppercase tracking-wider opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-75 ease-out">
+                  <span>{locale === 'ar' ? '\u0627\u0642\u0631\u0623 \u0627\u0644\u0645\u0632\u064a\u062f' : 'Read More'}</span>
+                  <ChevronRight size={11} className="mt-px" />
                 </div>
               </div>
             </Link>
           ))}
 
-          {/* View All card */}
-          <Link
-            href={`/${locale}/articles`}
-            data-article-card
-            className="group relative flex-shrink-0 overflow-hidden rounded-xl border border-border/50 hover:border-gold/40 transition-all duration-300 flex items-center justify-center snap-start"
-            style={{ width: '320px', minHeight: '380px' }}
-          >
+          <Link href={`/${locale}/articles`} data-article-card
+            className="group relative flex-shrink-0 overflow-hidden rounded-xl border border-border/50 hover:border-gold/40 transition-all duration-300 flex items-center justify-center snap-start bg-surface"
+            style={{ width: '280px', height: '400px' }}>
             <div className="text-center p-8">
               <div className="w-14 h-14 rounded-full border-2 border-gold/40 flex items-center justify-center mx-auto mb-4 group-hover:border-gold group-hover:bg-gold/10 transition-all duration-300">
                 <ChevronRight size={24} className="text-gold" />
               </div>
               <p className="text-lg font-semibold text-text-primary group-hover:text-gold transition-colors duration-200">
-                {locale === 'ar' ? 'المزيد من القصص' : 'Read All Stories'}
+                {locale === 'ar' ? '\u0627\u0644\u0645\u0632\u064a\u062f \u0645\u0646 \u0627\u0644\u0642\u0635\u0635' : 'Read All Stories'}
               </p>
               <p className="text-sm text-text-secondary mt-1">
-                {locale === 'ar' ? 'استكشف الأرشيف الكامل' : 'Explore the full archive'}
+                {locale === 'ar' ? '\u0627\u0633\u062a\u0643\u0634\u0641 \u0627\u0644\u0623\u0631\u0634\u064a\u0641 \u0627\u0644\u0643\u0627\u0645\u0644' : 'Explore the full archive'}
               </p>
             </div>
           </Link>
 
-          {/* Right spacer */}
           <div className="flex-shrink-0 w-4 sm:w-6 lg:w-8" />
         </div>
 
-        {/* Left fade */}
         {canScrollLeft && (
           <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
         )}
-
-        {/* Right fade */}
         {canScrollRight && (
           <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
         )}
