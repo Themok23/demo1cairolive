@@ -16,7 +16,7 @@
   - Mark task complete when test is written, run, and failure is documented
   - _Requirements: 2.1, 2.2, 2.3_
 
-- [-] 2. Write preservation property tests (BEFORE implementing fix)
+- [x] 2. Write preservation property tests (BEFORE implementing fix)
   - **Property 2: Preservation** - Next.js and Production Environment Loading
   - **IMPORTANT**: Follow observation-first methodology
   - Observe behavior on UNFIXED code for Next.js contexts (start dev server, test API routes)
@@ -34,7 +34,7 @@
 
 - [ ] 3. Fix for script environment loading
 
-  - [~] 3.1 Implement conditional dotenv loading in client.ts
+  - [-] 3.1 Implement conditional dotenv loading in client.ts
     - Add conditional dotenv loading at the very top of src/infrastructure/db/client.ts (before any imports)
     - Detect script context using `!process.env.NEXT_RUNTIME && !process.env.__NEXT_PROCESSED_ENV`
     - Load .env.local using dotenv.config() only in script contexts when file exists
