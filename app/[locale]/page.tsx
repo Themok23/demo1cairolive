@@ -9,6 +9,7 @@ import ArticleCarousel from '@/components/client/ArticleCarousel';
 import RotatingCards from '@/components/client/RotatingCards';
 import ScrollReveal from '@/components/client/ScrollReveal';
 import ParallaxSection from '@/components/client/ParallaxSection';
+import QuoteArtworkSection from '@/components/client/QuoteArtworkSection';
 
 interface HomePageProps {
   params: {
@@ -64,40 +65,8 @@ export default async function Home({ params }: HomePageProps) {
       {/* Article Carousel - Full Width GSAP ScrollTrigger */}
       <ArticleCarousel articles={carouselArticles} locale={locale} />
 
-      {/* Parallax Quote Section */}
-      <ParallaxSection speed={0.3} direction="up">
-        <section className="relative px-4 py-32 sm:px-6 lg:px-8 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-transparent to-gold/5" />
-          <div className="relative mx-auto max-w-4xl text-center">
-            <ScrollReveal direction="up">
-              <div className="mb-8">
-                <div className="inline-block h-px w-20 bg-gold/50 mb-8" />
-              </div>
-              <blockquote className="text-3xl font-light text-text-primary leading-relaxed sm:text-4xl lg:text-5xl">
-                {isAr ? (
-                  <>
-                    <span className="gradient-text font-bold">"</span>
-                    كل شخص استثنائي يستحق أن يُحتفى به
-                    <span className="gradient-text font-bold">"</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="gradient-text font-bold">"</span>
-                    Every remarkable person deserves to be celebrated
-                    <span className="gradient-text font-bold">"</span>
-                  </>
-                )}
-              </blockquote>
-              <p className="mt-6 text-lg text-text-secondary">
-                {isAr ? 'Cairo Live' : 'Cairo Live'}
-              </p>
-              <div className="mt-8">
-                <div className="inline-block h-px w-20 bg-gold/50" />
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-      </ParallaxSection>
+      {/* Parallax Quote Section with Cairo Artwork */}
+      <QuoteArtworkSection locale={locale} />
 
       {/* How It Works Section */}
       <section className="relative px-4 py-20 sm:px-6 lg:px-8">
