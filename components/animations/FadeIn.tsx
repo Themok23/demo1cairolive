@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
 
 interface FadeInProps extends React.HTMLAttributes<HTMLDivElement> {
   duration?: number;
@@ -14,21 +13,26 @@ const FadeIn = React.forwardRef<HTMLDivElement, FadeInProps>(
     const divRef = ref || internalRef;
 
     useEffect(() => {
+      if (typeof window === 'undefined') return;
       if (!divRef || typeof divRef === 'function') return;
 
       const element = divRef.current;
       if (!element) return;
 
-      // Set initial state
-      gsap.set(element, { opacity: 0, y: 20 });
+      import('gsap').then((gsapModule) => {
+        const gsap = gsapModule.default;
 
-      // Animate in
-      gsap.to(element, {
-        opacity: 1,
-        y: 0,
-        duration,
-        delay,
-        ease: 'power3.out',
+        // Set initial state
+        gsap.set(element, { opacity: 0, y: 20 });
+
+        // Animate in
+        gsap.to(element, {
+          opacity: 1,
+          y: 0,
+          duration,
+          delay,
+          ease: 'power3.out',
+        });
       });
     }, [divRef, duration, delay]);
 

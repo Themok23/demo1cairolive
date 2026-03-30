@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { isValidEmail } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface SubscribeFormData {
   email: string;
@@ -12,9 +13,15 @@ interface SubscribeFormData {
   lastName?: string;
 }
 
-export default function SubscribeForm() {
+interface SubscribeFormProps {
+  locale?: string;
+}
+
+export default function SubscribeForm({ locale }: SubscribeFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const t = useTranslations('subscribe');
+  const tSubmit = useTranslations('submit');
   const {
     register,
     handleSubmit,
@@ -28,7 +35,7 @@ export default function SubscribeForm() {
 
     try {
       if (!isValidEmail(data.email)) {
-        setMessage({ type: 'error', text: 'Please enter a valid email address' });
+        setMessage({ type: 'error', text: t('error') });
         return;
       }
 
@@ -41,13 +48,13 @@ export default function SubscribeForm() {
       const result = await response.json();
 
       if (result.success) {
-        setMessage({ type: 'success', text: 'Successfully subscribed! Check your email for confirmation.' });
+        setMessage({ type: 'success', text: t('success') });
         reset();
       } else {
-        setMessage({ type: 'error', text: result.error || 'Subscription failed' });
+        setMessage({ type: 'error', text: result.error || t('error') });
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred. Please try again.' });
+      setMessage({ type: 'error', text: t('error') });
     } finally {
       setIsLoading(false);
     }
@@ -58,22 +65,22 @@ export default function SubscribeForm() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input
           {...register('firstName')}
-          label="First Name (Optional)"
-          placeholder="Your first name"
+          label={tSubmit('firstName')}
+          placeholder={tSubmit('firstName')}
         />
         <Input
           {...register('lastName')}
-          label="Last Name (Optional)"
-          placeholder="Your last name"
+          label={tSubmit('lastName')}
+          placeholder={tSubmit('lastName')}
         />
       </div>
 
       <Input
-        {...register('email', { required: 'Email is required' })}
+        {...register('email', { required: true })}
         type="email"
-        label="Email Address"
+        label={t('email')}
         placeholder="you@example.com"
-        error={errors.email?.message}
+        error={errors.email ? t('email') : undefined}
       />
 
       {message && (
@@ -89,7 +96,7 @@ export default function SubscribeForm() {
       )}
 
       <Button type="submit" variant="primary" isLoading={isLoading} className="w-full">
-        Subscribe Now
+        {isLoading ? t('subscribing') : t('button')}
       </Button>
     </form>
   );

@@ -75,12 +75,16 @@ export const articles = pgTable(
     category: varchar('category', { length: 100 }),
     readTimeMinutes: integer('read_time_minutes').default(0),
     viewCount: integer('view_count').default(0),
+    malePersonId: varchar('male_person_id', { length: 36 }),
+    femalePersonId: varchar('female_person_id', { length: 36 }),
   },
   (table) => ({
     slugIdx: index('articles_slug_idx').on(table.slug),
     authorIdx: index('articles_author_idx').on(table.authorId),
     statusIdx: index('articles_status_idx').on(table.status),
     publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt),
+    malePersonIdx: index('articles_male_person_idx').on(table.malePersonId),
+    femalePersonIdx: index('articles_female_person_idx').on(table.femalePersonId),
   })
 );
 
@@ -185,11 +189,13 @@ export const sessions = pgTable(
 export const verificationTokens = pgTable(
   'verificationToken',
   {
-    email: varchar('email', { length: 255 }).notNull(),
+    identifier: varchar('identifier', { length: 255 }).notNull(),
     token: varchar('token', { length: 255 }).notNull(),
     expires: timestamp('expires', { withTimezone: true }).notNull(),
   },
   (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.email, vt.token] }),
+    compoundKey: primaryKey({
+      columns: [vt.identifier, vt.token],
+    }),
   })
 );

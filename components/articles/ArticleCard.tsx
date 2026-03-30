@@ -7,11 +7,12 @@ import { Article } from '@/domain/entities/article';
 
 interface ArticleCardProps {
   article: Article;
+  locale?: string;
 }
 
-export default function ArticleCard({ article }: ArticleCardProps) {
+export default function ArticleCard({ article, locale = 'en' }: ArticleCardProps) {
   return (
-    <Link href={`/articles/${article.slug}`}>
+    <Link href={`/${locale}/articles/${article.slug}`}>
       <Card variant="default" className="h-full hover:border-gold transition-colors cursor-pointer">
         {article.featuredImageUrl && (
           <div className="mb-4 -mx-6 -mt-6 h-48 w-[calc(100%+48px)] overflow-hidden rounded-t-lg">

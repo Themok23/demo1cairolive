@@ -17,6 +17,8 @@ export interface Article {
   category?: string | null;
   readTimeMinutes: number;
   viewCount: number | null;
+  malePersonId?: string | null;
+  femalePersonId?: string | null;
 }
 
 export class ArticleEntity implements Article {
@@ -27,15 +29,17 @@ export class ArticleEntity implements Article {
   excerpt: string;
   authorId: string;
   authorName: string;
-  featuredImageUrl?: string;
+  featuredImageUrl?: string | null;
   status: ArticleStatus;
-  publishedAt?: Date;
+  publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  tags?: string[];
-  category?: string;
+  tags?: string[] | null;
+  category?: string | null;
   readTimeMinutes: number;
-  viewCount: number;
+  viewCount: number | null;
+  malePersonId?: string | null;
+  femalePersonId?: string | null;
 
   constructor(data: Article) {
     this.id = data.id;
@@ -54,6 +58,8 @@ export class ArticleEntity implements Article {
     this.category = data.category;
     this.readTimeMinutes = data.readTimeMinutes;
     this.viewCount = data.viewCount;
+    this.malePersonId = data.malePersonId;
+    this.femalePersonId = data.femalePersonId;
   }
 
   isPublished(): boolean {
@@ -64,17 +70,29 @@ export class ArticleEntity implements Article {
     return this.status === 'draft';
   }
 
+  isArchived(): boolean {
+    return this.status === 'archived';
+  }
+
   calculateReadTime(): number {
     const wordsPerMinute = 200;
     const wordCount = this.content.split(/\s+/).length;
     return Math.ceil(wordCount / wordsPerMinute);
   }
 
-  publish(): ArticleEntity {
+  publish(publishDate?: Date): ArticleEntity {
     return new ArticleEntity({
       ...this,
-      status: 'published',
-      publishedAt: new Date(),
+      status: 'published' as ArticleStatus,
+      publishedAt: publishDate || new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  archive(): ArticleEntity {
+    return new ArticleEntity({
+      ...this,
+      status: 'archived' as ArticleStatus,
       updatedAt: new Date(),
     });
   }
@@ -82,7 +100,26 @@ export class ArticleEntity implements Article {
   incrementViewCount(): ArticleEntity {
     return new ArticleEntity({
       ...this,
-      viewCount: this.viewCount + 1,
+      viewCount: (this.viewCount || 0) + 1,
+      updatedAt: new Date(),
+    });
+  }
+
+  addTags(newTags: string[]): ArticleEntity {
+    const existingTags = this.tags || [];
+    const uniqueTags = Array.from(new Set([...existingTags, ...newTags]));
+    return new ArticleEntity({
+      ...this,
+      tags: uniqueTags,
+      updatedAt: new Date(),
+    });
+  }
+
+  removeTags(tagsToRemove: string[]): ArticleEntity {
+    const updatedTags = (this.tags || []).filter(tag => !tagsToRemove.includes(tag));
+    return new ArticleEntity({
+      ...this,
+      tags: updatedTags.length > 0 ? updatedTags : null,
       updatedAt: new Date(),
     });
   }
@@ -93,5 +130,32 @@ export class ArticleEntity implements Article {
       ...data,
       updatedAt: new Date(),
     });
+  }
+
+  getDisplayName(): string {
+    return this.title;
+  }
+
+  toJSON(): Article {
+    return {
+      id: this.id,
+      title: this.title,
+      slug: this.slug,
+      content: this.content,
+      excerpt: this.excerpt,
+      authorId: this.authorId,
+      authorName: this.authorName,
+      featuredImageUrl: this.featuredImageUrl,
+      status: this.status,
+      publishedAt: this.publishedAt,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      tags: this.tags,
+      category: this.category,
+      readTimeMinutes: this.readTimeMinutes,
+      viewCount: this.viewCount,
+      malePersonId: this.malePersonId,
+      femalePersonId: this.femalePersonId,
+    };
   }
 }

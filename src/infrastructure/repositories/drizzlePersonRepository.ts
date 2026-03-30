@@ -1,22 +1,32 @@
-import { eq, like, and, desc, sql } from 'drizzle-orm';
+import { eq, like, and, or, desc, sql } from 'drizzle-orm';
 import { db } from '../db/client';
 import { persons } from '../db/schema';
 import { Person } from '../../domain/entities/person';
 import { PersonRepository } from '../../domain/repositories/personRepository';
 
 export class DrizzlePersonRepository implements PersonRepository {
+  private parsePerson(data: any): Person {
+    return {
+      ...data,
+      gender: data.gender as any,
+      tier: data.tier as any,
+      dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
+      keywords: data.keywords ? JSON.parse(data.keywords) : undefined,
+    };
+  }
+
   async findById(id: string): Promise<Person | null> {
     const result = await db.query.persons.findFirst({
       where: eq(persons.id, id),
     });
-    return result || null;
+    return result ? this.parsePerson(result) : null;
   }
 
   async findByEmail(email: string): Promise<Person | null> {
     const result = await db.query.persons.findFirst({
       where: eq(persons.email, email),
     });
-    return result || null;
+    return result ? this.parsePerson(result) : null;
   }
 
   async findAll(options?: {
@@ -28,14 +38,14 @@ export class DrizzlePersonRepository implements PersonRepository {
     const limit = options?.limit || 20;
     const offset = options?.offset || 0;
 
-    let query = db.select().from(persons);
+    const conditions = [];
 
     if (options?.tier) {
-      query = query.where(eq(persons.tier, options.tier));
+      conditions.push(eq(persons.tier, options.tier));
     }
 
     if (options?.search) {
-      query = query.where(
+      conditions.push(
         or(
           like(persons.firstName, `%${options.search}%`),
           like(persons.lastName, `%${options.search}%`)
@@ -43,66 +53,99 @@ export class DrizzlePersonRepository implements PersonRepository {
       );
     }
 
-    const data = await query
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    const data = await db
+      .select()
+      .from(persons)
+      .where(whereClause)
       .orderBy(desc(persons.createdAt))
       .limit(limit)
       .offset(offset);
 
     const countResult = await db
       .select({ count: sql<number>`count(*)` })
-      .from(persons);
+      .from(persons)
+      .where(whereClause);
 
     const total = countResult[0]?.count || 0;
 
-    return { data: data as Person[], total };
+    return { data: data.map(d => this.parsePerson(d)), total };
   }
 
   async create(person: Person): Promise<Person> {
+    const values: any = {
+      id: person.id,
+      firstName: person.firstName,
+      lastName: person.lastName,
+      email: person.email,
+      phoneNumber: person.phoneNumber,
+      gender: person.gender,
+      bio: person.bio,
+      profileImageUrl: person.profileImageUrl,
+      coverImageUrl: person.coverImageUrl,
+      currentPosition: person.currentPosition,
+      currentCompany: person.currentCompany,
+      location: person.location,
+      tier: person.tier,
+      isVerified: person.isVerified,
+      isClaimed: person.isClaimed,
+      claimedBy: person.claimedBy,
+      keywords: person.keywords ? JSON.stringify(person.keywords) : null,
+      linkedinUrl: person.linkedinUrl,
+      twitterUrl: person.twitterUrl,
+      instagramUrl: person.instagramUrl,
+      websiteUrl: person.websiteUrl,
+      createdAt: person.createdAt,
+      updatedAt: person.updatedAt,
+    };
+
+    if (person.dateOfBirth) {
+      values.dateOfBirth = person.dateOfBirth;
+    }
+
     const [created] = await db
       .insert(persons)
-      .values({
-        id: person.id,
-        firstName: person.firstName,
-        lastName: person.lastName,
-        email: person.email,
-        phoneNumber: person.phoneNumber,
-        dateOfBirth: person.dateOfBirth,
-        gender: person.gender,
-        bio: person.bio,
-        profileImageUrl: person.profileImageUrl,
-        coverImageUrl: person.coverImageUrl,
-        currentPosition: person.currentPosition,
-        currentCompany: person.currentCompany,
-        location: person.location,
-        tier: person.tier,
-        isVerified: person.isVerified,
-        isClaimed: person.isClaimed,
-        claimedBy: person.claimedBy,
-        keywords: person.keywords ? JSON.stringify(person.keywords) : null,
-        linkedinUrl: person.linkedinUrl,
-        twitterUrl: person.twitterUrl,
-        instagramUrl: person.instagramUrl,
-        websiteUrl: person.websiteUrl,
-        createdAt: person.createdAt,
-        updatedAt: person.updatedAt,
-      })
+      .values(values)
       .returning();
 
-    return created as Person;
+    return this.parsePerson(created);
   }
 
   async update(id: string, person: Partial<Person>): Promise<Person | null> {
+    const updates: any = {
+      updatedAt: new Date(),
+    };
+
+    if (person.firstName !== undefined) updates.firstName = person.firstName;
+    if (person.lastName !== undefined) updates.lastName = person.lastName;
+    if (person.email !== undefined) updates.email = person.email;
+    if (person.phoneNumber !== undefined) updates.phoneNumber = person.phoneNumber;
+    if (person.dateOfBirth !== undefined) updates.dateOfBirth = person.dateOfBirth;
+    if (person.gender !== undefined) updates.gender = person.gender;
+    if (person.bio !== undefined) updates.bio = person.bio;
+    if (person.profileImageUrl !== undefined) updates.profileImageUrl = person.profileImageUrl;
+    if (person.coverImageUrl !== undefined) updates.coverImageUrl = person.coverImageUrl;
+    if (person.currentPosition !== undefined) updates.currentPosition = person.currentPosition;
+    if (person.currentCompany !== undefined) updates.currentCompany = person.currentCompany;
+    if (person.location !== undefined) updates.location = person.location;
+    if (person.tier !== undefined) updates.tier = person.tier;
+    if (person.isVerified !== undefined) updates.isVerified = person.isVerified;
+    if (person.isClaimed !== undefined) updates.isClaimed = person.isClaimed;
+    if (person.claimedBy !== undefined) updates.claimedBy = person.claimedBy;
+    if (person.keywords !== undefined) updates.keywords = person.keywords ? JSON.stringify(person.keywords) : null;
+    if (person.linkedinUrl !== undefined) updates.linkedinUrl = person.linkedinUrl;
+    if (person.twitterUrl !== undefined) updates.twitterUrl = person.twitterUrl;
+    if (person.instagramUrl !== undefined) updates.instagramUrl = person.instagramUrl;
+    if (person.websiteUrl !== undefined) updates.websiteUrl = person.websiteUrl;
+
     const [updated] = await db
       .update(persons)
-      .set({
-        ...person,
-        updatedAt: new Date(),
-        keywords: person.keywords ? JSON.stringify(person.keywords) : undefined,
-      })
+      .set(updates)
       .where(eq(persons.id, id))
       .returning();
 
-    return updated ? (updated as Person) : null;
+    return updated ? this.parsePerson(updated) : null;
   }
 
   async delete(id: string): Promise<boolean> {
@@ -121,7 +164,7 @@ export class DrizzlePersonRepository implements PersonRepository {
       .where(eq(persons.id, id))
       .returning();
 
-    return updated ? (updated as Person) : null;
+    return updated ? this.parsePerson(updated) : null;
   }
 
   async countByTier(tier: string): Promise<number> {
@@ -144,11 +187,6 @@ export class DrizzlePersonRepository implements PersonRepository {
         )
       );
 
-    return results as Person[];
+    return results.map(r => this.parsePerson(r));
   }
-}
-
-function or(...conditions: any[]): any {
-  // Implementation will be based on drizzle-orm's or helper
-  return conditions[0]; // Placeholder
 }

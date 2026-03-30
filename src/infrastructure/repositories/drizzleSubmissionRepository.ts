@@ -5,11 +5,19 @@ import { Submission } from '../../domain/entities/submission';
 import { SubmissionRepository } from '../../domain/repositories/submissionRepository';
 
 export class DrizzleSubmissionRepository implements SubmissionRepository {
+  private parseSubmission(data: any): Submission {
+    return {
+      ...data,
+      dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+      keywords: data.keywords ? JSON.parse(data.keywords) : null,
+    };
+  }
+
   async findById(id: string): Promise<Submission | null> {
     const result = await db.query.submissions.findFirst({
       where: eq(submissions.id, id),
     });
-    return result || null;
+    return result ? this.parseSubmission(result) : null;
   }
 
   async findAll(options?: {
@@ -20,77 +28,109 @@ export class DrizzleSubmissionRepository implements SubmissionRepository {
     const limit = options?.limit || 20;
     const offset = options?.offset || 0;
 
-    let query = db.select().from(submissions);
+    const conditions = [];
 
     if (options?.status) {
-      query = query.where(eq(submissions.status, options.status));
+      conditions.push(eq(submissions.status, options.status));
     }
 
-    const data = await query
+    const whereClause = conditions.length > 0 ? conditions[0] : undefined;
+
+    const data = await db
+      .select()
+      .from(submissions)
+      .where(whereClause)
       .orderBy(desc(submissions.submittedAt))
       .limit(limit)
       .offset(offset);
 
     const countResult = await db
       .select({ count: sql<number>`count(*)` })
-      .from(submissions);
+      .from(submissions)
+      .where(whereClause);
 
     const total = countResult[0]?.count || 0;
 
-    return { data: data as Submission[], total };
+    return { data: data.map(d => this.parseSubmission(d)), total };
   }
 
   async create(submission: Submission): Promise<Submission> {
+    const values: any = {
+      id: submission.id,
+      firstName: submission.firstName,
+      lastName: submission.lastName,
+      email: submission.email,
+      phoneNumber: submission.phoneNumber,
+      gender: submission.gender,
+      bio: submission.bio,
+      profileImageUrl: submission.profileImageUrl,
+      currentPosition: submission.currentPosition,
+      currentCompany: submission.currentCompany,
+      location: submission.location,
+      keywords: submission.keywords ? JSON.stringify(submission.keywords) : null,
+      linkedinUrl: submission.linkedinUrl,
+      twitterUrl: submission.twitterUrl,
+      instagramUrl: submission.instagramUrl,
+      websiteUrl: submission.websiteUrl,
+      status: submission.status,
+      submittedBy: submission.submittedBy,
+      reviewedBy: submission.reviewedBy,
+      reviewNotes: submission.reviewNotes,
+      submittedAt: submission.submittedAt,
+      reviewedAt: submission.reviewedAt,
+      updatedAt: submission.updatedAt,
+    };
+
+    if (submission.dateOfBirth) {
+      values.dateOfBirth = submission.dateOfBirth;
+    }
+
     const [created] = await db
       .insert(submissions)
-      .values({
-        id: submission.id,
-        firstName: submission.firstName,
-        lastName: submission.lastName,
-        email: submission.email,
-        phoneNumber: submission.phoneNumber,
-        dateOfBirth: submission.dateOfBirth,
-        gender: submission.gender,
-        bio: submission.bio,
-        profileImageUrl: submission.profileImageUrl,
-        currentPosition: submission.currentPosition,
-        currentCompany: submission.currentCompany,
-        location: submission.location,
-        keywords: submission.keywords ? JSON.stringify(submission.keywords) : null,
-        linkedinUrl: submission.linkedinUrl,
-        twitterUrl: submission.twitterUrl,
-        instagramUrl: submission.instagramUrl,
-        websiteUrl: submission.websiteUrl,
-        status: submission.status,
-        submittedBy: submission.submittedBy,
-        reviewedBy: submission.reviewedBy,
-        reviewNotes: submission.reviewNotes,
-        submittedAt: submission.submittedAt,
-        reviewedAt: submission.reviewedAt,
-        updatedAt: submission.updatedAt,
-      })
+      .values(values)
       .returning();
 
-    return created as Submission;
+    return this.parseSubmission(created);
   }
 
   async update(
     id: string,
     submission: Partial<Submission>
   ): Promise<Submission | null> {
+    const updates: any = {
+      updatedAt: new Date(),
+    };
+
+    if (submission.firstName !== undefined) updates.firstName = submission.firstName;
+    if (submission.lastName !== undefined) updates.lastName = submission.lastName;
+    if (submission.email !== undefined) updates.email = submission.email;
+    if (submission.phoneNumber !== undefined) updates.phoneNumber = submission.phoneNumber;
+    if (submission.dateOfBirth !== undefined) updates.dateOfBirth = submission.dateOfBirth;
+    if (submission.gender !== undefined) updates.gender = submission.gender;
+    if (submission.bio !== undefined) updates.bio = submission.bio;
+    if (submission.profileImageUrl !== undefined) updates.profileImageUrl = submission.profileImageUrl;
+    if (submission.currentPosition !== undefined) updates.currentPosition = submission.currentPosition;
+    if (submission.currentCompany !== undefined) updates.currentCompany = submission.currentCompany;
+    if (submission.location !== undefined) updates.location = submission.location;
+    if (submission.keywords !== undefined) updates.keywords = submission.keywords ? JSON.stringify(submission.keywords) : null;
+    if (submission.linkedinUrl !== undefined) updates.linkedinUrl = submission.linkedinUrl;
+    if (submission.twitterUrl !== undefined) updates.twitterUrl = submission.twitterUrl;
+    if (submission.instagramUrl !== undefined) updates.instagramUrl = submission.instagramUrl;
+    if (submission.websiteUrl !== undefined) updates.websiteUrl = submission.websiteUrl;
+    if (submission.status !== undefined) updates.status = submission.status;
+    if (submission.submittedBy !== undefined) updates.submittedBy = submission.submittedBy;
+    if (submission.reviewedBy !== undefined) updates.reviewedBy = submission.reviewedBy;
+    if (submission.reviewNotes !== undefined) updates.reviewNotes = submission.reviewNotes;
+    if (submission.submittedAt !== undefined) updates.submittedAt = submission.submittedAt;
+    if (submission.reviewedAt !== undefined) updates.reviewedAt = submission.reviewedAt;
+
     const [updated] = await db
       .update(submissions)
-      .set({
-        ...submission,
-        updatedAt: new Date(),
-        keywords: submission.keywords
-          ? JSON.stringify(submission.keywords)
-          : undefined,
-      })
+      .set(updates)
       .where(eq(submissions.id, id))
       .returning();
 
-    return updated ? (updated as Submission) : null;
+    return updated ? this.parseSubmission(updated) : null;
   }
 
   async delete(id: string): Promise<boolean> {
@@ -112,7 +152,7 @@ export class DrizzleSubmissionRepository implements SubmissionRepository {
       .where(eq(submissions.id, id))
       .returning();
 
-    return updated ? (updated as Submission) : null;
+    return updated ? this.parseSubmission(updated) : null;
   }
 
   async reject(
@@ -132,7 +172,7 @@ export class DrizzleSubmissionRepository implements SubmissionRepository {
       .where(eq(submissions.id, id))
       .returning();
 
-    return updated ? (updated as Submission) : null;
+    return updated ? this.parseSubmission(updated) : null;
   }
 
   async countByStatus(status: string): Promise<number> {
@@ -151,6 +191,6 @@ export class DrizzleSubmissionRepository implements SubmissionRepository {
       .where(eq(submissions.status, 'pending'))
       .orderBy(desc(submissions.submittedAt));
 
-    return results as Submission[];
+    return results.map(r => this.parseSubmission(r));
   }
 }

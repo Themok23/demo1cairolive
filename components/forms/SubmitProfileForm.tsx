@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { isValidEmail } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface SubmitProfileFormData {
   firstName: string;
@@ -22,6 +23,7 @@ interface SubmitProfileFormData {
 export default function SubmitProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const t = useTranslations('submit');
   const {
     register,
     handleSubmit,
@@ -35,7 +37,7 @@ export default function SubmitProfileForm() {
 
     try {
       if (!isValidEmail(data.email)) {
-        setMessage({ type: 'error', text: 'Please enter a valid email address' });
+        setMessage({ type: 'error', text: t('error') });
         return;
       }
 
@@ -50,14 +52,14 @@ export default function SubmitProfileForm() {
       if (result.success) {
         setMessage({
           type: 'success',
-          text: 'Profile submitted successfully! Our team will review it shortly.',
+          text: t('success'),
         });
         reset();
       } else {
-        setMessage({ type: 'error', text: result.error || 'Submission failed' });
+        setMessage({ type: 'error', text: result.error || t('error') });
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred. Please try again.' });
+      setMessage({ type: 'error', text: t('error') });
     } finally {
       setIsLoading(false);
     }
@@ -67,63 +69,63 @@ export default function SubmitProfileForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input
-          {...register('firstName', { required: 'First name is required' })}
-          label="First Name"
-          placeholder="Your first name"
-          error={errors.firstName?.message}
+          {...register('firstName', { required: true })}
+          label={t('firstName')}
+          placeholder={t('firstName')}
+          error={errors.firstName ? t('firstName') : undefined}
         />
         <Input
-          {...register('lastName', { required: 'Last name is required' })}
-          label="Last Name"
-          placeholder="Your last name"
-          error={errors.lastName?.message}
+          {...register('lastName', { required: true })}
+          label={t('lastName')}
+          placeholder={t('lastName')}
+          error={errors.lastName ? t('lastName') : undefined}
         />
       </div>
 
       <Input
-        {...register('email', { required: 'Email is required' })}
+        {...register('email', { required: true })}
         type="email"
-        label="Email Address"
+        label={t('email')}
         placeholder="you@example.com"
-        error={errors.email?.message}
+        error={errors.email ? t('email') : undefined}
       />
 
       <Input
         {...register('phoneNumber')}
         type="tel"
-        label="Phone Number (Optional)"
+        label={t('phone')}
         placeholder="+20 1XX XXX XXXX"
       />
 
       <Input
         {...register('currentPosition')}
-        label="Current Position (Optional)"
-        placeholder="e.g., Senior Software Engineer"
+        label={t('position')}
+        placeholder={t('position')}
       />
 
       <Input
         {...register('currentCompany')}
-        label="Current Company (Optional)"
-        placeholder="e.g., Tech Company Inc."
+        label={t('company')}
+        placeholder={t('company')}
       />
 
       <Input
         {...register('location')}
-        label="Location (Optional)"
-        placeholder="City, Country"
+        label={t('location')}
+        placeholder={t('location')}
       />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input
           {...register('linkedinUrl')}
           type="url"
-          label="LinkedIn URL (Optional)"
+          label={t('linkedin')}
           placeholder="https://linkedin.com/in/yourprofile"
         />
         <Input
           {...register('twitterUrl')}
           type="url"
-          label="Twitter URL (Optional)"
+          label={t('twitter')}
           placeholder="https://twitter.com/yourhandle"
         />
       </div>
@@ -141,7 +143,7 @@ export default function SubmitProfileForm() {
       )}
 
       <Button type="submit" variant="primary" isLoading={isLoading} className="w-full">
-        Submit Profile
+        {isLoading ? t('submitting') : t('submitButton')}
       </Button>
     </form>
   );

@@ -8,10 +8,6 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      lines: 80,
-      functions: 80,
-      branches: 80,
-      statements: 80,
       exclude: [
         'node_modules/',
         'dist/',
@@ -19,11 +15,17 @@ export default defineConfig({
         '**/*.d.ts',
         '**/index.ts',
       ],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 80,
+        statements: 80,
+      },
     },
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, '.'),
     },
   },
 });

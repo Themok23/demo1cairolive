@@ -1,31 +1,31 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Demo1 Cairo Live - Egyptian Profiles & Articles',
+  title: 'Cairo Live - Every Egyptian Has a Story',
   description:
-    'Celebrating extraordinary Egyptians and inspiring stories from around the globe. Browse profiles, read articles, and connect with remarkable people.',
+    'Discover remarkable Egyptians through their stories and digital profiles. Celebrate extraordinary achievements, innovations, and personal journeys from Cairo and beyond.',
   keywords:
-    'Egyptian profiles, Cairo, people, articles, inspiration, storytelling, Egypt',
-  authors: [{ name: 'Demo1 Cairo Live' }],
+    'Egyptian profiles, Cairo, people, articles, inspiration, storytelling, Egypt, remarkable people',
+  authors: [{ name: 'Cairo Live' }],
+  creator: 'The Mok Company',
   openGraph: {
-    title: 'Demo1 Cairo Live',
+    title: 'Cairo Live - Every Egyptian Has a Story',
     description:
-      'Celebrating extraordinary Egyptians and inspiring stories from around the globe.',
+      'Discover remarkable Egyptians through their stories and digital profiles.',
     type: 'website',
-    url: 'https://demo1cairolive.com',
-    siteName: 'Demo1 Cairo Live',
+    url: 'https://cairolive.com',
+    siteName: 'Cairo Live',
+    locale: 'en_EG',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Demo1 Cairo Live',
+    title: 'Cairo Live',
     description:
-      'Celebrating extraordinary Egyptians and inspiring stories from around the globe.',
+      'Discover remarkable Egyptians through their stories and digital profiles.',
+  },
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
   },
 };
 
@@ -34,15 +34,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en" className="dark">
-      <body className={inter.className}>
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-      </body>
-    </html>
-  );
+  return children;
 }

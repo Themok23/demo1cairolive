@@ -1,22 +1,30 @@
-import { eq, like, and, desc, sql } from 'drizzle-orm';
+import { eq, like, and, or, desc, sql } from 'drizzle-orm';
 import { db } from '../db/client';
 import { articles } from '../db/schema';
 import { Article } from '../../domain/entities/article';
 import { ArticleRepository } from '../../domain/repositories/articleRepository';
 
 export class DrizzleArticleRepository implements ArticleRepository {
+  private parseArticle(data: any): Article {
+    return {
+      ...data,
+      status: data.status as any,
+      tags: data.tags ? JSON.parse(data.tags) : undefined,
+    };
+  }
+
   async findById(id: string): Promise<Article | null> {
     const result = await db.query.articles.findFirst({
       where: eq(articles.id, id),
     });
-    return result || null;
+    return result ? this.parseArticle(result) : null;
   }
 
   async findBySlug(slug: string): Promise<Article | null> {
     const result = await db.query.articles.findFirst({
       where: eq(articles.slug, slug),
     });
-    return result || null;
+    return result ? this.parseArticle(result) : null;
   }
 
   async findAll(options?: {
@@ -55,7 +63,7 @@ export class DrizzleArticleRepository implements ArticleRepository {
 
     const total = countResult[0]?.count || 0;
 
-    return { data: data as Article[], total };
+    return { data: data.map(d => this.parseArticle(d)), total };
   }
 
   async findByAuthor(
@@ -83,7 +91,7 @@ export class DrizzleArticleRepository implements ArticleRepository {
 
     const total = countResult[0]?.count || 0;
 
-    return { data: data as Article[], total };
+    return { data: data.map(d => this.parseArticle(d)), total };
   }
 
   async create(article: Article): Promise<Article> {
@@ -109,7 +117,7 @@ export class DrizzleArticleRepository implements ArticleRepository {
       })
       .returning();
 
-    return created as Article;
+    return created ? this.parseArticle(created) : (null as any);
   }
 
   async update(id: string, article: Partial<Article>): Promise<Article | null> {
@@ -123,7 +131,7 @@ export class DrizzleArticleRepository implements ArticleRepository {
       .where(eq(articles.id, id))
       .returning();
 
-    return updated ? (updated as Article) : null;
+    return updated ? this.parseArticle(updated) : null;
   }
 
   async delete(id: string): Promise<boolean> {
@@ -187,11 +195,6 @@ export class DrizzleArticleRepository implements ArticleRepository {
 
     const total = countResult[0]?.count || 0;
 
-    return { data: data as Article[], total };
+    return { data: data.map(d => this.parseArticle(d)), total };
   }
-}
-
-function or(...conditions: any[]): any {
-  // Placeholder implementation
-  return conditions[0];
 }

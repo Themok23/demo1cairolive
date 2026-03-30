@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { successResponse, errorResponse } from '@/lib/apiResponse';
+import { DrizzleArticleRepository } from '@/src/infrastructure/repositories/drizzleArticleRepository';
+import { GetArticleUseCase } from '@/src/application/use-cases/articles/getArticle';
+import { UpdateArticleUseCase } from '@/src/application/use-cases/articles/updateArticle';
 
 interface RouteParams {
   params: {
@@ -10,12 +13,18 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = params;
+    const repository = new DrizzleArticleRepository();
+    const useCase = new GetArticleUseCase(repository);
 
-    // TODO: Implement article retrieval from database
-    return NextResponse.json(
-      errorResponse('Article not found'),
-      { status: 404 }
-    );
+    const result = await useCase.execute({ id });
+
+    if (!result.success) {
+      return NextResponse.json(errorResponse(result.error || 'Article not found'), {
+        status: 404,
+      });
+    }
+
+    return NextResponse.json(successResponse(result.data));
   } catch (error) {
     return NextResponse.json(
       errorResponse(error instanceof Error ? error.message : 'Failed to fetch article'),
@@ -24,36 +33,25 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = params;
     const body = await request.json();
+    const repository = new DrizzleArticleRepository();
+    const useCase = new UpdateArticleUseCase(repository);
 
-    // TODO: Implement article update
-    return NextResponse.json(
-      errorResponse('Article update not yet implemented'),
-      { status: 501 }
-    );
+    const result = await useCase.execute({ id, ...body });
+
+    if (!result.success) {
+      return NextResponse.json(errorResponse(result.error || 'Failed to update article'), {
+        status: 400,
+      });
+    }
+
+    return NextResponse.json(successResponse(result.data));
   } catch (error) {
     return NextResponse.json(
       errorResponse(error instanceof Error ? error.message : 'Failed to update article'),
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
-  try {
-    const { id } = params;
-
-    // TODO: Implement article deletion
-    return NextResponse.json(
-      errorResponse('Article deletion not yet implemented'),
-      { status: 501 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      errorResponse(error instanceof Error ? error.message : 'Failed to delete article'),
       { status: 500 }
     );
   }

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
 
 interface StaggerChildrenProps extends React.HTMLAttributes<HTMLDivElement> {
   staggerDuration?: number;
@@ -20,24 +19,29 @@ const StaggerChildren = React.forwardRef<
     const divRef = ref || internalRef;
 
     useEffect(() => {
+      if (typeof window === 'undefined') return;
       if (!divRef || typeof divRef === 'function') return;
 
       const element = divRef.current;
       if (!element) return;
 
-      const childElements = element.querySelectorAll('[data-stagger]');
+      import('gsap').then((gsapModule) => {
+        const gsap = gsapModule.default;
 
-      // Set initial state for all children
-      gsap.set(childElements, { opacity: 0, y: 20 });
+        const childElements = element.querySelectorAll('[data-stagger]');
 
-      // Stagger animation
-      gsap.to(childElements, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: staggerDuration,
-        delay,
-        ease: 'power3.out',
+        // Set initial state for all children
+        gsap.set(childElements, { opacity: 0, y: 20 });
+
+        // Stagger animation
+        gsap.to(childElements, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: staggerDuration,
+          delay,
+          ease: 'power3.out',
+        });
       });
     }, [divRef, staggerDuration, delay]);
 
