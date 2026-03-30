@@ -6,7 +6,10 @@ import { db } from '@/src/infrastructure/db/client';
 import { persons } from '@/src/infrastructure/db/schema';
 import { desc } from 'drizzle-orm';
 import { ArrowRight } from 'lucide-react';
+<<<<<<< HEAD
 import TierBadge from '@/components/ui/TierBadge';
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
 interface PeoplePageProps {
   params: {
@@ -15,14 +18,20 @@ interface PeoplePageProps {
 }
 
 export default async function PeoplePage({ params }: PeoplePageProps) {
+<<<<<<< HEAD
   const { locale } = await params;
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   const allPeople = await db
     .select()
     .from(persons)
     .orderBy(desc(persons.createdAt));
 
+<<<<<<< HEAD
   const isAr = locale === 'ar';
 
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -32,6 +41,7 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
         <div className="relative mx-auto max-w-7xl">
           <FadeIn>
             <div className="mb-6 inline-block rounded-full border border-gold/30 bg-gold/5 px-4 py-2">
+<<<<<<< HEAD
               <p className="text-sm font-semibold text-gold">
                 {isAr ? 'دليل' : 'Directory'}
               </p>
@@ -43,6 +53,15 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
               {isAr
                 ? 'اكتشف أفراداً استثنائيين من القاهرة وما حولها. استكشف إنجازاتهم وخبرتهم وقصصهم.'
                 : 'Discover remarkable individuals from Cairo and beyond. Explore their achievements, expertise, and stories.'}
+=======
+              <p className="text-sm font-semibold text-gold">Directory</p>
+            </div>
+            <h1 className="mb-4 text-5xl font-bold text-text-primary lg:text-6xl">
+              Browse <span className="gradient-text">Profiles</span>
+            </h1>
+            <p className="max-w-2xl text-xl text-text-secondary leading-relaxed">
+              Discover remarkable individuals from Cairo and beyond. Explore their achievements, expertise, and stories.
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </p>
           </FadeIn>
         </div>
@@ -54,7 +73,11 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
           <StaggerChildren className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {allPeople.map((person) => (
               <div key={person.id} data-stagger>
+<<<<<<< HEAD
                 <Link href={`/${locale}/krtk/${person.id}`}>
+=======
+                <Link href={`/${params.locale}/krtk/${person.id}`}>
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                   <div className="group relative h-72 overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface p-6 transition-all duration-300 hover:border-gold/60 hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] hover:-translate-y-2 cursor-pointer">
                     <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -69,9 +92,15 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
                             />
                           </div>
                         )}
+<<<<<<< HEAD
                         {person.tier && (
                           <div className="ml-auto">
                             <TierBadge tier={person.tier} size="sm" />
+=======
+                        {(person.tier === 'gold' || person.tier === 'platinum' || person.tier === 'silver') && (
+                          <div className="ml-auto rounded-lg bg-gold/10 px-2.5 py-1 text-xs font-bold text-gold border border-gold/30">
+                            {person.tier.toUpperCase()}
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                           </div>
                         )}
                       </div>
@@ -104,13 +133,21 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
                                   {keywords.slice(0, 2).map((keyword: string, index: number) => (
                                     <span
                                       key={index}
+<<<<<<< HEAD
                                       className="inline-block rounded-full bg-gold/10 px-2 py-0.5 text-xs font-semibold text-gold border border-gold/30"
+=======
+                                      className="inline-block rounded-full bg-gold/10 px-2 py-1 text-xs font-semibold text-gold border border-gold/30"
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                                     >
                                       {keyword}
                                     </span>
                                   ))}
                                   {keywords.length > 2 && (
+<<<<<<< HEAD
                                     <span className="inline-block rounded-full bg-gold/10 px-2 py-0.5 text-xs font-semibold text-gold border border-gold/30">
+=======
+                                    <span className="inline-block rounded-full bg-gold/10 px-2 py-1 text-xs font-semibold text-gold border border-gold/30">
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                                       +{keywords.length - 2}
                                     </span>
                                   )}
@@ -129,6 +166,7 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
               </div>
             ))}
           </StaggerChildren>
+<<<<<<< HEAD
         </div>
 
         {allPeople.length === 0 && (
@@ -148,3 +186,22 @@ export default async function PeoplePage({ params }: PeoplePageProps) {
     </div>
   );
 }
+=======
+
+          {allPeople.length === 0 && (
+            <FadeIn className="text-center py-12">
+              <p className="text-lg text-text-secondary mb-6">No profiles yet. Be the first to submit yours!</p>
+              <Button variant="primary" size="lg">
+                <Link href="/submit" className="flex items-center gap-2">
+                  Submit Your Profile
+                  <ArrowRight size={18} />
+                </Link>
+              </Button>
+            </FadeIn>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126

@@ -43,9 +43,27 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.remove('light', 'dark');
     root.classList.add(resolved);
 
+<<<<<<< HEAD
     if (typeof window !== 'undefined') {
       window.localStorage?.setItem('theme', theme);
     }
+=======
+    try {
+      window.localStorage?.setItem('theme', theme);
+    } catch {}
+  }, [theme]);
+
+  useEffect(() => {
+    if (theme !== 'system') return;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => {
+      setResolvedTheme(e.matches ? 'dark' : 'light');
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(e.matches ? 'dark' : 'light');
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   }, [theme]);
 
   return (

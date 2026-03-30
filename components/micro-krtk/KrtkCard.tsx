@@ -2,8 +2,13 @@
 
 import React, { useRef } from 'react';
 import Link from 'next/link';
+<<<<<<< HEAD
 import { CheckCircle } from 'lucide-react';
 import TierBadge from '@/components/ui/TierBadge';
+=======
+import Badge from '@/components/ui/Badge';
+import { CheckCircle } from 'lucide-react';
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 import { usePathname } from 'next/navigation';
 
 interface KrtkCardProps {
@@ -14,7 +19,11 @@ interface KrtkCardProps {
     profileImageUrl?: string;
     currentPosition?: string;
     currentCompany?: string;
+<<<<<<< HEAD
     tier?: string;
+=======
+    tier?: 'Free' | 'Premium';
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
     isVerified?: boolean;
   };
 }
@@ -44,6 +53,7 @@ export default function KrtkCard({ person }: KrtkCardProps) {
                   alt={`${person.firstName} ${person.lastName}`}
                   className="h-full w-full rounded-full border-2 border-gold object-cover group-hover:scale-110 transition-transform duration-300"
                 />
+<<<<<<< HEAD
               </div>
             )}
             {person.isVerified && (
@@ -51,6 +61,24 @@ export default function KrtkCard({ person }: KrtkCardProps) {
                 <CheckCircle size={12} />
                 Verified
               </div>
+=======
+                {person.isVerified && (
+                  <CheckCircle
+                    size={20}
+                    className="absolute -bottom-1 -right-1 fill-gold text-background"
+                  />
+                )}
+              </div>
+            )}
+            {person.tier === 'Premium' && (
+              <Badge
+                variant="gold"
+                size="sm"
+                className="ml-auto text-xs font-bold"
+              >
+                PREMIUM
+              </Badge>
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             )}
           </div>
 
@@ -58,11 +86,22 @@ export default function KrtkCard({ person }: KrtkCardProps) {
           <div className="space-y-2">
             <div>
               <h3 className="text-lg font-bold text-text-primary leading-tight group-hover:text-gold transition-colors duration-200">
+<<<<<<< HEAD
                 {person.firstName} {person.lastName}
               </h3>
             </div>
             {person.currentPosition && (
               <p className="text-sm font-medium text-gold/90 leading-tight">
+=======
+                {person.firstName}
+              </h3>
+              <h4 className="text-lg font-bold text-text-primary/70 leading-tight">
+                {person.lastName}
+              </h4>
+            </div>
+            {person.currentPosition && (
+              <p className="text-xs font-semibold text-gold/90 leading-tight">
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                 {person.currentPosition}
               </p>
             )}
@@ -71,9 +110,12 @@ export default function KrtkCard({ person }: KrtkCardProps) {
                 {person.currentCompany}
               </p>
             )}
+<<<<<<< HEAD
             {person.tier && (
               <TierBadge tier={person.tier} size="sm" />
             )}
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
           </div>
         </div>
       </div>

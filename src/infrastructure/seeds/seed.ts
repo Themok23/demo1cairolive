@@ -43,8 +43,13 @@ Ahmed's influence extends beyond entrepreneurship into the policy sphere. He reg
 منصة أحمد ليست مجرد منسق للتمويل بل هي حاضنة حقيقية توفر البنية التحتية التقنية والدعم الاستراتيجي والوصول إلى شبكة عالمية من المستثمرين والخبراء. اختار أحمد بعناية شركاءه الاستثماريين ليعكسوا التزامه بالمسؤولية الاجتماعية، بحيث تركز المحفظة على تقنيات تحسن حياة الملايين من المصريين غير المخدومين مالياً. كان أول استثماراته في منصة تحويل أموال موثوقة للعاملين بالخارج، وثانيها في نظام ائتمان يستخدم البيانات البديلة لتقييم الأفراد العاملين في القطاع غير الرسمي.
 
 التزام أحمد بالتعليم عميق الجذور. يقضي ساعات أسبوعياً في تدريس فصول حول هندسة الأنظمة الموزعة في جامعات محلية، وقد بنى مكتبة مفتوحة المصدر ضخمة للمطورين المصريين. محتوى التعليم الذي ينتجه موجود بالإنجليزية والعربية، مما يضمن إمكانية الوصول. شهادات طلابه توضح أن درسه غيّر مساراتهم المهنية—سبعة من تسعة من دفعته الأولى أسسوا الآن شركاتهم الناشئة الخاصة.`,
+<<<<<<< HEAD
         profileImageUrl: '/uploads/profile-ahmed-essam.png',
         coverImageUrl: '/uploads/cover-ahmed-essam.png',
+=======
+        profileImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+        coverImageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=400&fit=crop',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         currentPosition: 'Founder & CTO',
         currentCompany: 'VentureLab Egypt',
         location: 'Cairo, Egypt',
@@ -82,8 +87,13 @@ Beyond hard news, Nourhan has pioneered a distinctive approach to cultural journ
 التزام نورهان بحرية الصحافة عميق وعملي. تحافظ على موارد كاملة مخصصة لحماية مصادرها، وتدافع بشراسة عن حق الصحفيين في الوصول إلى المعلومات. عندما واجهت ضغوطات حكومية وتهديدات على سلامتها الشخصية بسبب تقاريرها، ظلت ملتزمة بمبادئها. قالت في مقابلة: "حرية الصحافة ليست رفاهية. إنها أساس الديمقراطية والحكم الرشيد. وإذا تنازلنا عن هذا المبدأ، فإننا نتنازل عن حق الشعب في معرفة الحقيقة."
 
 اليوم، تشرف نورهان على فريق من أربعين صحفياً وعاملاً في مجالات التحرير والتصميم والإنتاج الرقمي. مؤسستها حققت استدامة مالية من خلال نموذج تمويل متعدد الأطراف يضم اشتراكات القراء والدعم من مؤسسات حقوق الإنسان والإعلانات الأخلاقية. وهي تحافظ على سياسة صارمة بعدم قبول تمويل من أي جهة حكومية أو شركة قد يعرض استقلاليتها التحريرية للخطر.`,
+<<<<<<< HEAD
         profileImageUrl: '/uploads/profile-nourhan-el-sherif.png',
         coverImageUrl: '/uploads/cover-nourhan-el-sherif.png',
+=======
+        profileImageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face',
+        coverImageUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=400&fit=crop',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         currentPosition: 'Editor-in-Chief',
         currentCompany: 'Cairo Times Digital',
         location: 'Cairo, Egypt',
@@ -121,8 +131,13 @@ Karim's architectural philosophy is explicitly political. He argues that every d
 في مشروع إحياء القاهرة الإسلامية، أظهر كريم نموذجاً جديداً تماماً للعملية التصميمية. بدلاً من ورش عمل تخطيطية تقليدية شارك فيها خبراء بارزون، قام بتجميع فريق من الجغرافيين والمؤرخين والفنانين والسكان الحاليين. اجتمع معهم في المقاهي والمنازل الخاصة، وشارك الشاي وقصصهم. سمع عن التفاصيل الدقيقة لحياتهم—حيث يجلسون، أين يتسوقون، كيف ينتقلون عبر الأحياء. تعلم تقنيات بناء تقليدية من المعماريين المحليين والحرفيين الذين ظلوا يعملون برغم غياب الاهتمام الحكومي.
 
 النتيجة كانت عملية تصميم حقيقية، تجمع الجمال مع الوظيفة مع الحساسية الثقافية. لم يتم هدم أي مبنى تاريخي—تم ترميمها وإعادة تنشيطها. تم توظيف الحرفيين المحليين للعمل على هذه الترميمات، مما أعاد الكرامة لمهاراتهم. ظهرت متاجر جديدة وثقافية ومساحات عمل بأسعار معقولة. اليوم، القاهرة الإسلامية نموذج عالمي لكيفية إحياء الأحياء التاريخية بشكل عادل ومستدام.`,
+<<<<<<< HEAD
         profileImageUrl: '/uploads/profile-karim-abdel-aziz.png',
         coverImageUrl: '/uploads/cover-karim-abdel-aziz.png',
+=======
+        profileImageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+        coverImageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=400&fit=crop',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         currentPosition: 'Principal Architect',
         currentCompany: 'Aziz Design Studios',
         location: 'Cairo, Egypt',
@@ -160,8 +175,13 @@ Mariam's approach to AI is explicitly values-driven. She has developed framework
 في أطروحتها الدكتوراه، قامت مريم بتحليل شامل لكيفية أن اللغة العربية تحتوي على تعقيدات لا توجد في اللغات الأوروبية—النحو المرن، والتشكيل القياسي، والتراكيب الاستعارية المعقدة التي تتضمن جماليات ثقافية عميقة. أظهرت أن الأنظمة التي تم تدريبها على البيانات الإنجليزية ببساطة لا يمكنها التعامل مع هذه التعقيدات، وبالتالي فإن أداء نماذج الذكاء الاصطناعي على العربية كانت سيئة جداً بشكل غير مقبول.
 
 بدأت مريم تجميع مجموعات بيانات نصية ضخمة من مصادر عربية متنوعة—الكتب والصحف والمحادثات والشعر والقانون والعلوم الطبية. قامت بتدريب نماذج جديدة على هذه البيانات، وحققت نتائج لم تُحصل عليها من قبل لأنظمة معالجة اللغة الطبيعية العربية. اليوم، أبحاثها تُستخدم من قبل الحكومات والشركات والجامعات عبر العالم العربي.`,
+<<<<<<< HEAD
         profileImageUrl: '/uploads/profile-mariam-hassan.png',
         coverImageUrl: '/uploads/cover-mariam-hassan.png',
+=======
+        profileImageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+        coverImageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=400&fit=crop',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         currentPosition: 'Head of AI Research',
         currentCompany: 'Cairo Innovation Hub',
         location: 'Giza, Egypt',
@@ -199,8 +219,13 @@ Beyond filmmaking, Omar has established the Cairo Cinema Institute, a production
 فيلمه الأول "آخر فلاح" بدأ كفكرة بسيطة—قضاء ثلاثة أشهر في قرية صغيرة خارج القاهرة، والعيش مع عائلة فلاحية، وتصوير حياتهم اليومية. لم يكن يريد أن يخبر قصة بطريقة تقليدية. بدلاً من ذلك، أراد أن ينقل الجمال واللغز والكرامة في حياة شخص عادي. النتيجة كانت فيلماً حقيقياً—ليس تسجيلياً بالكامل، لكن متعمداً مؤلفاً مع ممثل غير محترف يلعب نسخة من نفسه. الفيلم كان مثيراً للجدل في مصر (بعض الناس شعروا أنه إساءة لصورة مصر)، لكنه حقق اعترافاً عالمياً فوراً.
 
 منذ ذلك الحين، ظل عمر مخلصاً لمبادئه الفنية. يسافر سنويًا إلى أماكن مختلفة في مصر والسودان وليبيا، ويقضي أشهراً في البحث والاستماع قبل التصوير. يتعاون مع فنانين محليين ومجتمعات محلية، مما يجعل المجتمعات شركاء في الفيلم وليس مجرد موضوعات. هذا النهج يعني أن عملية الإنتاج بطيئة والميزانيات منخفضة بمقاييس السينما الدولية، لكن النتيجة هي أفلام حقيقية من حيث الجوهر.`,
+<<<<<<< HEAD
         profileImageUrl: '/uploads/profile-omar-farouk.png',
         coverImageUrl: '/uploads/cover-omar-farouk.png',
+=======
+        profileImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
+        coverImageUrl: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200&h=400&fit=crop',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         currentPosition: 'Independent Film Director',
         currentCompany: 'Cairo Cinema Productions',
         location: 'Alexandria, Egypt',
@@ -239,8 +264,13 @@ Beyond her design house, Yasmine has established the Textile Futures Initiative,
 درست التصميم المعاصر والتصنيع الآلي، لكن ظلت مفتونة بالحرف التقليدية. واجهت أثناء فترة التدريب ضغوطاً للعمل مع محصل الملابس الكبار أو إنشاء علامة تجارية فاخرة أوروبية الأسلوب. بدلاً من ذلك، قررت تأسيس منزل تصميم تكون فيه الصناعات اليدوية والفنانون المصريون محور كل شيء. في السنوات الأولى، كانت تعمل مباشرة مع مجموعات صغيرة من النساجين والحرفيات، وتعلم تقنياتهم، وتفهم تحدياتهم الاقتصادية.
 
 أدركت بسرعة أن المشكلة ليست في جودة الحرف المصري—كانت جودة استثنائية. المشكلة كانت في نماذج الأعمال التي أبقت الصناعات اليدوية غير قابلة للاستمرار اقتصادياً. العاملات في النسيج كسبوا بضعة جنيهات لكل يوم عمل، بينما كانت الشركات الكبرى تبيع المنتجات النهائية بآلاف الجنيهات. قررت ياسمين إعادة هيكلة سلسلة القيمة تماماً.`,
+<<<<<<< HEAD
         profileImageUrl: '/uploads/profile-yasmine-nabil.png',
         coverImageUrl: '/uploads/cover-yasmine-nabil.png',
+=======
+        profileImageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face',
+        coverImageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=400&fit=crop',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         currentPosition: 'Creative Director',
         currentCompany: 'Yasmine Nabil Design House',
         location: 'Cairo, Egypt',

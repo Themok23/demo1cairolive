@@ -3,7 +3,10 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+<<<<<<< HEAD
 import TierBadge from '@/components/ui/TierBadge';
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
 interface Person {
   id: string;
@@ -11,7 +14,11 @@ interface Person {
   position: string;
   company: string;
   imageUrl: string | null;
+<<<<<<< HEAD
   tier: 'platinum' | 'gold' | 'silver' | 'bronze';
+=======
+  tier: 'gold' | 'silver' | 'bronze';
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 }
 
 interface RotatingCardsProps {
@@ -20,11 +27,14 @@ interface RotatingCardsProps {
 }
 
 const tierColors = {
+<<<<<<< HEAD
   platinum: {
     border: 'border-gold',
     glow: 'shadow-[0_0_25px_rgba(212,168,83,0.4)]',
     bg: 'from-gold/15 to-background',
   },
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   gold: {
     border: 'border-gold',
     glow: 'shadow-[0_0_20px_rgba(212,168,83,0.3)]',
@@ -70,6 +80,7 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
 
         const cards = cardsWrapper.querySelectorAll('[data-rotating-card]');
 
+<<<<<<< HEAD
         // Subtle scroll-driven entrance animation
         cards.forEach((card, index) => {
           gsap.fromTo(
@@ -95,6 +106,25 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
               },
             }
           );
+=======
+        // Create scroll-driven 3D rotation animation
+        cards.forEach((card, index) => {
+          const angle = (index / cards.length) * 360;
+
+          gsap.to(card, {
+            rotationX: angle * 0.5,
+            rotationY: angle * 0.3,
+            y: Math.sin(index * (Math.PI / cards.length)) * 30,
+            opacity: 0.6 + (index % 2) * 0.4,
+            scrollTrigger: {
+              trigger: container,
+              start: 'top center',
+              end: 'bottom center',
+              scrub: 1,
+              markers: false,
+            },
+          });
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         });
 
         // Cleanup on unmount
@@ -108,7 +138,14 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
   return (
     <div
       ref={containerRef}
+<<<<<<< HEAD
       className="relative w-full bg-gradient-to-b from-background via-background/95 to-background py-20"
+=======
+      className="relative w-full min-h-screen bg-gradient-to-b from-background via-background/95 to-background py-20"
+      style={{
+        perspective: '1200px',
+      }}
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-16 text-center">
@@ -126,9 +163,18 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
         <div
           ref={cardsWrapperRef}
           className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+<<<<<<< HEAD
         >
           {people.map((person, index) => {
             const tierColor = tierColors[person.tier] || tierColors.bronze;
+=======
+          style={{
+            transformStyle: 'preserve-3d',
+          }}
+        >
+          {people.map((person, index) => {
+            const tierColor = tierColors[person.tier];
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
             return (
               <div
@@ -136,7 +182,12 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
                 data-rotating-card
                 className={`group relative rounded-xl overflow-hidden border ${tierColor.border} ${tierColor.glow} transition-all duration-300 hover:scale-105`}
                 style={{
+<<<<<<< HEAD
                   willChange: 'transform, opacity',
+=======
+                  transformStyle: 'preserve-3d',
+                  willChange: 'transform',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                 }}
               >
                 {/* Background Gradient */}
@@ -169,7 +220,22 @@ const RotatingCards = ({ people, locale = 'en' }: RotatingCardsProps) => {
 
                   {/* Tier Badge */}
                   <div className="absolute top-4 right-4 z-10">
+<<<<<<< HEAD
                     <TierBadge tier={person.tier} size="md" />
+=======
+                    <span
+                      className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
+                      ${
+                        person.tier === 'gold'
+                          ? 'bg-gold text-black'
+                          : person.tier === 'silver'
+                            ? 'bg-gray-400 text-gray-900'
+                            : 'bg-amber-600 text-white'
+                      }`}
+                    >
+                      {person.tier}
+                    </span>
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                   </div>
                 </div>
 

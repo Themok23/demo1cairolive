@@ -38,8 +38,11 @@ export class ArticleEntity implements Article {
   category?: string | null;
   readTimeMinutes: number;
   viewCount: number | null;
+<<<<<<< HEAD
   malePersonId?: string | null;
   femalePersonId?: string | null;
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
   constructor(data: Article) {
     this.id = data.id;
@@ -101,6 +104,7 @@ export class ArticleEntity implements Article {
     return new ArticleEntity({
       ...this,
       viewCount: (this.viewCount || 0) + 1,
+<<<<<<< HEAD
       updatedAt: new Date(),
     });
   }
@@ -120,6 +124,8 @@ export class ArticleEntity implements Article {
     return new ArticleEntity({
       ...this,
       tags: updatedTags.length > 0 ? updatedTags : null,
+=======
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
       updatedAt: new Date(),
     });
   }

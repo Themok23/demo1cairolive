@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   },
   other: {
     'apple-mobile-web-app-capable': 'yes',
+<<<<<<< HEAD
+=======
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   },
 };
 
@@ -34,5 +38,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+<<<<<<< HEAD
   return children;
 }
+=======
+  return (
+    <html suppressHydrationWarning>
+      <body className="bg-[#0a0a0f] text-white min-h-screen">
+        {children}
+      </body>
+    </html>
+  );
+}
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126

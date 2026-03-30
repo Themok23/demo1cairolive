@@ -4,7 +4,13 @@ import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/src/i18n';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Inter, Noto_Sans_Arabic } from 'next/font/google';
+<<<<<<< HEAD
 import ConditionalLayout from '@/components/layout/ConditionalLayout';
+=======
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import PageTransitionProvider from '@/components/client/PageTransitionProvider';
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const notoArabic = Noto_Sans_Arabic({ subsets: ['arabic'], variable: '--font-arabic', display: 'swap' });
@@ -27,6 +33,7 @@ export default async function LocaleLayout({
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
+<<<<<<< HEAD
     <html suppressHydrationWarning dir={dir} lang={locale} className={`${inter.variable} ${notoArabic.variable} dark`}>
       <body suppressHydrationWarning className="bg-background text-text-primary">
         <NextIntlClientProvider messages={messages} locale={locale}>
@@ -34,6 +41,26 @@ export default async function LocaleLayout({
             <ConditionalLayout>
               {children}
             </ConditionalLayout>
+=======
+    <html suppressHydrationWarning dir={dir} lang={locale} className={`${inter.variable} ${notoArabic.variable}`}>
+      <head>
+        <meta name="theme-color" content="#0A0A0B" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </head>
+      <body className={`${inter.className} bg-background text-foreground dark`}>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">
+                <PageTransitionProvider>
+                  {children}
+                </PageTransitionProvider>
+              </main>
+              <Footer />
+            </div>
+>>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

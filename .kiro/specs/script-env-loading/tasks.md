@@ -34,7 +34,7 @@
 
 - [ ] 3. Fix for script environment loading
 
-  - [-] 3.1 Implement conditional dotenv loading in client.ts
+  - [x] 3.1 Implement conditional dotenv loading in client.ts
     - Add conditional dotenv loading at the very top of src/infrastructure/db/client.ts (before any imports)
     - Detect script context using `!process.env.NEXT_RUNTIME && !process.env.__NEXT_PROCESSED_ENV`
     - Load .env.local using dotenv.config() only in script contexts when file exists
@@ -45,7 +45,7 @@
     - _Preservation: Next.js contexts, production environments, CI/CD pipelines, and error handling must remain unchanged (Properties 2, 3, 4 from design)_
     - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 3.4_
 
-  - [~] 3.2 Verify bug condition exploration test now passes
+  - [-] 3.2 Verify bug condition exploration test now passes
     - **Property 1: Expected Behavior** - Scripts Load Environment Variables Automatically
     - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
     - The test from task 1 encodes the expected behavior
