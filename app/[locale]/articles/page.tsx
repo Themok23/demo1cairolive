@@ -2,11 +2,7 @@ import Link from 'next/link';
 import FadeIn from '@/components/animations/FadeIn';
 import StaggerChildren from '@/components/animations/StaggerChildren';
 import { db } from '@/src/infrastructure/db/client';
-<<<<<<< HEAD
 import { articles } from '@/src/infrastructure/db/schema';
-=======
-import { articles, persons } from '@/src/infrastructure/db/schema';
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 import { eq, desc } from 'drizzle-orm';
 import Button from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
@@ -18,21 +14,15 @@ interface ArticlesPageProps {
 }
 
 export default async function ArticlesPage({ params }: ArticlesPageProps) {
-<<<<<<< HEAD
   const { locale } = await params;
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   const publishedArticles = await db
     .select()
     .from(articles)
     .where(eq(articles.status, 'published'))
     .orderBy(desc(articles.publishedAt));
 
-<<<<<<< HEAD
   const isAr = locale === 'ar';
 
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -42,7 +32,6 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
         <div className="relative mx-auto max-w-7xl">
           <FadeIn>
             <div className="mb-6 inline-block rounded-full border border-gold/30 bg-gold/5 px-4 py-2">
-<<<<<<< HEAD
               <p className="text-sm font-semibold text-gold">
                 {isAr ? 'القصص والرؤى' : 'Stories & Insights'}
               </p>
@@ -54,15 +43,6 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
               {isAr
                 ? 'اقرأ قصص ملهمة وميزات متعمقة ورؤى حول المصريين الاستثنائيين ورحلاتهم المميزة'
                 : 'Read inspiring stories, in-depth features, and insights about remarkable Egyptians and their remarkable journeys.'}
-=======
-              <p className="text-sm font-semibold text-gold">Stories & Insights</p>
-            </div>
-            <h1 className="mb-4 text-5xl font-bold text-text-primary lg:text-6xl">
-              Latest <span className="gradient-text">Articles</span>
-            </h1>
-            <p className="max-w-2xl text-xl text-text-secondary leading-relaxed">
-              Read inspiring stories, in-depth features, and insights about remarkable Egyptians and their remarkable journeys.
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </p>
           </FadeIn>
         </div>
@@ -74,11 +54,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
           <StaggerChildren className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {publishedArticles.map((article) => (
               <div key={article.id} data-stagger>
-<<<<<<< HEAD
                 <Link href={`/${locale}/articles/${article.slug}`}>
-=======
-                <Link href={`/${params.locale}/articles/${article.slug}`}>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                   <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface transition-all duration-300 hover:border-gold/60 hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] hover:-translate-y-2 cursor-pointer h-full flex flex-col">
                     <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -104,16 +80,11 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                         <h3 className="mb-3 text-2xl font-bold text-text-primary group-hover:text-gold transition-colors duration-200 leading-tight">
                           {article.title}
                         </h3>
-<<<<<<< HEAD
                         <p className="mb-4 text-text-secondary line-clamp-2">
-=======
-                        <p className="text-sm text-text-secondary mb-4 line-clamp-3">
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                           {article.excerpt}
                         </p>
                       </div>
 
-<<<<<<< HEAD
                       <div className="flex items-center justify-between pt-4 border-t border-border/30">
                         <div className="flex items-center gap-3 text-sm text-text-secondary">
                           {article.publishedAt && (
@@ -133,26 +104,6 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                           )}
                         </div>
                         <ArrowRight size={18} className="text-gold opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-=======
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-xs text-text-secondary">
-                          <span>
-                            {article.publishedAt
-                              ? new Date(article.publishedAt).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                })
-                              : 'Not published'}
-                          </span>
-                          {article.readTimeMinutes && (
-                            <>
-                              <span>•</span>
-                              <span>{article.readTimeMinutes} min read</span>
-                            </>
-                          )}
-                        </div>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                       </div>
                     </div>
                   </div>
@@ -160,7 +111,6 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
               </div>
             ))}
           </StaggerChildren>
-<<<<<<< HEAD
         </div>
 
         {publishedArticles.length === 0 && (
@@ -180,22 +130,3 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
     </div>
   );
 }
-=======
-
-          {publishedArticles.length === 0 && (
-            <FadeIn className="text-center">
-              <p className="text-lg text-text-secondary mb-6">No published articles yet.</p>
-              <Button variant="outline" size="lg">
-                <Link href={`/${params.locale}/people`} className="flex items-center gap-2">
-                  Browse Profiles
-                  <ArrowRight size={18} />
-                </Link>
-              </Button>
-            </FadeIn>
-          )}
-        </div>
-      </section>
-    </div>
-  );
-}
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126

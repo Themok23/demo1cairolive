@@ -4,10 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-<<<<<<< HEAD
 import ImageUpload from '@/components/admin/ImageUpload';
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
 interface PersonFormProps {
   initialData?: {
@@ -312,7 +309,6 @@ export default function PersonForm({ initialData }: PersonFormProps) {
           <div>
             <h3 className="text-lg font-bold text-white mb-4">Images & Bio</h3>
             <div className="space-y-4">
-<<<<<<< HEAD
               <ImageUpload
                 label="Profile Image"
                 value={formData.profileImageUrl}
@@ -323,32 +319,6 @@ export default function PersonForm({ initialData }: PersonFormProps) {
                 value={formData.coverImageUrl}
                 onChange={(url) => setFormData({ ...formData, coverImageUrl: url })}
               />
-=======
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Profile Image URL
-                </label>
-                <input
-                  type="url"
-                  value={formData.profileImageUrl}
-                  onChange={(e) => setFormData({ ...formData, profileImageUrl: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#D4A853]/20 text-white focus:outline-none focus:border-[#D4A853] transition-colors"
-                  placeholder="https://..."
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Cover Image URL
-                </label>
-                <input
-                  type="url"
-                  value={formData.coverImageUrl}
-                  onChange={(e) => setFormData({ ...formData, coverImageUrl: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#D4A853]/20 text-white focus:outline-none focus:border-[#D4A853] transition-colors"
-                  placeholder="https://..."
-                />
-              </div>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
                 <textarea

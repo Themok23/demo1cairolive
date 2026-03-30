@@ -4,10 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-<<<<<<< HEAD
 import ImageUpload from '@/components/admin/ImageUpload';
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
 interface Person {
   id: string;
@@ -203,26 +200,11 @@ export default function ArticleForm({ initialData, people }: ArticleFormProps) {
           </div>
 
           {/* Featured Image */}
-<<<<<<< HEAD
           <ImageUpload
             label="Featured Image"
             value={formData.featuredImageUrl}
             onChange={(url) => setFormData({ ...formData, featuredImageUrl: url })}
           />
-=======
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Featured Image URL
-            </label>
-            <input
-              type="url"
-              value={formData.featuredImageUrl}
-              onChange={(e) => setFormData({ ...formData, featuredImageUrl: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-[#0a0a0f] border border-[#D4A853]/20 text-white focus:outline-none focus:border-[#D4A853] transition-colors"
-              placeholder="https://..."
-            />
-          </div>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
           {/* Persons */}
           <div className="space-y-4">

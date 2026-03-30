@@ -7,20 +7,14 @@ import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
-<<<<<<< HEAD
 import { useTranslations } from 'next-intl';
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
 export default function Header() {
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'en';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-<<<<<<< HEAD
   const t = useTranslations('nav');
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,31 +53,19 @@ export default function Header() {
               href={`/${locale}/people`}
               className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
             >
-<<<<<<< HEAD
               {t('people')}
-=======
-              People
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </Link>
             <Link
               href={`/${locale}/articles`}
               className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
             >
-<<<<<<< HEAD
               {t('articles')}
-=======
-              Articles
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </Link>
             <Link
               href={`/${locale}/krtk`}
               className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
             >
-<<<<<<< HEAD
               {t('krtk')}
-=======
-              KRTK
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </Link>
           </div>
 
@@ -92,17 +74,10 @@ export default function Header() {
             <ThemeToggle />
             <LanguageSwitcher />
             <Button variant="outline" size="sm">
-<<<<<<< HEAD
               <Link href={`/${locale}/subscribe`}>{t('subscribe')}</Link>
             </Button>
             <Button variant="primary" size="sm">
               <Link href={`/${locale}/submit`}>{t('submit')}</Link>
-=======
-              <Link href={`/${locale}/subscribe`}>Subscribe</Link>
-            </Button>
-            <Button variant="primary" size="sm">
-              <Link href={`/${locale}/submit`}>Submit Profile</Link>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </Button>
           </div>
 
@@ -126,7 +101,6 @@ export default function Header() {
             <div className="flex flex-col gap-4 py-4">
               <Link
                 href={`/${locale}/people`}
-<<<<<<< HEAD
                 onClick={() => setIsMenuOpen(false)}
                 className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-gold hover:bg-surface-elevated rounded transition-colors duration-200"
               >
@@ -152,30 +126,6 @@ export default function Header() {
                 </Button>
                 <Button variant="primary" size="sm" className="flex-1">
                   <Link href={`/${locale}/submit`} onClick={() => setIsMenuOpen(false)}>{t('submit')}</Link>
-=======
-                className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-gold hover:bg-surface-elevated rounded transition-colors duration-200"
-              >
-                People
-              </Link>
-              <Link
-                href={`/${locale}/articles`}
-                className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-gold hover:bg-surface-elevated rounded transition-colors duration-200"
-              >
-                Articles
-              </Link>
-              <Link
-                href={`/${locale}/krtk`}
-                className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-gold hover:bg-surface-elevated rounded transition-colors duration-200"
-              >
-                KRTK
-              </Link>
-              <div className="border-t border-border/30 px-4 pt-4">
-                <Button variant="outline" size="sm" className="w-full mb-2">
-                  <Link href={`/${locale}/subscribe`}>Subscribe</Link>
-                </Button>
-                <Button variant="primary" size="sm" className="w-full">
-                  <Link href={`/${locale}/submit`}>Submit Profile</Link>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                 </Button>
               </div>
             </div>

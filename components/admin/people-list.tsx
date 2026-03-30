@@ -2,10 +2,7 @@
 
 import Link from 'next/link';
 import { Edit2, Plus, Trash2 } from 'lucide-react';
-<<<<<<< HEAD
 import TierBadge from '@/components/ui/TierBadge';
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 import { useState } from 'react';
 
 interface Person {
@@ -103,21 +100,7 @@ export default function AdminPeopleList({ people, locale }: PeopleListProps) {
                       <p className="text-gray-400 text-sm">{person.currentCompany || '-'}</p>
                     </td>
                     <td className="py-4 px-6">
-<<<<<<< HEAD
                       <TierBadge tier={person.tier} size="sm" />
-=======
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                          person.tier === 'gold'
-                            ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-700/30'
-                            : person.tier === 'silver'
-                              ? 'bg-gray-700/30 text-gray-300 border border-gray-600/30'
-                              : 'bg-orange-900/30 text-orange-400 border border-orange-700/30'
-                        }`}
-                      >
-                        {person.tier.charAt(0).toUpperCase() + person.tier.slice(1)}
-                      </span>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-2">

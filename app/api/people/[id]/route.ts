@@ -82,17 +82,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json(successResponse(result.data));
     }
 
-<<<<<<< HEAD
     return NextResponse.json(errorResponse('Invalid action'), { status: 400 });
   } catch (error) {
     return NextResponse.json(
       errorResponse(error instanceof Error ? error.message : 'Failed to process claim'),
-=======
-    return NextResponse.json(errorResponse('Unknown action'), { status: 400 });
-  } catch (error) {
-    return NextResponse.json(
-      errorResponse(error instanceof Error ? error.message : 'Failed to process request'),
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
       { status: 500 }
     );
   }

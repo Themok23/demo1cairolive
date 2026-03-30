@@ -94,11 +94,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     .orderBy(desc(articles.publishedAt))
     .limit(3);
 
-<<<<<<< HEAD
   const isAr = params.locale === 'ar';
 
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -107,11 +104,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <FadeIn className="mb-8">
             <Link href={`/${params.locale}/articles`}>
               <Button variant="ghost" size="sm">
-<<<<<<< HEAD
                 {isAr ? '← العودة للمقالات' : '← Back to Articles'}
-=======
-                ← Back to Articles
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
               </Button>
             </Link>
           </FadeIn>
@@ -132,11 +125,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               {currentArticle.publishedAt && (
                 <>
                   <span>
-<<<<<<< HEAD
                     {new Date(currentArticle.publishedAt).toLocaleDateString(isAr ? 'ar-EG' : 'en-US', {
-=======
-                    {new Date(currentArticle.publishedAt).toLocaleDateString('en-US', {
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric',
@@ -145,15 +134,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   <span>•</span>
                 </>
               )}
-<<<<<<< HEAD
               {currentArticle.readTimeMinutes && (
                 <span>
                   {currentArticle.readTimeMinutes} {isAr ? 'دقيقة' : 'min'} {isAr ? '' : 'read'}
                 </span>
               )}
-=======
-              {currentArticle.readTimeMinutes && <span>{currentArticle.readTimeMinutes} min read</span>}
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </div>
           </FadeIn>
         </div>
@@ -163,11 +148,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       {currentArticle.featuredImageUrl && (
         <FadeIn className="px-4 sm:px-6 lg:px-8 mb-12">
           <div className="mx-auto max-w-3xl">
-<<<<<<< HEAD
             <div className="relative h-96 w-full overflow-hidden rounded-xl border border-border/30">
-=======
-            <div className="relative h-96 w-full overflow-hidden rounded-xl">
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
               <img
                 src={currentArticle.featuredImageUrl}
                 alt={currentArticle.title}
@@ -178,7 +159,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </FadeIn>
       )}
 
-<<<<<<< HEAD
       {/* Article Content */}
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
@@ -227,47 +207,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         </h3>
                         {malePerson.currentPosition && (
                           <p className="mb-2 text-sm font-semibold text-gold/90">
-=======
-      {/* Content */}
-      <section className="px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <FadeIn className="prose prose-invert max-w-none mb-12">
-            <div className="text-lg leading-relaxed text-text-primary space-y-6 whitespace-pre-wrap">
-              {currentArticle.content}
-            </div>
-          </FadeIn>
-
-          {/* Featured Persons */}
-          {(malePerson || femalePerson) && (
-            <FadeIn className="my-12 border-t border-b border-border/30 py-12">
-              <h2 className="mb-8 text-3xl font-bold text-text-primary">Featured In This Article</h2>
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                {malePerson && (
-                  <Link href={`/${params.locale}/krtk/${malePerson.id}`}>
-                    <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface p-6 transition-all duration-300 hover:border-gold/60 hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] cursor-pointer h-full">
-                      <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                      <div className="relative z-10 flex flex-col items-center text-center">
-                        {malePerson.profileImageUrl && (
-                          <div className="relative h-24 w-24 mb-4 flex-shrink-0">
-                            <img
-                              src={malePerson.profileImageUrl}
-                              alt={`${malePerson.firstName} ${malePerson.lastName}`}
-                              className="h-full w-full rounded-full border-2 border-gold object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                          </div>
-                        )}
-                        <h3 className="text-2xl font-bold text-text-primary group-hover:text-gold transition-colors duration-200">
-                          {malePerson.firstName} {malePerson.lastName}
-                        </h3>
-                        {malePerson.currentPosition && (
-                          <p className="text-sm font-semibold text-gold/90 mt-1">
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                             {malePerson.currentPosition}
                           </p>
                         )}
                         {malePerson.currentCompany && (
-<<<<<<< HEAD
                           <p className="mb-4 text-sm text-text-secondary">
                             {malePerson.currentCompany}
                           </p>
@@ -304,42 +247,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         </h3>
                         {femalePerson.currentPosition && (
                           <p className="mb-2 text-sm font-semibold text-gold/90">
-=======
-                          <p className="text-xs text-text-secondary mt-1">
-                            {malePerson.currentCompany}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                )}
-
-                {femalePerson && (
-                  <Link href={`/${params.locale}/krtk/${femalePerson.id}`}>
-                    <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface p-6 transition-all duration-300 hover:border-gold/60 hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] cursor-pointer h-full">
-                      <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                      <div className="relative z-10 flex flex-col items-center text-center">
-                        {femalePerson.profileImageUrl && (
-                          <div className="relative h-24 w-24 mb-4 flex-shrink-0">
-                            <img
-                              src={femalePerson.profileImageUrl}
-                              alt={`${femalePerson.firstName} ${femalePerson.lastName}`}
-                              className="h-full w-full rounded-full border-2 border-gold object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                          </div>
-                        )}
-                        <h3 className="text-2xl font-bold text-text-primary group-hover:text-gold transition-colors duration-200">
-                          {femalePerson.firstName} {femalePerson.lastName}
-                        </h3>
-                        {femalePerson.currentPosition && (
-                          <p className="text-sm font-semibold text-gold/90 mt-1">
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                             {femalePerson.currentPosition}
                           </p>
                         )}
                         {femalePerson.currentCompany && (
-<<<<<<< HEAD
                           <p className="mb-4 text-sm text-text-secondary">
                             {femalePerson.currentCompany}
                           </p>
@@ -438,68 +349,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </Button>
             </Link>
           </FadeIn>
-=======
-                          <p className="text-xs text-text-secondary mt-1">
-                            {femalePerson.currentCompany}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                )}
-              </div>
-            </FadeIn>
-          )}
-
-          {/* Related Articles */}
-          {relatedArticles.length > 1 && (
-            <FadeIn className="mt-12">
-              <h2 className="mb-8 text-3xl font-bold text-text-primary">More Stories</h2>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {relatedArticles
-                  .filter((a) => a.id !== currentArticle.id)
-                  .slice(0, 3)
-                  .map((relatedArticle) => (
-                    <Link key={relatedArticle.id} href={`/${params.locale}/articles/${relatedArticle.slug}`}>
-                      <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface transition-all duration-300 hover:border-gold/60 hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] cursor-pointer h-full flex flex-col">
-                        <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                        {relatedArticle.featuredImageUrl && (
-                          <div className="relative h-32 w-full overflow-hidden">
-                            <img
-                              src={relatedArticle.featuredImageUrl}
-                              alt={relatedArticle.title}
-                              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                          </div>
-                        )}
-
-                        <div className="relative z-10 flex flex-1 flex-col justify-between p-4">
-                          <h3 className="text-lg font-bold text-text-primary group-hover:text-gold transition-colors duration-200 leading-tight">
-                            {relatedArticle.title}
-                          </h3>
-                          <div className="text-xs text-text-secondary mt-2">
-                            {relatedArticle.publishedAt
-                              ? new Date(relatedArticle.publishedAt).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                })
-                              : ''}
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-              </div>
-            </FadeIn>
-          )}
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
         </div>
       </section>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126

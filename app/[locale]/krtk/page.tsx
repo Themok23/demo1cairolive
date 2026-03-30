@@ -6,10 +6,7 @@ import { db } from '@/src/infrastructure/db/client';
 import { persons } from '@/src/infrastructure/db/schema';
 import { desc } from 'drizzle-orm';
 import { Sparkles, ArrowRight } from 'lucide-react';
-<<<<<<< HEAD
 import TierBadge from '@/components/ui/TierBadge';
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
 
 interface KrtkPageProps {
   params: {
@@ -18,20 +15,14 @@ interface KrtkPageProps {
 }
 
 export default async function KrtkPage({ params }: KrtkPageProps) {
-<<<<<<< HEAD
   const { locale } = await params;
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   const allPeople = await db
     .select()
     .from(persons)
     .orderBy(desc(persons.createdAt));
 
-<<<<<<< HEAD
   const isAr = locale === 'ar';
 
-=======
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -42,7 +33,6 @@ export default async function KrtkPage({ params }: KrtkPageProps) {
           <FadeIn>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-2">
               <Sparkles size={16} className="text-gold" />
-<<<<<<< HEAD
               <p className="text-sm font-semibold text-gold">
                 {isAr ? 'KRTK - اعرف الأطفال الموهوبين المميزين' : 'KRTK - Know Remarkable Talented Kids'}
               </p>
@@ -54,15 +44,6 @@ export default async function KrtkPage({ params }: KrtkPageProps) {
               {isAr
                 ? 'احتفل بالمواهب الصاعدة والأصوات الناشئة. KRTK هو دليل بطاقات عملنا الرقمية يعرض الجيل القادم من المصريين الاستثنائيين'
                 : 'Celebrate rising talents and emerging voices. KRTK is our digital business card directory featuring the next generation of remarkable Egyptians.'}
-=======
-              <p className="text-sm font-semibold text-gold">KRTK - Know Remarkable Talented Kids</p>
-            </div>
-            <h1 className="mb-4 text-5xl font-bold text-text-primary lg:text-6xl">
-              Micro <span className="gradient-text">Profiles</span>
-            </h1>
-            <p className="max-w-2xl text-xl text-text-secondary leading-relaxed">
-              Celebrate rising talents and emerging voices. KRTK is our digital business card directory featuring the next generation of remarkable Egyptians.
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
             </p>
           </FadeIn>
         </div>
@@ -74,11 +55,7 @@ export default async function KrtkPage({ params }: KrtkPageProps) {
           <StaggerChildren className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {allPeople.map((person) => (
               <div key={person.id} data-stagger>
-<<<<<<< HEAD
                 <Link href={`/${locale}/krtk/${person.id}`}>
-=======
-                <Link href={`/${params.locale}/krtk/${person.id}`}>
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                   <div className="group relative h-72 overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface p-6 transition-all duration-300 hover:border-gold/60 hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] hover:-translate-y-2 cursor-pointer">
                     <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -93,15 +70,9 @@ export default async function KrtkPage({ params }: KrtkPageProps) {
                             />
                           </div>
                         )}
-<<<<<<< HEAD
                         {person.tier && (
                           <div className="ml-auto">
                             <TierBadge tier={person.tier} size="sm" />
-=======
-                        {person.isVerified && (
-                          <div className="ml-auto rounded-lg bg-gold/10 px-2.5 py-1 text-xs font-bold text-gold border border-gold/30">
-                            VERIFIED
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
                           </div>
                         )}
                       </div>
@@ -132,7 +103,6 @@ export default async function KrtkPage({ params }: KrtkPageProps) {
               </div>
             ))}
           </StaggerChildren>
-<<<<<<< HEAD
         </div>
 
         {allPeople.length === 0 && (
@@ -152,41 +122,3 @@ export default async function KrtkPage({ params }: KrtkPageProps) {
     </div>
   );
 }
-=======
-
-          {allPeople.length === 0 && (
-            <FadeIn className="text-center py-12">
-              <p className="text-lg text-text-secondary mb-6">No profiles yet. Be the first to submit yours!</p>
-              <Button variant="primary" size="lg">
-                <Link href={`/${params.locale}/submit`} className="flex items-center gap-2">
-                  Submit Your Profile
-                  <ArrowRight size={18} />
-                </Link>
-              </Button>
-            </FadeIn>
-          )}
-        </div>
-      </section>
-
-      {/* What is KRTK */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
-          <FadeIn>
-            <div className="rounded-xl border border-border/30 bg-surface-elevated/30 p-8">
-              <h3 className="mb-6 text-2xl font-bold text-text-primary">What is KRTK?</h3>
-              <div className="space-y-4">
-                <p className="text-text-secondary leading-relaxed">
-                  KRTK stands for "Know Remarkable Talented Kids" - our premium digital profile system designed to showcase emerging talents and established professionals. Each profile is a sophisticated micro-card that highlights your achievements, current role, and professional presence.
-                </p>
-                <p className="text-text-secondary leading-relaxed">
-                  Think of it as your digital business card on steroids. It is the foundation of Cairo Live, designed to celebrate and connect remarkable Egyptians with opportunities, collaborations, and recognition.
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-    </div>
-  );
-}
->>>>>>> 788516360d1fd0481af5e2906da5afbab28c3126
