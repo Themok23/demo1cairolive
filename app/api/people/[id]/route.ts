@@ -6,14 +6,14 @@ import { UpdatePersonUseCase } from '@/src/application/use-cases/people/updatePe
 import { ClaimProfileUseCase } from '@/src/application/use-cases/people/claimProfile';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const repository = new DrizzlePersonRepository();
     const useCase = new GetPersonUseCase(repository);
 
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const repository = new DrizzlePersonRepository();
     const useCase = new UpdatePersonUseCase(repository);
@@ -60,7 +60,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
 
     if (body.action === 'claim') {

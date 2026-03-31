@@ -26,13 +26,13 @@ async function seed() {
     await db.insert(persons).values([
       {
         id: ahmedId,
-        firstName: 'Ahmed',
-        lastName: 'Essam',
+        firstNameEn: 'Ahmed',
+        lastNameEn: 'Essam',
         email: 'ahmed.essam@example.com',
         phoneNumber: '+201001234567',
         dateOfBirth: new Date('1994-05-15') as any,
         gender: 'male',
-        bio: `Ahmed Essam is a Cairo-born fintech architect who has become one of the MENA region's most influential voices in distributed systems and blockchain technology. Starting with side projects while completing his computer science degree at the American University in Cairo, he taught himself distributed systems architecture through hands-on experimentation—building payment protocols that could work across Egypt's fragmented internet infrastructure, designing ledger systems for remittance corridors, and engineering the backend systems that would eventually power VentureLab Egypt. His breakthrough came when he realized that Egypt's constraints—limited bandwidth, inconsistent power supply, regulatory uncertainty—weren't obstacles to innovation but rather forcing functions that drove more elegant solutions.
+        bioEn: `Ahmed Essam is a Cairo-born fintech architect who has become one of the MENA region's most influential voices in distributed systems and blockchain technology. Starting with side projects while completing his computer science degree at the American University in Cairo, he taught himself distributed systems architecture through hands-on experimentation—building payment protocols that could work across Egypt's fragmented internet infrastructure, designing ledger systems for remittance corridors, and engineering the backend systems that would eventually power VentureLab Egypt. His breakthrough came when he realized that Egypt's constraints—limited bandwidth, inconsistent power supply, regulatory uncertainty—weren't obstacles to innovation but rather forcing functions that drove more elegant solutions.
 
 Today, VentureLab Egypt has become the MENA region's premier fintech acceleration platform, launching over forty companies, eight of which achieved unicorn valuations and three acquired by global institutions. Ahmed's platform is known for backing founders solving genuinely hard problems: financial inclusion for unbanked populations, trade finance for small agricultural exporters, and credit scoring systems for the gig economy. He combines technical rigor with founder psychology, often personally code-reviewing critical systems and facilitating deep technical conversations between portfolio companies and his engineering team.
 
@@ -45,9 +45,9 @@ Ahmed's influence extends beyond entrepreneurship into the policy sphere. He reg
 التزام أحمد بالتعليم عميق الجذور. يقضي ساعات أسبوعياً في تدريس فصول حول هندسة الأنظمة الموزعة في جامعات محلية، وقد بنى مكتبة مفتوحة المصدر ضخمة للمطورين المصريين. محتوى التعليم الذي ينتجه موجود بالإنجليزية والعربية، مما يضمن إمكانية الوصول. شهادات طلابه توضح أن درسه غيّر مساراتهم المهنية—سبعة من تسعة من دفعته الأولى أسسوا الآن شركاتهم الناشئة الخاصة.`,
         profileImageUrl: '/uploads/profile-ahmed-essam.png',
         coverImageUrl: '/uploads/cover-ahmed-essam.png',
-        currentPosition: 'Founder & CTO',
-        currentCompany: 'VentureLab Egypt',
-        location: 'Cairo, Egypt',
+        currentPositionEn: 'Founder & CTO',
+        currentCompanyEn: 'VentureLab Egypt',
+        locationEn: 'Cairo, Egypt',
         tier: 'gold',
         isVerified: true,
         isClaimed: false,
@@ -65,13 +65,13 @@ Ahmed's influence extends beyond entrepreneurship into the policy sphere. He reg
       },
       {
         id: nourhranId,
-        firstName: 'Nourhan',
-        lastName: 'El-Sherif',
+        firstNameEn: 'Nourhan',
+        lastNameEn: 'El-Sherif',
         email: 'nourhan.elsherif@example.com',
         phoneNumber: '+201001234568',
         dateOfBirth: new Date('1996-08-22') as any,
         gender: 'female',
-        bio: `Nourhan El-Sherif is an award-winning investigative journalist and editor-in-chief of Cairo Times Digital, one of the Arab world's most respected independent news organizations. Her career spans the critical transformation of journalism from print-centric to digitally native, and her reporting has consistently challenged power structures and amplified marginalized voices across Egypt. After graduating from the American University in Cairo with honors in journalism, she spent three years as a correspondent covering North Africa for international outlets before recognizing that the most important stories were being told only through Western lenses. She founded her current publication to directly serve Egyptian and Arab audiences, ensuring that narratives of Egypt would be shaped by Egyptian journalists with deep contextual understanding.
+        bioEn: `Nourhan El-Sherif is an award-winning investigative journalist and editor-in-chief of Cairo Times Digital, one of the Arab world's most respected independent news organizations. Her career spans the critical transformation of journalism from print-centric to digitally native, and her reporting has consistently challenged power structures and amplified marginalized voices across Egypt. After graduating from the American University in Cairo with honors in journalism, she spent three years as a correspondent covering North Africa for international outlets before recognizing that the most important stories were being told only through Western lenses. She founded her current publication to directly serve Egyptian and Arab audiences, ensuring that narratives of Egypt would be shaped by Egyptian journalists with deep contextual understanding.
 
 Her investigative team has exposed corruption networks involving high-ranking officials, environmental crimes threatening the Nile Delta, and human trafficking networks operating with impunity. Her five-part investigation into digital surveillance practices by state and private actors won the Reporters Without Borders Press Freedom Award in 2022 and directly influenced parliamentary discussions about digital privacy legislation. What distinguishes Nourhan's journalism is her refusal of both sensationalism and deference to power. Her pieces are meticulously reported, multiply-sourced, and willing to sit with moral complexity rather than impose narrative certainty.
 
@@ -84,9 +84,9 @@ Beyond hard news, Nourhan has pioneered a distinctive approach to cultural journ
 اليوم، تشرف نورهان على فريق من أربعين صحفياً وعاملاً في مجالات التحرير والتصميم والإنتاج الرقمي. مؤسستها حققت استدامة مالية من خلال نموذج تمويل متعدد الأطراف يضم اشتراكات القراء والدعم من مؤسسات حقوق الإنسان والإعلانات الأخلاقية. وهي تحافظ على سياسة صارمة بعدم قبول تمويل من أي جهة حكومية أو شركة قد يعرض استقلاليتها التحريرية للخطر.`,
         profileImageUrl: '/uploads/profile-nourhan-el-sherif.png',
         coverImageUrl: '/uploads/cover-nourhan-el-sherif.png',
-        currentPosition: 'Editor-in-Chief',
-        currentCompany: 'Cairo Times Digital',
-        location: 'Cairo, Egypt',
+        currentPositionEn: 'Editor-in-Chief',
+        currentCompanyEn: 'Cairo Times Digital',
+        locationEn: 'Cairo, Egypt',
         tier: 'silver',
         isVerified: true,
         isClaimed: false,
@@ -104,13 +104,13 @@ Beyond hard news, Nourhan has pioneered a distinctive approach to cultural journ
       },
       {
         id: karimId,
-        firstName: 'Karim',
-        lastName: 'Abdel Aziz',
+        firstNameEn: 'Karim',
+        lastNameEn: 'Abdel Aziz',
         email: 'karim.abdelaziz@example.com',
         phoneNumber: '+201001234569',
         dateOfBirth: new Date('1992-03-10') as any,
         gender: 'male',
-        bio: `Karim Abdel Aziz is a visionary architect and urban planner who has fundamentally reshaped conversations about design's role in solving Egypt's most pressing urban challenges. After completing his architecture degree at Ain Shams University and a fellowship at the Architectural Association in London, he returned to Cairo with a conviction that Egyptian architecture contained thousands of years of solutions to contemporary problems. His breakthrough project was the revitalization of Islamic Cairo—a historically significant but economically struggling neighborhood in central Cairo. Rather than imposing top-down design, he spent eighteen months listening: conducting oral histories with longtime residents, documenting vernacular building techniques, mapping community needs and aspirations. The resulting design process involved over two hundred community members and drew explicitly on architectural knowledge embedded in the neighborhood's six-hundred-year history.
+        bioEn: `Karim Abdel Aziz is a visionary architect and urban planner who has fundamentally reshaped conversations about design's role in solving Egypt's most pressing urban challenges. After completing his architecture degree at Ain Shams University and a fellowship at the Architectural Association in London, he returned to Cairo with a conviction that Egyptian architecture contained thousands of years of solutions to contemporary problems. His breakthrough project was the revitalization of Islamic Cairo—a historically significant but economically struggling neighborhood in central Cairo. Rather than imposing top-down design, he spent eighteen months listening: conducting oral histories with longtime residents, documenting vernacular building techniques, mapping community needs and aspirations. The resulting design process involved over two hundred community members and drew explicitly on architectural knowledge embedded in the neighborhood's six-hundred-year history.
 
 The transformation of Islamic Cairo has become a global case study in equitable urban design. Historic structures were preserved and revitalized rather than demolished for luxury development. Traditional crafts—stone masonry, inlaid woodwork, textile production—were integrated into the economic strategy, creating employment for artisans whose skills had become obsolete. A functioning marketplace emerged, anchored by cafes, galleries, and craft studios, generating foot traffic while remaining financially accessible to locals. The project won the UN-Habitat scroll of honor and has been featured in the world's leading architecture publications, but its real success is in the lived experience of residents who finally see economic opportunity and cultural dignity in their own neighborhood.
 
@@ -123,9 +123,9 @@ Karim's architectural philosophy is explicitly political. He argues that every d
 النتيجة كانت عملية تصميم حقيقية، تجمع الجمال مع الوظيفة مع الحساسية الثقافية. لم يتم هدم أي مبنى تاريخي—تم ترميمها وإعادة تنشيطها. تم توظيف الحرفيين المحليين للعمل على هذه الترميمات، مما أعاد الكرامة لمهاراتهم. ظهرت متاجر جديدة وثقافية ومساحات عمل بأسعار معقولة. اليوم، القاهرة الإسلامية نموذج عالمي لكيفية إحياء الأحياء التاريخية بشكل عادل ومستدام.`,
         profileImageUrl: '/uploads/profile-karim-abdel-aziz.png',
         coverImageUrl: '/uploads/cover-karim-abdel-aziz.png',
-        currentPosition: 'Principal Architect',
-        currentCompany: 'Aziz Design Studios',
-        location: 'Cairo, Egypt',
+        currentPositionEn: 'Principal Architect',
+        currentCompanyEn: 'Aziz Design Studios',
+        locationEn: 'Cairo, Egypt',
         tier: 'bronze',
         isVerified: false,
         isClaimed: false,
@@ -143,13 +143,13 @@ Karim's architectural philosophy is explicitly political. He argues that every d
       },
       {
         id: mariamId,
-        firstName: 'Mariam',
-        lastName: 'Hassan',
+        firstNameEn: 'Mariam',
+        lastNameEn: 'Hassan',
         email: 'mariam.hassan@example.com',
         phoneNumber: '+201001234570',
         dateOfBirth: new Date('1998-11-30') as any,
         gender: 'female',
-        bio: `Mariam Hassan is one of the Arab world's leading artificial intelligence researchers, with particular expertise in natural language processing for Arabic languages. Her PhD dissertation at Cairo University—"Semantic Analysis and Cultural Specificity in Arabic NLP: Building AI Systems for Arabic Speakers"—became the most-cited research paper in Arabic AI within three years of publication, with applications spanning healthcare, e-commerce, digital government services, and cultural preservation. After completing her doctorate, she joined Cairo Innovation Hub as head of AI research, where she oversees a team developing AI systems specifically trained on Arabic language data and cultural context. Her work has fundamentally challenged the assumption that AI systems built for English automatically transfer to Arabic; instead, she demonstrates how linguistic and cultural specificity requires purpose-built approaches that actually deliver superior results.
+        bioEn: `Mariam Hassan is one of the Arab world's leading artificial intelligence researchers, with particular expertise in natural language processing for Arabic languages. Her PhD dissertation at Cairo University—"Semantic Analysis and Cultural Specificity in Arabic NLP: Building AI Systems for Arabic Speakers"—became the most-cited research paper in Arabic AI within three years of publication, with applications spanning healthcare, e-commerce, digital government services, and cultural preservation. After completing her doctorate, she joined Cairo Innovation Hub as head of AI research, where she oversees a team developing AI systems specifically trained on Arabic language data and cultural context. Her work has fundamentally challenged the assumption that AI systems built for English automatically transfer to Arabic; instead, she demonstrates how linguistic and cultural specificity requires purpose-built approaches that actually deliver superior results.
 
 Her most significant contribution has been exposing algorithmic bias in commercial AI systems serving Arabic speakers. She demonstrated that major speech recognition systems had error rates twice as high for Arabic speakers as for English speakers, and that machine translation systems systematically mistranslated Arabic idioms, cultural references, and context-dependent meanings. These weren't technical oversights—they reflected straightforward decisions by companies to prioritize English-speaking markets because they were larger and more profitable. Her research led to policy recommendations adopted by Egypt's government and influenced technical standards across the MENA region. She founded the open-source Arabic NLP initiative, which provides researchers across the Arab world with datasets, tools, and pre-trained models specifically optimized for Arabic language complexity.
 
@@ -162,9 +162,9 @@ Mariam's approach to AI is explicitly values-driven. She has developed framework
 بدأت مريم تجميع مجموعات بيانات نصية ضخمة من مصادر عربية متنوعة—الكتب والصحف والمحادثات والشعر والقانون والعلوم الطبية. قامت بتدريب نماذج جديدة على هذه البيانات، وحققت نتائج لم تُحصل عليها من قبل لأنظمة معالجة اللغة الطبيعية العربية. اليوم، أبحاثها تُستخدم من قبل الحكومات والشركات والجامعات عبر العالم العربي.`,
         profileImageUrl: '/uploads/profile-mariam-hassan.png',
         coverImageUrl: '/uploads/cover-mariam-hassan.png',
-        currentPosition: 'Head of AI Research',
-        currentCompany: 'Cairo Innovation Hub',
-        location: 'Giza, Egypt',
+        currentPositionEn: 'Head of AI Research',
+        currentCompanyEn: 'Cairo Innovation Hub',
+        locationEn: 'Giza, Egypt',
         tier: 'gold',
         isVerified: true,
         isClaimed: false,
@@ -182,13 +182,13 @@ Mariam's approach to AI is explicitly values-driven. She has developed framework
       },
       {
         id: omarId,
-        firstName: 'Omar',
-        lastName: 'Farouk',
+        firstNameEn: 'Omar',
+        lastNameEn: 'Farouk',
         email: 'omar.farouk@example.com',
         phoneNumber: '+201001234571',
         dateOfBirth: new Date('1991-07-03') as any,
         gender: 'male',
-        bio: `Omar Farouk is an award-winning film director whose work has fundamentally changed how Egypt is represented in global cinema. His breakthrough feature film "The Last Fellah"—a poetic portrait of an aging farmer confronting urban expansion—premiered at the Berlin International Film Festival and won the Golden Bear for direction. The film's refusal to sentimentalize or exoticize its protagonist, instead presenting a fully realized human being navigating profound change, resonated globally precisely because it refused easy emotional shortcuts. Since then, Omar has established himself as one of the Arab world's most significant contemporary filmmakers, with subsequent films exploring the 2011 Egyptian Revolution, Sudanese music traditions, and the lived experience of marginalized communities across North Africa.
+        bioEn: `Omar Farouk is an award-winning film director whose work has fundamentally changed how Egypt is represented in global cinema. His breakthrough feature film "The Last Fellah"—a poetic portrait of an aging farmer confronting urban expansion—premiered at the Berlin International Film Festival and won the Golden Bear for direction. The film's refusal to sentimentalize or exoticize its protagonist, instead presenting a fully realized human being navigating profound change, resonated globally precisely because it refused easy emotional shortcuts. Since then, Omar has established himself as one of the Arab world's most significant contemporary filmmakers, with subsequent films exploring the 2011 Egyptian Revolution, Sudanese music traditions, and the lived experience of marginalized communities across North Africa.
 
 What distinguishes Omar's cinematic vision is his commitment to visual and narrative complexity. He works with cinematographers at the highest international level, shooting in locations often ignored by commercial cinema—rural villages, informal urban settlements, heritage neighborhoods—and treating these spaces with the visual care reserved for romantic European landscapes. His approach to storytelling refuses both Western sentimentalism and nationalist propaganda. His five-hour documentary "Voices of the Nile"—which follows five working-class women through the decade following the 2011 revolution—presents their perspectives without voiceover narration, editorial judgment, or imposed narrative arc. The film invites viewers into their worlds and trusts audiences to develop their own understanding. This approach has earned him recognition from major international festivals and scholars of documentary cinema.
 
@@ -201,9 +201,9 @@ Beyond filmmaking, Omar has established the Cairo Cinema Institute, a production
 منذ ذلك الحين، ظل عمر مخلصاً لمبادئه الفنية. يسافر سنويًا إلى أماكن مختلفة في مصر والسودان وليبيا، ويقضي أشهراً في البحث والاستماع قبل التصوير. يتعاون مع فنانين محليين ومجتمعات محلية، مما يجعل المجتمعات شركاء في الفيلم وليس مجرد موضوعات. هذا النهج يعني أن عملية الإنتاج بطيئة والميزانيات منخفضة بمقاييس السينما الدولية، لكن النتيجة هي أفلام حقيقية من حيث الجوهر.`,
         profileImageUrl: '/uploads/profile-omar-farouk.png',
         coverImageUrl: '/uploads/cover-omar-farouk.png',
-        currentPosition: 'Independent Film Director',
-        currentCompany: 'Cairo Cinema Productions',
-        location: 'Alexandria, Egypt',
+        currentPositionEn: 'Independent Film Director',
+        currentCompanyEn: 'Cairo Cinema Productions',
+        locationEn: 'Alexandria, Egypt',
         tier: 'platinum',
         isVerified: true,
         isClaimed: true,
@@ -222,13 +222,13 @@ Beyond filmmaking, Omar has established the Cairo Cinema Institute, a production
       },
       {
         id: yasmineId,
-        firstName: 'Yasmine',
-        lastName: 'Nabil',
+        firstNameEn: 'Yasmine',
+        lastNameEn: 'Nabil',
         email: 'yasmine.nabil@example.com',
         phoneNumber: '+201001234572',
         dateOfBirth: new Date('1997-12-18') as any,
         gender: 'female',
-        bio: `Yasmine Nabil is a trailblazing fashion designer whose collections have elevated Egyptian textile traditions to the global stage while fundamentally challenging exploitative supply chain models. Her design house creates pieces that integrate centuries-old weaving and embroidery techniques from across Egypt—indigo patterns from the Western Desert, ikkat ikat weaving from Aswan, fine linen embroidery from the Delta, traditional appliqué work from Upper Egypt—with contemporary silhouettes and sustainable production methods. Her breakthrough collection "Riverine," launched during Paris Fashion Week, was featured in Vogue and won the Ellen MacArthur Foundation Award for Circular Fashion Design. What distinguished the collection wasn't just aesthetic brilliance—it was her explicit commitment to ensuring that artisans received substantive credit and financial benefit. Each piece listed the specific artisan or cooperative that created it, and a percentage of revenue returned directly to the communities that produced the textiles.
+        bioEn: `Yasmine Nabil is a trailblazing fashion designer whose collections have elevated Egyptian textile traditions to the global stage while fundamentally challenging exploitative supply chain models. Her design house creates pieces that integrate centuries-old weaving and embroidery techniques from across Egypt—indigo patterns from the Western Desert, ikkat ikat weaving from Aswan, fine linen embroidery from the Delta, traditional appliqué work from Upper Egypt—with contemporary silhouettes and sustainable production methods. Her breakthrough collection "Riverine," launched during Paris Fashion Week, was featured in Vogue and won the Ellen MacArthur Foundation Award for Circular Fashion Design. What distinguished the collection wasn't just aesthetic brilliance—it was her explicit commitment to ensuring that artisans received substantive credit and financial benefit. Each piece listed the specific artisan or cooperative that created it, and a percentage of revenue returned directly to the communities that produced the textiles.
 
 Yasmine's approach to fashion business represents a fundamental challenge to luxury industry models. The conventional global supply chain extracts raw materials and craft labor from the Global South at minimal cost, adds minimal design, and sells finished products for ten to twenty times the input cost under Western brand names. Artisans remain invisible and undercompensated. Yasmine inverted this model. Egyptian textile artisans aren't her suppliers—they're her collaborators and co-creators. Their names appear on garments. They participate in revenue sharing. When a dress sells for two hundred euros, the artisan community can track exactly how much value was created by their hands and can negotiate for increases in compensation if demand rises. This approach has proven both ethically and commercially powerful: luxury consumers increasingly demand authenticity, ethical production, and traceability. Stories of artisan families and heritage techniques become part of what consumers are purchasing.
 
@@ -241,9 +241,9 @@ Beyond her design house, Yasmine has established the Textile Futures Initiative,
 أدركت بسرعة أن المشكلة ليست في جودة الحرف المصري—كانت جودة استثنائية. المشكلة كانت في نماذج الأعمال التي أبقت الصناعات اليدوية غير قابلة للاستمرار اقتصادياً. العاملات في النسيج كسبوا بضعة جنيهات لكل يوم عمل، بينما كانت الشركات الكبرى تبيع المنتجات النهائية بآلاف الجنيهات. قررت ياسمين إعادة هيكلة سلسلة القيمة تماماً.`,
         profileImageUrl: '/uploads/profile-yasmine-nabil.png',
         coverImageUrl: '/uploads/cover-yasmine-nabil.png',
-        currentPosition: 'Creative Director',
-        currentCompany: 'Yasmine Nabil Design House',
-        location: 'Cairo, Egypt',
+        currentPositionEn: 'Creative Director',
+        currentCompanyEn: 'Yasmine Nabil Design House',
+        locationEn: 'Cairo, Egypt',
         tier: 'silver',
         isVerified: false,
         isClaimed: false,
@@ -440,10 +440,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
     await db.insert(articles).values([
       {
         id: 'article-tech-titans-nile',
-        title: 'Tech Titans of the Nile',
-        slug: 'tech-titans-of-the-nile',
-        content: article1Content,
-        excerpt: 'Ahmed Essam and Nourhan El-Sherif discuss how engineering and storytelling are amplifying Egypt\'s voice in global innovation and media.',
+        titleEn: 'Tech Titans of the Nile',
+        slugEn: 'tech-titans-of-the-nile',
+        contentEn: article1Content,
+        excerptEn: 'Ahmed Essam and Nourhan El-Sherif discuss how engineering and storytelling are amplifying Egypt\'s voice in global innovation and media.',
         authorId: ahmedId,
         authorName: 'Ahmed Essam',
         featuredImageUrl: '/uploads/articles/tech-titans.jpg',
@@ -460,10 +460,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
       },
       {
         id: 'article-designing-egypt-future',
-        title: 'Designing Egypt\'s Future',
-        slug: 'designing-egypts-future',
-        content: article2Content,
-        excerpt: 'Karim Abdel Aziz and Mariam Hassan explore how architecture and AI are solving urban challenges and reshaping city design.',
+        titleEn: 'Designing Egypt\'s Future',
+        slugEn: 'designing-egypts-future',
+        contentEn: article2Content,
+        excerptEn: 'Karim Abdel Aziz and Mariam Hassan explore how architecture and AI are solving urban challenges and reshaping city design.',
         authorId: karimId,
         authorName: 'Karim Abdel Aziz',
         featuredImageUrl: '/uploads/articles/designing-future.jpg',
@@ -480,10 +480,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
       },
       {
         id: 'article-cairo-creative-revolution',
-        title: 'Cairo\'s Creative Revolution',
-        slug: 'cairo-creative-revolution',
-        content: article3Content,
-        excerpt: 'Omar Farouk and Yasmine Nabil demonstrate how Egyptian cinema and fashion are claiming space on the global stage.',
+        titleEn: 'Cairo\'s Creative Revolution',
+        slugEn: 'cairo-creative-revolution',
+        contentEn: article3Content,
+        excerptEn: 'Omar Farouk and Yasmine Nabil demonstrate how Egyptian cinema and fashion are claiming space on the global stage.',
         authorId: omarId,
         authorName: 'Omar Farouk',
         featuredImageUrl: '/uploads/articles/cairo-creative.jpg',
@@ -500,10 +500,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
       },
       {
         id: 'article-innovation-crossroads',
-        title: 'Innovation at the Crossroads',
-        slug: 'innovation-at-the-crossroads',
-        content: article4Content,
-        excerpt: 'Ahmed Essam and Mariam Hassan explore ethical innovation, AI literacy, and building sustainable tech ecosystems.',
+        titleEn: 'Innovation at the Crossroads',
+        slugEn: 'innovation-at-the-crossroads',
+        contentEn: article4Content,
+        excerptEn: 'Ahmed Essam and Mariam Hassan explore ethical innovation, AI literacy, and building sustainable tech ecosystems.',
         authorId: ahmedId,
         authorName: 'Ahmed Essam',
         featuredImageUrl: '/uploads/articles/innovation.jpg',
@@ -520,10 +520,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
       },
       {
         id: 'article-stories-shape-nation',
-        title: 'Stories That Shape a Nation',
-        slug: 'stories-that-shape-a-nation',
-        content: article5Content,
-        excerpt: 'Omar Farouk and Nourhan El-Sherif discuss the power of storytelling to shape narrative, preserve dignity, and influence understanding.',
+        titleEn: 'Stories That Shape a Nation',
+        slugEn: 'stories-that-shape-a-nation',
+        contentEn: article5Content,
+        excerptEn: 'Omar Farouk and Nourhan El-Sherif discuss the power of storytelling to shape narrative, preserve dignity, and influence understanding.',
         authorId: omarId,
         authorName: 'Omar Farouk',
         featuredImageUrl: '/uploads/articles/stories-nation.jpg',
@@ -540,10 +540,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
       },
       {
         id: 'article-nile-to-world',
-        title: 'From the Nile to the World',
-        slug: 'from-the-nile-to-the-world',
-        content: article6Content,
-        excerpt: 'Karim Abdel Aziz and Yasmine Nabil explore how Egyptian heritage, rooted in tradition, is becoming globally relevant.',
+        titleEn: 'From the Nile to the World',
+        slugEn: 'from-the-nile-to-the-world',
+        contentEn: article6Content,
+        excerptEn: 'Karim Abdel Aziz and Yasmine Nabil explore how Egyptian heritage, rooted in tradition, is becoming globally relevant.',
         authorId: karimId,
         authorName: 'Karim Abdel Aziz',
         featuredImageUrl: '/uploads/articles/nile-world.jpg',
@@ -560,10 +560,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
       },
       {
         id: 'article-healthcare-innovation',
-        title: 'Healthcare Innovation at Scale',
-        slug: 'healthcare-innovation-at-scale',
-        content: article7Content,
-        excerpt: 'Mariam Hassan and Nourhan El-Sherif collaborate on AI-powered healthcare solutions bringing digital medicine to underserved Egyptian communities.',
+        titleEn: 'Healthcare Innovation at Scale',
+        slugEn: 'healthcare-innovation-at-scale',
+        contentEn: article7Content,
+        excerptEn: 'Mariam Hassan and Nourhan El-Sherif collaborate on AI-powered healthcare solutions bringing digital medicine to underserved Egyptian communities.',
         authorId: nourhranId,
         authorName: 'Nourhan El-Sherif',
         featuredImageUrl: '/uploads/articles/healthcare.jpg',
@@ -580,10 +580,10 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
       },
       {
         id: 'article-youth-leadership',
-        title: 'Mentoring the Next Generation of Leaders',
-        slug: 'mentoring-next-generation-leaders',
-        content: article8Content,
-        excerpt: 'Mariam Hassan and Nourhan El-Sherif discuss their mentorship philosophy and why supporting young Egyptians is crucial for the nation\'s future.',
+        titleEn: 'Mentoring the Next Generation of Leaders',
+        slugEn: 'mentoring-next-generation-leaders',
+        contentEn: article8Content,
+        excerptEn: 'Mariam Hassan and Nourhan El-Sherif discuss their mentorship philosophy and why supporting young Egyptians is crucial for the nation\'s future.',
         authorId: mariamId,
         authorName: 'Mariam Hassan',
         featuredImageUrl: '/uploads/articles/mentoring.jpg',

@@ -4,12 +4,13 @@ import { desc, eq, sql } from 'drizzle-orm';
 import AdminDashboard from '@/components/admin/dashboard';
 
 interface AdminPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default async function AdminPage({ params }: AdminPageProps) {
+  const { locale } = await params;
   // Fetch all counts
   const [personCount, articleCount, submissionCount, subscriberCount, recentSubmissions] =
     await Promise.all([
@@ -31,5 +32,5 @@ export default async function AdminPage({ params }: AdminPageProps) {
     totalSubscribers: subscriberCount[0]?.count || 0,
   };
 
-  return <AdminDashboard stats={stats} recentSubmissions={recentSubmissions} locale={params.locale} />;
+  return <AdminDashboard stats={stats} recentSubmissions={recentSubmissions} locale={locale} />;
 }

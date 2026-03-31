@@ -215,10 +215,17 @@ export default function QuoteArtworkSection({ locale }: QuoteArtworkSectionProps
       </div>
 
       {/* === Radial gradient vignette overlay === */}
+      {/* Dark mode: dark vignette; Light mode: white vignette */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 hidden dark:block"
         style={{
           background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(13,13,13,0.85) 100%)',
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 dark:hidden"
+        style={{
+          background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(248,248,249,0.9) 100%)',
         }}
       />
 

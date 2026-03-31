@@ -4,9 +4,9 @@ import { ArticleRepository } from '../../../domain/repositories/articleRepositor
 
 const UpdateArticleSchema = z.object({
   id: z.string().min(1),
-  title: z.string().min(1).max(500).optional(),
-  content: z.string().min(1).optional(),
-  excerpt: z.string().min(1).optional(),
+  titleEn: z.string().min(1).max(500).optional(),
+  contentEn: z.string().min(1).optional(),
+  excerptEn: z.string().min(1).optional(),
   featuredImageUrl: z.string().url().optional(),
   tags: z.array(z.string()).optional(),
   category: z.string().max(100).optional(),
@@ -37,17 +37,17 @@ export class UpdateArticleUseCase {
       }
 
       const updateData: Partial<Article> = {
-        title: validated.title,
-        content: validated.content,
-        excerpt: validated.excerpt,
+        titleEn: validated.titleEn,
+        contentEn: validated.contentEn,
+        excerptEn: validated.excerptEn,
         featuredImageUrl: validated.featuredImageUrl,
         tags: validated.tags,
         category: validated.category,
         status: validated.status as any,
       };
 
-      if (validated.content) {
-        const readTime = this.calculateReadTime(validated.content);
+      if (validated.contentEn) {
+        const readTime = this.calculateReadTime(validated.contentEn);
         updateData.readTimeMinutes = readTime;
       }
 

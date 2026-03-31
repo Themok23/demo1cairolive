@@ -8,7 +8,6 @@ import {
   date,
   primaryKey,
   index,
-  unique,
 } from 'drizzle-orm/pg-core';
 
 // Persons table
@@ -16,37 +15,43 @@ export const persons = pgTable(
   'persons',
   {
     id: varchar('id', { length: 36 }).primaryKey(),
-    firstName: varchar('first_name', { length: 255 }).notNull(),
-    lastName: varchar('last_name', { length: 255 }).notNull(),
-    email: varchar('email', { length: 255 }).notNull().unique(),
-    phoneNumber: varchar('phone_number', { length: 20 }),
-    dateOfBirth: date('date_of_birth'),
-    gender: varchar('gender', { length: 20 }).default('prefer-not-to-say'),
-    bio: text('bio'),
+
+    // Bilingual name + content fields
+    firstNameEn: varchar('first_name_en', { length: 255 }).notNull(),
+    firstNameAr: varchar('first_name_ar', { length: 255 }),
+    lastNameEn:  varchar('last_name_en',  { length: 255 }).notNull(),
+    lastNameAr:  varchar('last_name_ar',  { length: 255 }),
+    bioEn:              text('bio_en'),
+    bioAr:              text('bio_ar'),
+    currentPositionEn:  varchar('current_position_en', { length: 255 }),
+    currentPositionAr:  varchar('current_position_ar', { length: 255 }),
+    currentCompanyEn:   varchar('current_company_en',  { length: 255 }),
+    currentCompanyAr:   varchar('current_company_ar',  { length: 255 }),
+    locationEn:         varchar('location_en',          { length: 255 }),
+    locationAr:         varchar('location_ar',          { length: 255 }),
+
+    // Language-neutral fields
+    email:           varchar('email',        { length: 255 }).notNull().unique(),
+    phoneNumber:     varchar('phone_number', { length: 20 }),
+    dateOfBirth:     date('date_of_birth'),
+    gender:          varchar('gender', { length: 20 }).default('prefer-not-to-say'),
     profileImageUrl: text('profile_image_url'),
-    coverImageUrl: text('cover_image_url'),
-    currentPosition: varchar('current_position', { length: 255 }),
-    currentCompany: varchar('current_company', { length: 255 }),
-    location: varchar('location', { length: 255 }),
-    tier: varchar('tier', { length: 20 }).default('bronze').notNull(),
-    isVerified: boolean('is_verified').default(false),
-    isClaimed: boolean('is_claimed').default(false),
-    claimedBy: varchar('claimed_by', { length: 36 }),
-    keywords: text('keywords'), // JSON stringified array
-    linkedinUrl: text('linkedin_url'),
-    twitterUrl: text('twitter_url'),
-    instagramUrl: text('instagram_url'),
-    websiteUrl: text('website_url'),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    coverImageUrl:   text('cover_image_url'),
+    tier:            varchar('tier', { length: 20 }).default('bronze').notNull(),
+    isVerified:      boolean('is_verified').default(false),
+    isClaimed:       boolean('is_claimed').default(false),
+    claimedBy:       varchar('claimed_by', { length: 36 }),
+    keywords:        text('keywords'), // JSON stringified array
+    linkedinUrl:     text('linkedin_url'),
+    twitterUrl:      text('twitter_url'),
+    instagramUrl:    text('instagram_url'),
+    websiteUrl:      text('website_url'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => ({
-    emailIdx: index('persons_email_idx').on(table.email),
-    tierIdx: index('persons_tier_idx').on(table.tier),
+    emailIdx:     index('persons_email_idx').on(table.email),
+    tierIdx:      index('persons_tier_idx').on(table.tier),
     createdAtIdx: index('persons_created_at_idx').on(table.createdAt),
   })
 );
@@ -56,35 +61,39 @@ export const articles = pgTable(
   'articles',
   {
     id: varchar('id', { length: 36 }).primaryKey(),
-    title: varchar('title', { length: 500 }).notNull(),
-    slug: varchar('slug', { length: 500 }).notNull().unique(),
-    content: text('content').notNull(),
-    excerpt: text('excerpt').notNull(),
-    authorId: varchar('author_id', { length: 36 }).notNull(),
-    authorName: varchar('author_name', { length: 255 }).notNull(),
+
+    // Bilingual content fields
+    titleEn:   varchar('title_en',   { length: 500 }).notNull(),
+    titleAr:   varchar('title_ar',   { length: 500 }),
+    slugEn:    varchar('slug_en',    { length: 500 }).notNull().unique(),
+    slugAr:    varchar('slug_ar',    { length: 500 }),
+    contentEn: text('content_en').notNull(),
+    contentAr: text('content_ar'),
+    excerptEn: text('excerpt_en').notNull(),
+    excerptAr: text('excerpt_ar'),
+
+    // Language-neutral fields
+    authorId:        varchar('author_id',   { length: 36  }).notNull(),
+    authorName:      varchar('author_name', { length: 255 }).notNull(),
     featuredImageUrl: text('featured_image_url'),
-    status: varchar('status', { length: 20 }).default('draft').notNull(),
-    publishedAt: timestamp('published_at', { withTimezone: true }),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    tags: text('tags'), // JSON stringified array
-    category: varchar('category', { length: 100 }),
+    status:          varchar('status', { length: 20 }).default('draft').notNull(),
+    publishedAt:     timestamp('published_at', { withTimezone: true }),
+    createdAt:       timestamp('created_at',   { withTimezone: true }).defaultNow().notNull(),
+    updatedAt:       timestamp('updated_at',   { withTimezone: true }).defaultNow().notNull(),
+    tags:            text('tags'), // JSON stringified array
+    category:        varchar('category', { length: 100 }),
     readTimeMinutes: integer('read_time_minutes').default(0),
-    viewCount: integer('view_count').default(0),
-    malePersonId: varchar('male_person_id', { length: 36 }),
-    femalePersonId: varchar('female_person_id', { length: 36 }),
+    viewCount:       integer('view_count').default(0),
+    malePersonId:    varchar('male_person_id',   { length: 36 }),
+    femalePersonId:  varchar('female_person_id', { length: 36 }),
   },
   (table) => ({
-    slugIdx: index('articles_slug_idx').on(table.slug),
-    authorIdx: index('articles_author_idx').on(table.authorId),
-    statusIdx: index('articles_status_idx').on(table.status),
+    slugEnIdx:      index('articles_slug_en_idx').on(table.slugEn),
+    authorIdx:      index('articles_author_idx').on(table.authorId),
+    statusIdx:      index('articles_status_idx').on(table.status),
     publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt),
-    malePersonIdx: index('articles_male_person_idx').on(table.malePersonId),
-    femalePersonIdx: index('articles_female_person_idx').on(table.femalePersonId),
+    malePersonIdx:  index('articles_male_person_idx').on(table.malePersonId),
+    femalePersonIdx:index('articles_female_person_idx').on(table.femalePersonId),
   })
 );
 
@@ -92,38 +101,34 @@ export const articles = pgTable(
 export const submissions = pgTable(
   'submissions',
   {
-    id: varchar('id', { length: 36 }).primaryKey(),
-    firstName: varchar('first_name', { length: 255 }).notNull(),
-    lastName: varchar('last_name', { length: 255 }).notNull(),
-    email: varchar('email', { length: 255 }).notNull(),
-    phoneNumber: varchar('phone_number', { length: 20 }),
-    dateOfBirth: date('date_of_birth'),
-    gender: varchar('gender', { length: 20 }).default('prefer-not-to-say'),
-    bio: text('bio'),
-    profileImageUrl: text('profile_image_url'),
-    currentPosition: varchar('current_position', { length: 255 }),
-    currentCompany: varchar('current_company', { length: 255 }),
-    location: varchar('location', { length: 255 }),
-    keywords: text('keywords'), // JSON stringified array
-    linkedinUrl: text('linkedin_url'),
-    twitterUrl: text('twitter_url'),
-    instagramUrl: text('instagram_url'),
-    websiteUrl: text('website_url'),
-    status: varchar('status', { length: 20 }).default('pending').notNull(),
-    submittedBy: varchar('submitted_by', { length: 255 }).notNull(),
-    reviewedBy: varchar('reviewed_by', { length: 36 }),
-    reviewNotes: text('review_notes'),
-    submittedAt: timestamp('submitted_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    id:               varchar('id',           { length: 36 }).primaryKey(),
+    firstName:        varchar('first_name',   { length: 255 }).notNull(),
+    lastName:         varchar('last_name',    { length: 255 }).notNull(),
+    email:            varchar('email',        { length: 255 }).notNull(),
+    phoneNumber:      varchar('phone_number', { length: 20  }),
+    dateOfBirth:      date('date_of_birth'),
+    gender:           varchar('gender',       { length: 20  }).default('prefer-not-to-say'),
+    bio:              text('bio'),
+    profileImageUrl:  text('profile_image_url'),
+    currentPosition:  varchar('current_position', { length: 255 }),
+    currentCompany:   varchar('current_company',  { length: 255 }),
+    location:         varchar('location',          { length: 255 }),
+    keywords:         text('keywords'),
+    linkedinUrl:      text('linkedin_url'),
+    twitterUrl:       text('twitter_url'),
+    instagramUrl:     text('instagram_url'),
+    websiteUrl:       text('website_url'),
+    status:           varchar('status', { length: 20 }).default('pending').notNull(),
+    submittedBy:      varchar('submitted_by', { length: 255 }).notNull(),
+    reviewedBy:       varchar('reviewed_by',  { length: 36  }),
+    reviewNotes:      text('review_notes'),
+    submittedAt:      timestamp('submitted_at', { withTimezone: true }).defaultNow().notNull(),
+    reviewedAt:       timestamp('reviewed_at',  { withTimezone: true }),
+    updatedAt:        timestamp('updated_at',   { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => ({
-    statusIdx: index('submissions_status_idx').on(table.status),
-    emailIdx: index('submissions_email_idx').on(table.email),
+    statusIdx:      index('submissions_status_idx').on(table.status),
+    emailIdx:       index('submissions_email_idx').on(table.email),
     submittedAtIdx: index('submissions_submitted_at_idx').on(table.submittedAt),
   })
 );
@@ -132,21 +137,17 @@ export const submissions = pgTable(
 export const subscribers = pgTable(
   'subscribers',
   {
-    id: varchar('id', { length: 36 }).primaryKey(),
-    email: varchar('email', { length: 255 }).notNull().unique(),
-    firstName: varchar('first_name', { length: 255 }),
-    lastName: varchar('last_name', { length: 255 }),
-    isActive: boolean('is_active').default(true).notNull(),
-    subscribedAt: timestamp('subscribed_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    id:             varchar('id',         { length: 36  }).primaryKey(),
+    email:          varchar('email',      { length: 255 }).notNull().unique(),
+    firstName:      varchar('first_name', { length: 255 }),
+    lastName:       varchar('last_name',  { length: 255 }),
+    isActive:       boolean('is_active').default(true).notNull(),
+    subscribedAt:   timestamp('subscribed_at',   { withTimezone: true }).defaultNow().notNull(),
     unsubscribedAt: timestamp('unsubscribed_at', { withTimezone: true }),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
+    updatedAt:      timestamp('updated_at',       { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => ({
-    emailIdx: index('subscribers_email_idx').on(table.email),
+    emailIdx:    index('subscribers_email_idx').on(table.email),
     isActiveIdx: index('subscribers_is_active_idx').on(table.isActive),
   })
 );
@@ -155,17 +156,17 @@ export const subscribers = pgTable(
 export const accounts = pgTable(
   'account',
   {
-    userId: varchar('userId', { length: 255 }).notNull(),
-    type: varchar('type', { length: 255 }).notNull(),
-    provider: varchar('provider', { length: 255 }).notNull(),
+    userId:            varchar('userId',            { length: 255 }).notNull(),
+    type:              varchar('type',              { length: 255 }).notNull(),
+    provider:          varchar('provider',          { length: 255 }).notNull(),
     providerAccountId: varchar('providerAccountId', { length: 255 }).notNull(),
-    refresh_token: text('refresh_token'),
-    access_token: text('access_token'),
-    expires_at: integer('expires_at'),
-    token_type: varchar('token_type', { length: 255 }),
-    scope: text('scope'),
-    id_token: text('id_token'),
-    session_state: varchar('session_state', { length: 255 }),
+    refresh_token:     text('refresh_token'),
+    access_token:      text('access_token'),
+    expires_at:        integer('expires_at'),
+    token_type:        varchar('token_type',  { length: 255 }),
+    scope:             text('scope'),
+    id_token:          text('id_token'),
+    session_state:     varchar('session_state', { length: 255 }),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -178,8 +179,8 @@ export const sessions = pgTable(
   'session',
   {
     sessionToken: varchar('sessionToken', { length: 255 }).primaryKey(),
-    userId: varchar('userId', { length: 255 }).notNull(),
-    expires: timestamp('expires', { withTimezone: true }).notNull(),
+    userId:       varchar('userId',       { length: 255 }).notNull(),
+    expires:      timestamp('expires', { withTimezone: true }).notNull(),
   },
   (session) => ({
     userIdIdx: index('session_userId_idx').on(session.userId),
@@ -190,12 +191,10 @@ export const verificationTokens = pgTable(
   'verificationToken',
   {
     identifier: varchar('identifier', { length: 255 }).notNull(),
-    token: varchar('token', { length: 255 }).notNull(),
-    expires: timestamp('expires', { withTimezone: true }).notNull(),
+    token:      varchar('token',      { length: 255 }).notNull(),
+    expires:    timestamp('expires',  { withTimezone: true }).notNull(),
   },
   (vt) => ({
-    compoundKey: primaryKey({
-      columns: [vt.identifier, vt.token],
-    }),
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );

@@ -4,10 +4,10 @@ import { ArticleRepository } from '../../../domain/repositories/articleRepositor
 import { PersonRepository } from '../../../domain/repositories/personRepository';
 
 const CreateArticleSchema = z.object({
-  title: z.string().min(1).max(500),
-  slug: z.string().min(1).max(500),
-  content: z.string().min(1),
-  excerpt: z.string().min(1),
+  titleEn: z.string().min(1).max(500),
+  slugEn: z.string().min(1).max(500),
+  contentEn: z.string().min(1),
+  excerptEn: z.string().min(1),
   authorId: z.string().min(1),
   featuredImageUrl: z.string().url().optional(),
   tags: z.array(z.string()).optional(),
@@ -41,7 +41,7 @@ export class CreateArticleUseCase {
       }
 
       const existingArticle = await this.articleRepository.findBySlug(
-        validated.slug
+        validated.slugEn
       );
       if (existingArticle) {
         return {
@@ -50,17 +50,17 @@ export class CreateArticleUseCase {
         };
       }
 
-      const readTime = this.calculateReadTime(validated.content);
+      const readTime = this.calculateReadTime(validated.contentEn);
       const now = new Date();
 
       const article: Article = {
         id: this.generateId(),
-        title: validated.title,
-        slug: validated.slug,
-        content: validated.content,
-        excerpt: validated.excerpt,
+        titleEn: validated.titleEn,
+        slugEn: validated.slugEn,
+        contentEn: validated.contentEn,
+        excerptEn: validated.excerptEn,
         authorId: validated.authorId,
-        authorName: `${author.firstName} ${author.lastName}`,
+        authorName: `${author.firstNameEn} ${author.lastNameEn}`,
         featuredImageUrl: validated.featuredImageUrl,
         status: 'draft',
         createdAt: now,

@@ -8,7 +8,7 @@ const SubmitProfileSchema = z.object({
   email: z.string().email(),
   phoneNumber: z.string().max(20).optional(),
   dateOfBirth: z.date().optional(),
-  gender: z.enum(['male', 'female', 'other', 'prefer-not-to-say']),
+  gender: z.enum(['male', 'female', 'other', 'prefer-not-to-say']).optional(),
   bio: z.string().optional(),
   profileImageUrl: z.string().url().optional(),
   currentPosition: z.string().max(255).optional(),
@@ -19,7 +19,7 @@ const SubmitProfileSchema = z.object({
   twitterUrl: z.string().url().optional(),
   instagramUrl: z.string().url().optional(),
   websiteUrl: z.string().url().optional(),
-  submittedBy: z.string().min(1),
+  submittedBy: z.string().min(1).optional(),
 });
 
 export type SubmitProfileInput = z.infer<typeof SubmitProfileSchema>;
@@ -45,7 +45,7 @@ export class SubmitProfileUseCase {
         email: validated.email,
         phoneNumber: validated.phoneNumber,
         dateOfBirth: validated.dateOfBirth,
-        gender: validated.gender,
+        gender: validated.gender ?? 'prefer-not-to-say',
         bio: validated.bio,
         profileImageUrl: validated.profileImageUrl,
         currentPosition: validated.currentPosition,
@@ -57,7 +57,7 @@ export class SubmitProfileUseCase {
         instagramUrl: validated.instagramUrl,
         websiteUrl: validated.websiteUrl,
         status: 'pending',
-        submittedBy: validated.submittedBy,
+        submittedBy: validated.submittedBy ?? 'public-form',
         submittedAt: now,
         updatedAt: now,
       };
