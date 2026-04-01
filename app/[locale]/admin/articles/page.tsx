@@ -4,16 +4,18 @@ import { desc } from 'drizzle-orm';
 import AdminArticlesList from '@/components/admin/articles-list';
 
 interface AdminArticlesPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default async function AdminArticlesPage({ params }: AdminArticlesPageProps) {
+  const { locale } = await params;
   const allArticles = await db
     .select()
     .from(articles)
-    .orderBy(desc(articles.createdAt));
+    .orderBy(desc(articles.createdAt))
+    .limit(200);
 
-  return <AdminArticlesList articles={allArticles} locale={params.locale} />;
+  return <AdminArticlesList articles={allArticles} locale={locale} />;
 }

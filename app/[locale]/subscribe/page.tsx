@@ -4,9 +4,9 @@ import StaggerChildren from '@/components/animations/StaggerChildren';
 import { Bell, Heart, Shield } from 'lucide-react';
 
 interface SubscribePageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default async function SubscribePage({ params }: SubscribePageProps) {
@@ -64,7 +64,7 @@ export default async function SubscribePage({ params }: SubscribePageProps) {
               const content = isAr ? benefit.ar : benefit.en;
               return (
                 <div key={index} data-stagger>
-                  <div className="rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface p-6 text-center">
+                  <div className="rounded-xl border border-border dark:border-border/50 bg-surface shadow-sm dark:shadow-none dark:bg-gradient-to-br dark:from-surface-elevated dark:to-surface p-6 text-center">
                     <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gold/10 border border-gold/30">
                       <IconComponent size={24} className="text-gold" />
                     </div>
@@ -82,7 +82,7 @@ export default async function SubscribePage({ params }: SubscribePageProps) {
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
           <FadeIn>
-            <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-surface-elevated via-surface to-surface-elevated p-8">
+            <div className="rounded-2xl border border-gold/30 bg-surface shadow-sm dark:shadow-none dark:bg-gradient-to-br dark:from-surface-elevated dark:via-surface dark:to-surface-elevated p-8">
               <SubscribeForm locale={locale} />
             </div>
           </FadeIn>

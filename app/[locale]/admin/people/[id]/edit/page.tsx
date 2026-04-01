@@ -5,14 +5,15 @@ import { notFound } from 'next/navigation';
 import PersonForm from '@/components/admin/person-form';
 
 interface EditPersonPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function AdminEditPersonPage({ params }: EditPersonPageProps) {
+  const { id } = await params;
   const person = await db
     .select()
     .from(persons)
-    .where(eq(persons.id, params.id))
+    .where(eq(persons.id, id))
     .then((result) => result[0]);
 
   if (!person) {

@@ -15,7 +15,8 @@ export default function Footer() {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!subscriberEmail || !subscriberEmail.includes('@')) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!subscriberEmail || !emailRegex.test(subscriberEmail)) {
       setSubscriberMessage({ type: 'error', text: t('subscribe_error') || 'Please enter a valid email' });
       return;
     }

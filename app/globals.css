@@ -4,26 +4,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────────────────
+   CSS DESIGN TOKENS
+   Variables are declared as RGB triplets (no `rgb()` wrapper) so that
+   Tailwind can apply opacity modifiers:  bg-gold/50  →  rgb(var(--gold) / 0.5)
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ─── Light mode (default) ───────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --card: #f5f5f5;
-  --card-foreground: #171717;
-  --border: #e5e5e5;
-  --muted: #737373;
-  --gold: #D4A853;
-  --gold-light: #E8C97A;
+  /* Page & surface layers */
+  --background:        248 248 249;    /* #F8F8F9 */
+  --surface:           255 255 255;    /* #FFFFFF */
+  --surface-elevated:  242 242 244;    /* #F2F2F4 */
+
+  /* Text */
+  --text-primary:      9 9 11;         /* #09090B */
+  --text-secondary:    82 82 91;       /* #52525B */
+
+  /* Borders */
+  --border:            228 228 231;    /* #E4E4E7 */
+
+  /* Brand — slightly deeper gold for legibility on white */
+  --gold:              184 134 11;     /* #B8860B */
+  --gold-light:        212 168 83;     /* #D4A853 */
+  --amber:             217 119 6;      /* #D97706 */
 }
 
+/* ─── Dark mode ──────────────────────────────────────────────────────── */
 .dark {
-  --background: #0a0a0f;
-  --foreground: #ededed;
-  --card: #141420;
-  --card-foreground: #ededed;
-  --border: #2a2a3a;
-  --muted: #a0a0a0;
-  --gold: #D4A853;
-  --gold-light: #E8C97A;
+  /* Page & surface layers */
+  --background:        10 10 11;       /* #0A0A0B */
+  --surface:           20 20 22;       /* #141416 */
+  --surface-elevated:  28 28 31;       /* #1C1C1F */
+
+  /* Text */
+  --text-primary:      250 250 250;    /* #FAFAFA */
+  --text-secondary:    161 161 170;    /* #A1A1AA */
+
+  /* Borders */
+  --border:            42 42 46;       /* #2A2A2E */
+
+  /* Brand */
+  --gold:              212 168 83;     /* #D4A853 */
+  --gold-light:        232 201 122;    /* #E8C97A */
+  --amber:             245 158 11;     /* #F59E0B */
 }
 
 * {
@@ -32,6 +56,21 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Theme transition — smooth colour swap on toggle */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease;
+  transition-duration: 200ms;
+}
+
+/* But never transition transform / opacity / layout (breaks animations) */
+.no-theme-transition,
+.no-theme-transition * {
+  transition: none !important;
 }
 
 body {
@@ -53,7 +92,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0B;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -68,8 +107,8 @@ body {
 
 /* Selection */
 ::selection {
-  background-color: #D4A853;
-  color: #0A0A0B;
+  background-color: rgb(var(--gold) / 0.8);
+  color: rgb(var(--background));
 }
 
 /* Smooth transitions */
@@ -90,7 +129,7 @@ button,
 
 /* Gradient text utility */
 .gradient-text {
-  background: linear-gradient(135deg, #D4A853 0%, #F59E0B 100%);
+  background: linear-gradient(135deg, rgb(var(--gold)) 0%, rgb(var(--amber)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -102,14 +141,14 @@ button,
 }
 
 .card-glow:hover {
-  box-shadow: 0 0 30px rgba(212, 168, 83, 0.2), 0 0 60px rgba(245, 158, 11, 0.1);
+  box-shadow: 0 0 30px rgb(var(--gold) / 0.2), 0 0 60px rgb(var(--amber) / 0.1);
   @apply border-gold/60;
 }
 
 /* Gold gradient hover */
 .gold-hover:hover {
   @apply text-gold;
-  text-shadow: 0 0 20px rgba(212, 168, 83, 0.3);
+  text-shadow: 0 0 20px rgb(var(--gold) / 0.3);
 }
 
 /* Smooth focus rings */
@@ -119,7 +158,7 @@ button,
 
 /* Scrollbar for Firefox */
 * {
-  scrollbar-color: #D4A853 #0A0A0B;
+  scrollbar-color: var(--gold) var(--background);
   scrollbar-width: thin;
 }
 
@@ -142,14 +181,14 @@ h3 {
 
 /* Text utility classes */
 .text-gold-gradient {
-  background: linear-gradient(135deg, #D4A853 0%, #F59E0B 100%);
+  background: linear-gradient(135deg, rgb(var(--gold)) 0%, rgb(var(--amber)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-shadow-gold {
-  text-shadow: 0 0 20px rgba(212, 168, 83, 0.4);
+  text-shadow: 0 0 20px rgb(var(--gold) / 0.4);
 }
 
 /* Button reset for links */

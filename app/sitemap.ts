@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const publishedArticles = await db
-      .select({ slug: articles.slug, updatedAt: articles.updatedAt })
+      .select({ slug: articles.slugEn, updatedAt: articles.updatedAt })
       .from(articles)
       .where(eq(articles.status, 'published'));
 

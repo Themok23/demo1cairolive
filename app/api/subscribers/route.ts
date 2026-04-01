@@ -3,9 +3,15 @@ import { successResponse, errorResponse } from '@/lib/apiResponse';
 import { DrizzleSubscriberRepository } from '@/src/infrastructure/repositories/drizzleSubscriberRepository';
 import { ListSubscribersUseCase } from '@/src/application/use-cases/subscribers/listSubscribers';
 import { SubscribeUseCase } from '@/src/application/use-cases/subscribers/subscribe';
+import { auth } from '@/src/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json(errorResponse('Unauthorized'), { status: 401 });
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get('limit') || '20', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);

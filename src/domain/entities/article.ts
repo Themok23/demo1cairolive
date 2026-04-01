@@ -2,10 +2,16 @@ import { ArticleStatus } from '../value-objects/articleStatus';
 
 export interface Article {
   id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string;
+  // Bilingual content
+  titleEn: string;
+  titleAr?: string | null;
+  slugEn: string;
+  slugAr?: string | null;
+  contentEn: string;
+  contentAr?: string | null;
+  excerptEn: string;
+  excerptAr?: string | null;
+  // Language-neutral
   authorId: string;
   authorName: string;
   featuredImageUrl?: string | null;
@@ -23,10 +29,14 @@ export interface Article {
 
 export class ArticleEntity implements Article {
   id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string;
+  titleEn: string;
+  titleAr?: string | null;
+  slugEn: string;
+  slugAr?: string | null;
+  contentEn: string;
+  contentAr?: string | null;
+  excerptEn: string;
+  excerptAr?: string | null;
   authorId: string;
   authorName: string;
   featuredImageUrl?: string | null;
@@ -43,10 +53,14 @@ export class ArticleEntity implements Article {
 
   constructor(data: Article) {
     this.id = data.id;
-    this.title = data.title;
-    this.slug = data.slug;
-    this.content = data.content;
-    this.excerpt = data.excerpt;
+    this.titleEn = data.titleEn;
+    this.titleAr = data.titleAr;
+    this.slugEn = data.slugEn;
+    this.slugAr = data.slugAr;
+    this.contentEn = data.contentEn;
+    this.contentAr = data.contentAr;
+    this.excerptEn = data.excerptEn;
+    this.excerptAr = data.excerptAr;
     this.authorId = data.authorId;
     this.authorName = data.authorName;
     this.featuredImageUrl = data.featuredImageUrl;
@@ -62,21 +76,31 @@ export class ArticleEntity implements Article {
     this.femalePersonId = data.femalePersonId;
   }
 
-  isPublished(): boolean {
-    return this.status === 'published' && !!this.publishedAt;
+  /** Returns the title for the given locale, falling back to EN */
+  getTitle(locale: 'en' | 'ar' = 'en'): string {
+    if (locale === 'ar') return this.titleAr || this.titleEn;
+    return this.titleEn;
   }
 
-  isDraft(): boolean {
-    return this.status === 'draft';
+  /** Returns the excerpt for the given locale, falling back to EN */
+  getExcerpt(locale: 'en' | 'ar' = 'en'): string {
+    if (locale === 'ar') return this.excerptAr || this.excerptEn;
+    return this.excerptEn;
   }
 
-  isArchived(): boolean {
-    return this.status === 'archived';
+  /** Returns the content for the given locale, falling back to EN */
+  getContent(locale: 'en' | 'ar' = 'en'): string {
+    if (locale === 'ar') return this.contentAr || this.contentEn;
+    return this.contentEn;
   }
+
+  isPublished(): boolean { return this.status === 'published' && !!this.publishedAt; }
+  isDraft():     boolean { return this.status === 'draft'; }
+  isArchived():  boolean { return this.status === 'archived'; }
 
   calculateReadTime(): number {
     const wordsPerMinute = 200;
-    const wordCount = this.content.split(/\s+/).length;
+    const wordCount = this.contentEn.split(/\s+/).length;
     return Math.ceil(wordCount / wordsPerMinute);
   }
 
@@ -90,59 +114,46 @@ export class ArticleEntity implements Article {
   }
 
   archive(): ArticleEntity {
-    return new ArticleEntity({
-      ...this,
-      status: 'archived' as ArticleStatus,
-      updatedAt: new Date(),
-    });
+    return new ArticleEntity({ ...this, status: 'archived' as ArticleStatus, updatedAt: new Date() });
   }
 
   incrementViewCount(): ArticleEntity {
-    return new ArticleEntity({
-      ...this,
-      viewCount: (this.viewCount || 0) + 1,
-      updatedAt: new Date(),
-    });
+    return new ArticleEntity({ ...this, viewCount: (this.viewCount || 0) + 1, updatedAt: new Date() });
   }
 
   addTags(newTags: string[]): ArticleEntity {
-    const existingTags = this.tags || [];
-    const uniqueTags = Array.from(new Set([...existingTags, ...newTags]));
+    const existing = this.tags || [];
     return new ArticleEntity({
       ...this,
-      tags: uniqueTags,
+      tags: Array.from(new Set([...existing, ...newTags])),
       updatedAt: new Date(),
     });
   }
 
   removeTags(tagsToRemove: string[]): ArticleEntity {
-    const updatedTags = (this.tags || []).filter(tag => !tagsToRemove.includes(tag));
+    const updated = (this.tags || []).filter(t => !tagsToRemove.includes(t));
     return new ArticleEntity({
       ...this,
-      tags: updatedTags.length > 0 ? updatedTags : null,
+      tags: updated.length > 0 ? updated : null,
       updatedAt: new Date(),
     });
   }
 
   update(data: Partial<Article>): ArticleEntity {
-    return new ArticleEntity({
-      ...this,
-      ...data,
-      updatedAt: new Date(),
-    });
-  }
-
-  getDisplayName(): string {
-    return this.title;
+    return new ArticleEntity({ ...this, ...data, updatedAt: new Date() });
   }
 
   toJSON(): Article {
     return {
       id: this.id,
-      title: this.title,
-      slug: this.slug,
-      content: this.content,
-      excerpt: this.excerpt,
+      titleEn: this.titleEn,
+      titleAr: this.titleAr,
+      slugEn: this.slugEn,
+      slugAr: this.slugAr,
+      contentEn: this.contentEn,
+      contentAr: this.contentAr,
+      excerptEn: this.excerptEn,
+      excerptAr: this.excerptAr,
       authorId: this.authorId,
       authorName: this.authorName,
       featuredImageUrl: this.featuredImageUrl,

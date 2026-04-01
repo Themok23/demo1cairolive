@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import type { Route } from 'next';
 import Link from 'next/link';
 import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
@@ -11,12 +12,14 @@ export default function AdminLoginPage() {
   const searchParams = useSearchParams();
   const params = useParams();
   const locale = params.locale as string;
-  const [email, setEmail] = useState('mokhtar@themok.company');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const callbackUrl: string = searchParams.get('callbackUrl') || `/${locale}/admin`;
+  const rawCallback = searchParams.get('callbackUrl') || `/${locale}/admin`;
+  // Prevent open redirect: only allow relative paths, block protocol-relative URLs
+  const callbackUrl = rawCallback.startsWith('/') && !rawCallback.startsWith('//') ? rawCallback : `/${locale}/admin`;
   const isAr = locale === 'ar';
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -34,7 +37,7 @@ export default function AdminLoginPage() {
       if (result?.error) {
         setError(result.error || (isAr ? 'فشل تسجيل الدخول' : 'Failed to sign in'));
       } else if (result?.ok) {
-        router.push(callbackUrl as any);
+        router.push(callbackUrl as Route);
       }
     } catch (err) {
       setError(isAr ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred');

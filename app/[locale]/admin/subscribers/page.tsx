@@ -7,7 +7,8 @@ export default async function AdminSubscribersPage() {
   const allSubscribers = await db
     .select()
     .from(subscribers)
-    .orderBy(desc(subscribers.subscribedAt));
+    .orderBy(desc(subscribers.subscribedAt))
+    .limit(200);
 
   return <AdminSubscribersList subscribers={allSubscribers} />;
 }

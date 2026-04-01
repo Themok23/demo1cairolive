@@ -14,17 +14,23 @@ import {
   Download,
 } from 'lucide-react';
 import TierBadge from '@/components/ui/TierBadge';
+import { localized, type Locale } from '@/src/lib/locale';
 
 interface KrtkBusinessCardProps {
   person: {
     id: string;
-    firstName: string;
-    lastName: string;
+    firstNameEn: string;
+    firstNameAr?: string | null;
+    lastNameEn: string;
+    lastNameAr?: string | null;
     profileImageUrl?: string | null;
     coverImageUrl?: string | null;
-    currentPosition?: string | null;
-    currentCompany?: string | null;
-    location?: string | null;
+    currentPositionEn?: string | null;
+    currentPositionAr?: string | null;
+    currentCompanyEn?: string | null;
+    currentCompanyAr?: string | null;
+    locationEn?: string | null;
+    locationAr?: string | null;
     email?: string;
     phoneNumber?: string | null;
     tier?: string | null;
@@ -33,7 +39,8 @@ interface KrtkBusinessCardProps {
     twitterUrl?: string | null;
     instagramUrl?: string | null;
     websiteUrl?: string | null;
-    bio?: string | null;
+    bioEn?: string | null;
+    bioAr?: string | null;
   };
   locale: string;
 }
@@ -73,18 +80,18 @@ const tierConfig: Record<string, { label: string; labelAr: string; bg: string; t
   },
 };
 
-function generateVCard(person: KrtkBusinessCardProps['person']): string {
+function generateVCard(person: KrtkBusinessCardProps['person'], firstName: string, lastName: string, position: string, company: string, location: string): string {
   const lines = [
     'BEGIN:VCARD',
     'VERSION:3.0',
-    `FN:${person.firstName} ${person.lastName}`,
-    `N:${person.lastName};${person.firstName};;;`,
+    `FN:${firstName} ${lastName}`,
+    `N:${lastName};${firstName};;;`,
   ];
-  if (person.currentCompany) lines.push(`ORG:${person.currentCompany}`);
-  if (person.currentPosition) lines.push(`TITLE:${person.currentPosition}`);
+  if (company) lines.push(`ORG:${company}`);
+  if (position) lines.push(`TITLE:${position}`);
   if (person.email) lines.push(`EMAIL:${person.email}`);
   if (person.phoneNumber) lines.push(`TEL:${person.phoneNumber}`);
-  if (person.location) lines.push(`ADR:;;${person.location};;;`);
+  if (location) lines.push(`ADR:;;${location};;;`);
   if (person.websiteUrl) lines.push(`URL:${person.websiteUrl}`);
   if (person.profileImageUrl) lines.push(`PHOTO;VALUE=URI:${person.profileImageUrl}`);
   lines.push('END:VCARD');
@@ -94,11 +101,19 @@ function generateVCard(person: KrtkBusinessCardProps['person']): string {
 export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardProps) {
   const [copied, setCopied] = useState(false);
   const isAr = locale === 'ar';
+  const loc = locale as Locale;
   const tier = tierConfig[person.tier?.toLowerCase() || ''] || null;
-  const fullName = `${person.firstName} ${person.lastName}`;
+
+  const firstName = localized(loc, person.firstNameEn, person.firstNameAr);
+  const lastName  = localized(loc, person.lastNameEn, person.lastNameAr);
+  const position  = localized(loc, person.currentPositionEn, person.currentPositionAr);
+  const company   = localized(loc, person.currentCompanyEn, person.currentCompanyAr);
+  const location  = localized(loc, person.locationEn, person.locationAr);
+  const bio       = localized(loc, person.bioEn, person.bioAr);
+  const fullName  = `${firstName} ${lastName}`.trim();
 
   const hasSocials = person.linkedinUrl || person.twitterUrl || person.instagramUrl || person.websiteUrl;
-  const hasContact = person.email || person.phoneNumber || person.location;
+  const hasContact = person.email || person.phoneNumber || location;
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/${locale}/krtk/${person.id}`;
@@ -124,12 +139,12 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
   };
 
   const handleDownloadVCard = () => {
-    const vcard = generateVCard(person);
+    const vcard = generateVCard(person, firstName, lastName, position, company, location);
     const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${person.firstName}-${person.lastName}.vcf`;
+    a.download = `${firstName}-${lastName}.vcf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -142,19 +157,20 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
       <div
         className={`
           relative overflow-hidden rounded-2xl
-          bg-gradient-to-br from-[#18181B] via-[#1C1C20] to-[#111113]
-          border border-white/[0.06]
+          bg-gradient-to-br from-surface-elevated via-surface to-surface
+          border border-border
+          shadow-md dark:shadow-[0_8px_40px_rgba(0,0,0,0.18)]
           transition-all duration-500
-          hover:shadow-[0_8px_60px_rgba(212,168,83,0.12)]
-          hover:border-[#D4A853]/20
+          hover:shadow-lg dark:hover:shadow-[0_12px_64px_rgba(212,168,83,0.15)]
+          hover:border-gold/20
         `}
       >
         {/* Subtle top accent line */}
-        <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#D4A853]/40 to-transparent" />
+        <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
         {/* Ambient glow */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#D4A853]/[0.04] rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-[#D4A853]/[0.03] rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gold/[0.04] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-gold/[0.03] rounded-full blur-2xl pointer-events-none" />
 
         {/* Card Content */}
         <div className="relative p-8 sm:p-10">
@@ -166,13 +182,13 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
                 <TierBadge tier={person.tier} size="md" />
               )}
               {person.isVerified && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-semibold tracking-wide text-emerald-400">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-semibold tracking-wide text-emerald-700 dark:text-emerald-400">
                   <CheckCircle className="w-3 h-3" />
                   {isAr ? 'موثق' : 'Verified'}
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-medium tracking-[0.2em] text-white/20 uppercase">
+            <span className="text-[10px] font-medium tracking-[0.2em] text-text-secondary/50 uppercase">
               KRTK
             </span>
           </div>
@@ -181,7 +197,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
           <div className="flex items-start gap-6 sm:gap-8 mb-8">
             {/* Profile Photo */}
             <div className="relative flex-shrink-0">
-              <div className={`w-[88px] h-[88px] sm:w-[100px] sm:h-[100px] rounded-2xl overflow-hidden ring-2 ring-[#D4A853]/30 ring-offset-2 ring-offset-[#18181B] ${tier ? tier.glow : ''}`}>
+              <div className={`w-[88px] h-[88px] sm:w-[100px] sm:h-[100px] rounded-2xl overflow-hidden ring-2 ring-gold/30 ring-offset-2 ring-offset-surface ${tier ? tier.glow : ''}`}>
                 {person.profileImageUrl ? (
                   <img
                     src={person.profileImageUrl}
@@ -189,9 +205,9 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-[#D4A853]/20 to-[#D4A853]/5 flex items-center justify-center">
-                    <span className="text-2xl sm:text-3xl font-bold text-[#D4A853]/60">
-                      {person.firstName[0]}{person.lastName[0]}
+                  <div className="w-full h-full bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
+                    <span className="text-2xl sm:text-3xl font-bold text-gold/60">
+                      {firstName[0]}{lastName[0]}
                     </span>
                   </div>
                 )}
@@ -200,27 +216,27 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
 
             {/* Name + Title */}
             <div className="flex-1 min-w-0 pt-1">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight tracking-tight">
-                {person.firstName}
+              <h2 className="text-2xl sm:text-3xl font-bold text-text-primary leading-tight tracking-tight" lang={locale}>
+                {firstName}
               </h2>
-              <h3 className="text-xl sm:text-2xl font-semibold text-white/50 leading-tight tracking-tight">
-                {person.lastName}
+              <h3 className="text-xl sm:text-2xl font-semibold text-text-primary/50 leading-tight tracking-tight" lang={locale}>
+                {lastName}
               </h3>
-              {person.currentPosition && (
-                <p className="mt-2 text-sm font-semibold text-[#D4A853] leading-snug">
-                  {person.currentPosition}
+              {position && (
+                <p className="mt-2 text-sm font-semibold text-gold leading-snug" lang={locale}>
+                  {position}
                 </p>
               )}
-              {person.currentCompany && (
-                <p className="mt-0.5 text-xs text-white/40 font-medium">
-                  {person.currentCompany}
+              {company && (
+                <p className="mt-0.5 text-xs text-text-secondary font-medium" lang={locale}>
+                  {company}
                 </p>
               )}
             </div>
           </div>
 
           {/* Divider */}
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-6" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-border to-transparent mb-6" />
 
           {/* Contact Details */}
           {hasContact && (
@@ -228,9 +244,9 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
               {person.email && (
                 <a
                   href={`mailto:${person.email}`}
-                  className="group flex items-center gap-3 text-white/40 hover:text-[#D4A853] transition-colors duration-200"
+                  className="group flex items-center gap-3 text-text-secondary hover:text-gold transition-colors duration-200"
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.04] group-hover:bg-[#D4A853]/10 transition-colors duration-200">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-surface-elevated group-hover:bg-gold/10 transition-colors duration-200">
                     <Mail className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-sm truncate">{person.email}</span>
@@ -239,21 +255,21 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
               {person.phoneNumber && (
                 <a
                   href={`tel:${person.phoneNumber}`}
-                  className="group flex items-center gap-3 text-white/40 hover:text-[#D4A853] transition-colors duration-200"
+                  className="group flex items-center gap-3 text-text-secondary hover:text-gold transition-colors duration-200"
                   dir="ltr"
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.04] group-hover:bg-[#D4A853]/10 transition-colors duration-200">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-surface-elevated group-hover:bg-gold/10 transition-colors duration-200">
                     <Phone className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-sm">{person.phoneNumber}</span>
                 </a>
               )}
-              {person.location && (
-                <div className="flex items-center gap-3 text-white/40">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.04]">
+              {location && (
+                <div className="flex items-center gap-3 text-text-secondary">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-surface-elevated">
                     <MapPin className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-sm">{person.location}</span>
+                  <span className="text-sm" lang={locale}>{location}</span>
                 </div>
               )}
             </div>
@@ -267,7 +283,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
                   href={person.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/[0.04] text-white/30 hover:bg-[#0077B5]/10 hover:text-[#0077B5] transition-all duration-200 cursor-pointer"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-surface-elevated text-text-secondary hover:bg-[#0077B5]/10 hover:text-[#0077B5] transition-all duration-200 cursor-pointer"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="w-4 h-4" />
@@ -278,7 +294,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
                   href={person.twitterUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/[0.04] text-white/30 hover:bg-sky-500/10 hover:text-sky-400 transition-all duration-200 cursor-pointer"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-surface-elevated text-text-secondary hover:bg-sky-500/10 hover:text-sky-400 transition-all duration-200 cursor-pointer"
                   aria-label="Twitter"
                 >
                   <Twitter className="w-4 h-4" />
@@ -289,7 +305,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
                   href={person.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/[0.04] text-white/30 hover:bg-pink-500/10 hover:text-pink-400 transition-all duration-200 cursor-pointer"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-surface-elevated text-text-secondary hover:bg-pink-500/10 hover:text-pink-400 transition-all duration-200 cursor-pointer"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-4 h-4" />
@@ -300,7 +316,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
                   href={person.websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/[0.04] text-white/30 hover:bg-[#D4A853]/10 hover:text-[#D4A853] transition-all duration-200 cursor-pointer"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl bg-surface-elevated text-text-secondary hover:bg-gold/10 hover:text-gold transition-all duration-200 cursor-pointer"
                   aria-label="Website"
                 >
                   <Globe className="w-4 h-4" />
@@ -310,20 +326,20 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
           )}
 
           {/* Bio snippet */}
-          {person.bio && (
-            <p className="text-xs text-white/25 leading-relaxed line-clamp-2 mb-6">
-              {person.bio}
+          {bio && (
+            <p className="text-xs text-text-secondary/60 leading-relaxed line-clamp-2 mb-6" lang={locale}>
+              {bio}
             </p>
           )}
 
           {/* Bottom Divider */}
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-5" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-border to-transparent mb-5" />
 
           {/* Footer: Branding + Actions */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded bg-gradient-to-br from-[#D4A853] to-[#F59E0B]" />
-              <span className="text-[11px] font-semibold tracking-wide text-white/20">
+              <div className="w-5 h-5 rounded bg-gradient-to-br from-gold to-amber" />
+              <span className="text-[11px] font-semibold tracking-wide text-text-secondary/50">
                 Cairo Live
               </span>
             </div>
@@ -331,7 +347,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
             <div className="flex items-center gap-1">
               <button
                 onClick={handleShare}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium text-white/30 hover:text-[#D4A853] hover:bg-[#D4A853]/[0.06] transition-all duration-200 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium text-text-secondary hover:text-gold hover:bg-gold/[0.06] transition-all duration-200 cursor-pointer"
                 aria-label={isAr ? 'مشاركة البطاقة' : 'Share card'}
               >
                 <Share2 className="w-3 h-3" />
@@ -342,7 +358,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
               </button>
               <button
                 onClick={handleDownloadVCard}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium text-white/30 hover:text-[#D4A853] hover:bg-[#D4A853]/[0.06] transition-all duration-200 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium text-text-secondary hover:text-gold hover:bg-gold/[0.06] transition-all duration-200 cursor-pointer"
                 aria-label={isAr ? 'تحميل البطاقة' : 'Download vCard'}
               >
                 <Download className="w-3 h-3" />

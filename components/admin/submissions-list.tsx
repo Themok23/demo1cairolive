@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Check, X } from 'lucide-react';
 
 interface Submission {
@@ -17,6 +18,7 @@ interface SubmissionsListProps {
 }
 
 export default function AdminSubmissionsList({ submissions }: SubmissionsListProps) {
+  const router = useRouter();
   const [updating, setUpdating] = useState<string | null>(null);
 
   const handleApprove = async (id: string) => {
@@ -29,7 +31,7 @@ export default function AdminSubmissionsList({ submissions }: SubmissionsListPro
       });
 
       if (response.ok) {
-        window.location.reload();
+        router.refresh();
       } else {
         alert('Failed to approve submission');
       }
@@ -51,7 +53,7 @@ export default function AdminSubmissionsList({ submissions }: SubmissionsListPro
       });
 
       if (response.ok) {
-        window.location.reload();
+        router.refresh();
       } else {
         alert('Failed to reject submission');
       }

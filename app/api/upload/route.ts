@@ -29,10 +29,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Generate unique filename
+    // Generate unique filename - derive extension from validated MIME type, not user filename
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 15);
-    const ext = file.name.split('.').pop() || 'jpg';
+    const mimeToExt: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif', 'image/webp': 'webp' };
+    const ext = mimeToExt[file.type] || 'jpg';
     const filename = `${timestamp}-${random}.${ext}`;
 
     // Create uploads directory if it doesn't exist

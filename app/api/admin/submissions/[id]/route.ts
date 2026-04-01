@@ -6,11 +6,12 @@ import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface RouteParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const submission = await db
       .select()
       .from(submissions)
-      .where(eq(submissions.id, params.id));
+      .where(eq(submissions.id, id));
 
     if (!submission.length) {
       return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
@@ -34,6 +35,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -50,7 +52,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const submission = await db
       .select()
       .from(submissions)
-      .where(eq(submissions.id, params.id))
+      .where(eq(submissions.id, id))
       .then((result) => result[0]);
 
     if (!submission) {
@@ -62,18 +64,18 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       const personId = crypto.randomUUID();
       await db.insert(persons).values({
         id: personId,
-        firstName: submission.firstName,
-        lastName: submission.lastName,
+        firstNameEn: submission.firstName,
+        lastNameEn: submission.lastName,
         email: submission.email,
         phoneNumber: submission.phoneNumber,
         dateOfBirth: submission.dateOfBirth,
         gender: submission.gender,
-        bio: submission.bio,
+        bioEn: submission.bio,
         profileImageUrl: submission.profileImageUrl,
         coverImageUrl: null,
-        currentPosition: submission.currentPosition,
-        currentCompany: submission.currentCompany,
-        location: submission.location,
+        currentPositionEn: submission.currentPosition,
+        currentCompanyEn: submission.currentCompany,
+        locationEn: submission.location,
         tier: 'bronze',
         isVerified: false,
         isClaimed: false,
@@ -97,7 +99,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         reviewedAt: now,
         updatedAt: now,
       })
-      .where(eq(submissions.id, params.id));
+      .where(eq(submissions.id, id));
 
     return NextResponse.json({ message: `Submission ${status}` });
   } catch (error) {
