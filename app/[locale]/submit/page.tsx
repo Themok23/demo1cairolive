@@ -4,9 +4,9 @@ import { Upload, CheckCircle } from 'lucide-react';
 import StaggerChildren from '@/components/animations/StaggerChildren';
 
 interface SubmitPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default async function SubmitPage({ params }: SubmitPageProps) {

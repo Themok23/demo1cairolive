@@ -7,11 +7,12 @@ import { eq, desc } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import Button from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
+import { localized, type Locale } from '@/src/lib/locale';
 
 interface ArticlesPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default async function ArticlesPage({ params }: ArticlesPageProps) {
@@ -22,19 +23,25 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
   const publishedArticles = await db
     .select({
       id: articles.id,
-      slug: articles.slug,
-      title: articles.title,
-      excerpt: articles.excerpt,
+      slugEn: articles.slugEn,
+      titleEn: articles.titleEn,
+      titleAr: articles.titleAr,
+      excerptEn: articles.excerptEn,
+      excerptAr: articles.excerptAr,
       featuredImageUrl: articles.featuredImageUrl,
       publishedAt: articles.publishedAt,
       category: articles.category,
       readTimeMinutes: articles.readTimeMinutes,
-      maleFirstName: malePerson.firstName,
-      maleLastName: malePerson.lastName,
+      maleFirstNameEn: malePerson.firstNameEn,
+      maleFirstNameAr: malePerson.firstNameAr,
+      maleLastNameEn: malePerson.lastNameEn,
+      maleLastNameAr: malePerson.lastNameAr,
       maleImage: malePerson.profileImageUrl,
       maleId: malePerson.id,
-      femaleFirstName: femalePerson.firstName,
-      femaleLastName: femalePerson.lastName,
+      femaleFirstNameEn: femalePerson.firstNameEn,
+      femaleFirstNameAr: femalePerson.firstNameAr,
+      femaleLastNameEn: femalePerson.lastNameEn,
+      femaleLastNameAr: femalePerson.lastNameAr,
       femaleImage: femalePerson.profileImageUrl,
       femaleId: femalePerson.id,
     })
@@ -45,6 +52,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
     .orderBy(desc(articles.publishedAt));
 
   const isAr = locale === 'ar';
+  const loc = locale as Locale;
 
   return (
     <div className="min-h-screen">
@@ -77,7 +85,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
           <StaggerChildren className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {publishedArticles.map((article) => (
               <div key={article.id} data-stagger>
-                <Link href={`/${locale}/articles/${article.slug}`}>
+                <Link href={`/${locale}/articles/${article.slugEn}`}>
                   <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-surface-elevated to-surface transition-all duration-300 hover:border-gold/60 hover:shadow-[0_0_30px_rgba(212,168,83,0.2)] hover:-translate-y-2 cursor-pointer h-full flex flex-col">
                     <div className="absolute inset-0 bg-gradient-to-b from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -85,7 +93,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                       <div className="relative h-56 w-full overflow-hidden">
                         <img
                           src={article.featuredImageUrl}
-                          alt={article.title}
+                          alt={localized(loc, article.titleEn, article.titleAr)}
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
@@ -100,11 +108,11 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                             </span>
                           )}
                         </div>
-                        <h3 className="mb-3 text-2xl font-bold text-text-primary group-hover:text-gold transition-colors duration-200 leading-tight">
-                          {article.title}
+                        <h3 className="mb-3 text-2xl font-bold text-text-primary group-hover:text-gold transition-colors duration-200 leading-tight" lang={locale}>
+                          {localized(loc, article.titleEn, article.titleAr)}
                         </h3>
-                        <p className="mb-4 text-text-secondary line-clamp-2">
-                          {article.excerpt}
+                        <p className="mb-4 text-text-secondary line-clamp-2" lang={locale}>
+                          {localized(loc, article.excerptEn, article.excerptAr)}
                         </p>
                       </div>
 
@@ -113,8 +121,8 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                         <div className="mb-3 flex items-center gap-2">
                           <div className="flex -space-x-2">
                             {[
-                              article.maleId ? { id: article.maleId, name: `${article.maleFirstName} ${article.maleLastName}`, imageUrl: article.maleImage } : null,
-                              article.femaleId ? { id: article.femaleId, name: `${article.femaleFirstName} ${article.femaleLastName}`, imageUrl: article.femaleImage } : null,
+                              article.maleId ? { id: article.maleId, name: `${localized(loc, article.maleFirstNameEn, article.maleFirstNameAr)} ${localized(loc, article.maleLastNameEn, article.maleLastNameAr)}`, imageUrl: article.maleImage } : null,
+                              article.femaleId ? { id: article.femaleId, name: `${localized(loc, article.femaleFirstNameEn, article.femaleFirstNameAr)} ${localized(loc, article.femaleLastNameEn, article.femaleLastNameAr)}`, imageUrl: article.femaleImage } : null,
                             ].filter(Boolean).map((person: any) => (
                               <div key={person.id} className="h-8 w-8 rounded-full border-2 border-border/60 overflow-hidden bg-surface flex-shrink-0" title={person.name}>
                                 {person.imageUrl ? (
@@ -125,10 +133,10 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                               </div>
                             ))}
                           </div>
-                          <span className="text-sm text-text-secondary">
+                          <span className="text-sm text-text-secondary" lang={locale}>
                             {[
-                              article.maleId ? `${article.maleFirstName} ${article.maleLastName}` : null,
-                              article.femaleId ? `${article.femaleFirstName} ${article.femaleLastName}` : null,
+                              article.maleId ? `${localized(loc, article.maleFirstNameEn, article.maleFirstNameAr)} ${localized(loc, article.maleLastNameEn, article.maleLastNameAr)}` : null,
+                              article.femaleId ? `${localized(loc, article.femaleFirstNameEn, article.femaleFirstNameAr)} ${localized(loc, article.femaleLastNameEn, article.femaleLastNameAr)}` : null,
                             ].filter(Boolean).join(' & ')}
                           </span>
                         </div>

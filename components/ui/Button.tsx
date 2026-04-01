@@ -1,11 +1,56 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import type { Route } from 'next';
 import { cn } from '@/lib/cn';
 
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+const baseStyles =
+  'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold focus:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed';
+
+const variants: Record<ButtonVariant, string> = {
+  primary:
+    'bg-gradient-to-r from-gold to-amber text-background hover:shadow-[0_0_30px_rgba(212,168,83,0.4)] hover:scale-105 active:scale-95',
+  secondary:
+    'bg-surface-elevated text-text-primary hover:bg-surface-elevated/80 border border-border hover:border-gold/50',
+  outline:
+    'border border-gold/50 text-text-primary hover:bg-gold/10 hover:border-gold',
+  ghost: 'text-text-primary hover:bg-surface-elevated/50 hover:text-gold',
+};
+
+const sizes: Record<ButtonSize, string> = {
+  sm: 'px-3 py-1.5 text-sm',
+  md: 'px-4 py-2 text-base',
+  lg: 'px-6 py-3 text-lg',
+};
+
+// Link variant — renders as Next.js <Link> when href is provided
+interface ButtonLinkProps {
+  href: Route | string;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  className?: string;
+  children: React.ReactNode;
+}
+
+export function ButtonLink({ href, variant = 'primary', size = 'md', className, children }: ButtonLinkProps) {
+  return (
+    <Link
+      href={href as Route}
+      className={cn(baseStyles, variants[variant], sizes[size], className)}
+    >
+      {children}
+    </Link>
+  );
+}
+
+// Standard button variant
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   isLoading?: boolean;
 }
 
@@ -22,25 +67,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const baseStyles =
-      'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold focus:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed';
-
-    const variants = {
-      primary:
-        'bg-gradient-to-r from-gold to-amber text-background hover:shadow-[0_0_30px_rgba(212,168,83,0.4)] hover:scale-105 active:scale-95',
-      secondary:
-        'bg-surface-elevated text-text-primary hover:bg-surface-elevated/80 border border-border hover:border-gold/50',
-      outline:
-        'border border-gold/50 text-text-primary hover:bg-gold/10 hover:border-gold',
-      ghost: 'text-text-primary hover:bg-surface-elevated/50 hover:text-gold',
-    };
-
-    const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-base',
-      lg: 'px-6 py-3 text-lg',
-    };
-
     return (
       <button
         ref={ref}

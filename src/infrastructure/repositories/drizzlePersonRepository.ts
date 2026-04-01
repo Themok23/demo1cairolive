@@ -47,8 +47,8 @@ export class DrizzlePersonRepository implements PersonRepository {
     if (options?.search) {
       conditions.push(
         or(
-          like(persons.firstName, `%${options.search}%`),
-          like(persons.lastName, `%${options.search}%`)
+          like(persons.firstNameEn, `%${options.search}%`),
+          like(persons.lastNameEn, `%${options.search}%`)
         )
       );
     }
@@ -76,17 +76,17 @@ export class DrizzlePersonRepository implements PersonRepository {
   async create(person: Person): Promise<Person> {
     const values: any = {
       id: person.id,
-      firstName: person.firstName,
-      lastName: person.lastName,
+      firstNameEn: person.firstNameEn,
+      lastNameEn: person.lastNameEn,
       email: person.email,
       phoneNumber: person.phoneNumber,
       gender: person.gender,
-      bio: person.bio,
+      bioEn: person.bioEn,
       profileImageUrl: person.profileImageUrl,
       coverImageUrl: person.coverImageUrl,
-      currentPosition: person.currentPosition,
-      currentCompany: person.currentCompany,
-      location: person.location,
+      currentPositionEn: person.currentPositionEn,
+      currentCompanyEn: person.currentCompanyEn,
+      locationEn: person.locationEn,
       tier: person.tier,
       isVerified: person.isVerified,
       isClaimed: person.isClaimed,
@@ -117,18 +117,18 @@ export class DrizzlePersonRepository implements PersonRepository {
       updatedAt: new Date(),
     };
 
-    if (person.firstName !== undefined) updates.firstName = person.firstName;
-    if (person.lastName !== undefined) updates.lastName = person.lastName;
+    if (person.firstNameEn !== undefined) updates.firstNameEn = person.firstNameEn;
+    if (person.lastNameEn !== undefined) updates.lastNameEn = person.lastNameEn;
     if (person.email !== undefined) updates.email = person.email;
     if (person.phoneNumber !== undefined) updates.phoneNumber = person.phoneNumber;
     if (person.dateOfBirth !== undefined) updates.dateOfBirth = person.dateOfBirth;
     if (person.gender !== undefined) updates.gender = person.gender;
-    if (person.bio !== undefined) updates.bio = person.bio;
+    if (person.bioEn !== undefined) updates.bioEn = person.bioEn;
     if (person.profileImageUrl !== undefined) updates.profileImageUrl = person.profileImageUrl;
     if (person.coverImageUrl !== undefined) updates.coverImageUrl = person.coverImageUrl;
-    if (person.currentPosition !== undefined) updates.currentPosition = person.currentPosition;
-    if (person.currentCompany !== undefined) updates.currentCompany = person.currentCompany;
-    if (person.location !== undefined) updates.location = person.location;
+    if (person.currentPositionEn !== undefined) updates.currentPositionEn = person.currentPositionEn;
+    if (person.currentCompanyEn !== undefined) updates.currentCompanyEn = person.currentCompanyEn;
+    if (person.locationEn !== undefined) updates.locationEn = person.locationEn;
     if (person.tier !== undefined) updates.tier = person.tier;
     if (person.isVerified !== undefined) updates.isVerified = person.isVerified;
     if (person.isClaimed !== undefined) updates.isClaimed = person.isClaimed;
@@ -182,8 +182,8 @@ export class DrizzlePersonRepository implements PersonRepository {
       .from(persons)
       .where(
         and(
-          like(persons.firstName, `%${firstName}%`),
-          like(persons.lastName, `%${lastName}%`)
+          like(persons.firstNameEn, `%${firstName}%`),
+          like(persons.lastNameEn, `%${lastName}%`)
         )
       );
 

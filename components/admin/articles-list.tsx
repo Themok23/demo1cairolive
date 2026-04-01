@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Edit2, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface Article {
   id: string;
-  title: string;
+  titleEn: string;
   status: string;
   publishedAt: Date | null;
   malePersonId: string | null;
@@ -19,6 +20,7 @@ interface ArticlesListProps {
 }
 
 export default function AdminArticlesList({ articles, locale }: ArticlesListProps) {
+  const router = useRouter();
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
@@ -31,7 +33,7 @@ export default function AdminArticlesList({ articles, locale }: ArticlesListProp
       });
 
       if (response.ok) {
-        window.location.reload();
+        router.refresh();
       } else {
         alert('Failed to delete article');
       }
@@ -87,7 +89,7 @@ export default function AdminArticlesList({ articles, locale }: ArticlesListProp
                     className="border-b border-[#D4A853]/5 hover:bg-[#2a2a2f]/50 transition-colors"
                   >
                     <td className="py-4 px-6">
-                      <p className="text-white font-medium">{article.title}</p>
+                      <p className="text-white font-medium">{article.titleEn}</p>
                     </td>
                     <td className="py-4 px-6">
                       <span

@@ -1,8 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import Button from '@/components/ui/Button';
-import Link from 'next/link';
+import { ButtonLink } from '@/components/ui/Button';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import HeroCanvas from './HeroCanvas';
 
@@ -22,17 +21,21 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    let cancelled = false;
+    let timeline: any;
+
     import('gsap').then((gsapModule) => {
+      if (cancelled) return;
       const gsap = gsapModule.default;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         gsap.set([badgeRef.current, headingRef.current, subtitleRef.current, buttonsRef.current], { opacity: 1, y: 0 });
         return;
       }
 
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       if (badgeRef.current) {
-        tl.fromTo(badgeRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, 0);
+        timeline.fromTo(badgeRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, 0);
       }
 
       if (headingRef.current) {
@@ -41,18 +44,23 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
           .map((w) => `<span class="inline-block" style="overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em"><span class="inline-block">${w}</span></span>`)
           .join(' ');
         const wordSpans = headingRef.current.querySelectorAll('span span');
-        tl.fromTo(wordSpans, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.07 }, 0.2);
+        timeline.fromTo(wordSpans, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.65, stagger: 0.07 }, 0.2);
       }
 
       if (subtitleRef.current) {
-        tl.fromTo(subtitleRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7 }, 0.65);
+        timeline.fromTo(subtitleRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7 }, 0.65);
       }
 
       if (buttonsRef.current) {
         const btns = buttonsRef.current.querySelectorAll('a');
-        tl.fromTo(btns, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1 }, 0.85);
+        timeline.fromTo(btns, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.1 }, 0.85);
       }
     });
+
+    return () => {
+      cancelled = true;
+      timeline?.kill();
+    };
   }, []);
 
   return (
@@ -82,7 +90,7 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
           {/* Main Heading */}
           <h1
             ref={headingRef}
-            className="text-5xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl leading-[1.05]"
+            className="text-5xl font-black tracking-tight text-text-primary sm:text-7xl lg:text-8xl leading-[1.05]"
           >
             {isAr ? 'حيث تعيش أيقونات مصر' : 'Where Egypt\'s Icons Live'}
           </h1>
@@ -90,7 +98,7 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
           {/* Subtitle */}
           <p
             ref={subtitleRef}
-            className="mx-auto max-w-2xl text-lg leading-relaxed text-white/60 sm:text-xl"
+            className="mx-auto max-w-2xl text-lg leading-relaxed text-text-secondary sm:text-xl"
           >
             {isAr
               ? 'مجموعة مختارة بعناية من الشخصيات الاستثنائية التي تشكّل ثقافة مصر وصناعتها ومستقبلها — قصة تلو الأخرى.'
@@ -102,18 +110,14 @@ export default function AnimatedHero({ locale = 'en' }: AnimatedHeroProps) {
             ref={buttonsRef}
             className="flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <Button variant="primary" size="lg">
-              <Link href={`/${locale}/people`} className="flex items-center gap-2">
-                {isAr ? 'استكشف الأيقونات' : 'Explore the Icons'}
-                <ArrowRight size={18} />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg">
-              <Link href={`/${locale}/articles`} className="flex items-center gap-2">
-                {isAr ? 'اقرأ القصص' : 'Read Their Stories'}
-                <BookOpen size={18} />
-              </Link>
-            </Button>
+            <ButtonLink href={`/${locale}/people`} variant="primary" size="lg" className="gap-2">
+              {isAr ? 'استكشف الأيقونات' : 'Explore the Icons'}
+              <ArrowRight size={18} />
+            </ButtonLink>
+            <ButtonLink href={`/${locale}/articles`} variant="outline" size="lg" className="gap-2">
+              {isAr ? 'اقرأ القصص' : 'Read Their Stories'}
+              <BookOpen size={18} />
+            </ButtonLink>
           </div>
 
         </div>

@@ -59,36 +59,50 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    import('gsap').then(({ default: gsap }) => {
-      import('gsap/ScrollTrigger').then(({ default: ScrollTrigger }) => {
-        gsap.registerPlugin(ScrollTrigger);
-        const section = sectionRef.current;
-        if (!section) return;
 
-        const heading = section.querySelector('[data-heading]');
-        if (heading) {
-          gsap.fromTo(heading,
-            { opacity: 0, y: 28 },
-            {
-              opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
-              scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none reverse' },
-            }
-          );
-        }
+    let cancelled = false;
+    let cleanupFn: (() => void) | undefined;
 
-        const cards = section.querySelectorAll('[data-article-card]');
-        gsap.fromTo(cards,
-          { opacity: 0, y: 44, scale: 0.96 },
+    const initGsap = async () => {
+      const { default: gsap } = await import('gsap');
+      if (cancelled) return;
+      const { default: ScrollTrigger } = await import('gsap/ScrollTrigger');
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const heading = section.querySelector('[data-heading]');
+      if (heading) {
+        gsap.fromTo(heading,
+          { opacity: 0, y: 28 },
           {
-            opacity: 1, y: 0, scale: 1,
-            duration: 0.6, stagger: 0.1, ease: 'power2.out',
-            scrollTrigger: { trigger: section, start: 'top 75%', toggleActions: 'play none none reverse' },
+            opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+            scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none reverse' },
           }
         );
+      }
 
-        return () => ScrollTrigger.getAll().forEach((t: any) => t.kill());
-      });
-    });
+      const cards = section.querySelectorAll('[data-article-card]');
+      gsap.fromTo(cards,
+        { opacity: 0, y: 44, scale: 0.96 },
+        {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.6, stagger: 0.1, ease: 'power2.out',
+          scrollTrigger: { trigger: section, start: 'top 75%', toggleActions: 'play none none reverse' },
+        }
+      );
+
+      cleanupFn = () => ScrollTrigger.getAll().forEach((t: any) => t.kill());
+    };
+
+    initGsap();
+
+    return () => {
+      cancelled = true;
+      cleanupFn?.();
+    };
   }, [articles.length]);
 
   if (!articles.length) {
@@ -108,11 +122,11 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-4xl font-bold text-text-primary sm:text-5xl">
-              {locale === 'ar' ? '\u0627\u0644\u0642\u0635\u0635' : 'The Stories'}
+              {locale === 'ar' ? 'القصص' : 'The Stories'}
             </h2>
             <p className="mt-3 text-lg text-text-secondary">
               {locale === 'ar'
-                ? '\u0631\u0648\u0627\u064a\u0627\u062a \u0637\u0648\u064a\u0644\u0629 \u0639\u0646 \u0627\u0644\u0646\u0627\u0633 \u0648\u0627\u0644\u0623\u0641\u0643\u0627\u0631 \u0648\u0627\u0644\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u062a\u064a \u062a\u0634\u0643\u0651\u0644 \u0645\u0635\u0631.'
+                ? 'روايات طويلة عن الناس والأفكار والحركات التي تشكّل مصر.'
                 : 'Long-form stories on the people, ideas, and movements shaping Egypt.'}
             </p>
           </div>
@@ -212,17 +226,17 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
           ))}
 
           <Link href={`/${locale}/articles`} data-article-card
-            className="group relative flex-shrink-0 overflow-hidden rounded-xl border border-border/50 hover:border-gold/40 transition-all duration-300 flex items-center justify-center snap-start bg-surface"
+            className="group relative flex-shrink-0 overflow-hidden rounded-xl border border-border dark:border-border/50 hover:border-gold/40 transition-all duration-300 flex items-center justify-center snap-start bg-surface shadow-sm dark:shadow-none"
             style={{ width: '280px', height: '400px' }}>
             <div className="text-center p-8">
               <div className="w-14 h-14 rounded-full border-2 border-gold/40 flex items-center justify-center mx-auto mb-4 group-hover:border-gold group-hover:bg-gold/10 transition-all duration-300">
                 <ChevronRight size={24} className="text-gold" />
               </div>
               <p className="text-lg font-semibold text-text-primary group-hover:text-gold transition-colors duration-200">
-                {locale === 'ar' ? '\u0627\u0644\u0645\u0632\u064a\u062f \u0645\u0646 \u0627\u0644\u0642\u0635\u0635' : 'Read All Stories'}
+                {locale === 'ar' ? 'المزيد من القصص' : 'Read All Stories'}
               </p>
               <p className="text-sm text-text-secondary mt-1">
-                {locale === 'ar' ? '\u0627\u0633\u062a\u0643\u0634\u0641 \u0627\u0644\u0623\u0631\u0634\u064a\u0641 \u0627\u0644\u0643\u0627\u0645\u0644' : 'Explore the full archive'}
+                {locale === 'ar' ? 'استكشف الأرشيف الكامل' : 'Explore the full archive'}
               </p>
             </div>
           </Link>

@@ -1,16 +1,17 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Edit2, Plus, Trash2 } from 'lucide-react';
 import TierBadge from '@/components/ui/TierBadge';
 import { useState } from 'react';
 
 interface Person {
   id: string;
-  firstName: string;
-  lastName: string;
-  currentPosition: string | null;
-  currentCompany: string | null;
+  firstNameEn: string;
+  lastNameEn: string;
+  currentPositionEn: string | null;
+  currentCompanyEn: string | null;
   tier: string;
   isVerified: boolean | null;
   isClaimed: boolean | null;
@@ -22,6 +23,7 @@ interface PeopleListProps {
 }
 
 export default function AdminPeopleList({ people, locale }: PeopleListProps) {
+  const router = useRouter();
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
@@ -34,7 +36,7 @@ export default function AdminPeopleList({ people, locale }: PeopleListProps) {
       });
 
       if (response.ok) {
-        window.location.reload();
+        router.refresh();
       } else {
         alert('Failed to delete person');
       }
@@ -90,14 +92,14 @@ export default function AdminPeopleList({ people, locale }: PeopleListProps) {
                   >
                     <td className="py-4 px-6">
                       <p className="text-white font-medium">
-                        {person.firstName} {person.lastName}
+                        {person.firstNameEn} {person.lastNameEn}
                       </p>
                     </td>
                     <td className="py-4 px-6">
-                      <p className="text-gray-400 text-sm">{person.currentPosition || '-'}</p>
+                      <p className="text-gray-400 text-sm">{person.currentPositionEn || '-'}</p>
                     </td>
                     <td className="py-4 px-6">
-                      <p className="text-gray-400 text-sm">{person.currentCompany || '-'}</p>
+                      <p className="text-gray-400 text-sm">{person.currentCompanyEn || '-'}</p>
                     </td>
                     <td className="py-4 px-6">
                       <TierBadge tier={person.tier} size="sm" />

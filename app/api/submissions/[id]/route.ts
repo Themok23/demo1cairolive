@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { successResponse, errorResponse } from '@/lib/apiResponse';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params;
     return NextResponse.json(
       errorResponse('Use /api/submissions to list or POST /api/submissions/[id]/review'),
       { status: 400 }

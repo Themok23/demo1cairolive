@@ -7,7 +7,8 @@ export default async function AdminSubmissionsPage() {
   const allSubmissions = await db
     .select()
     .from(submissions)
-    .orderBy(desc(submissions.submittedAt));
+    .orderBy(desc(submissions.submittedAt))
+    .limit(200);
 
   return <AdminSubmissionsList submissions={allSubmissions} />;
 }

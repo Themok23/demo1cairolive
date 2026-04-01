@@ -22,7 +22,7 @@ export class DrizzleArticleRepository implements ArticleRepository {
 
   async findBySlug(slug: string): Promise<Article | null> {
     const result = await db.query.articles.findFirst({
-      where: eq(articles.slug, slug),
+      where: eq(articles.slugEn, slug),
     });
     return result ? this.parseArticle(result) : null;
   }
@@ -99,10 +99,10 @@ export class DrizzleArticleRepository implements ArticleRepository {
       .insert(articles)
       .values({
         id: article.id,
-        title: article.title,
-        slug: article.slug,
-        content: article.content,
-        excerpt: article.excerpt,
+        titleEn: article.titleEn,
+        slugEn: article.slugEn,
+        contentEn: article.contentEn,
+        excerptEn: article.excerptEn,
         authorId: article.authorId,
         authorName: article.authorName,
         featuredImageUrl: article.featuredImageUrl,
@@ -169,9 +169,9 @@ export class DrizzleArticleRepository implements ArticleRepository {
         and(
           eq(articles.status, 'published'),
           or(
-            like(articles.title, searchTerm),
-            like(articles.excerpt, searchTerm),
-            like(articles.content, searchTerm)
+            like(articles.titleEn, searchTerm),
+            like(articles.excerptEn, searchTerm),
+            like(articles.contentEn, searchTerm)
           )
         )
       )
@@ -186,9 +186,9 @@ export class DrizzleArticleRepository implements ArticleRepository {
         and(
           eq(articles.status, 'published'),
           or(
-            like(articles.title, searchTerm),
-            like(articles.excerpt, searchTerm),
-            like(articles.content, searchTerm)
+            like(articles.titleEn, searchTerm),
+            like(articles.excerptEn, searchTerm),
+            like(articles.contentEn, searchTerm)
           )
         )
       );

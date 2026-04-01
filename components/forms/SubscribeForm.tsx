@@ -87,8 +87,8 @@ export default function SubscribeForm({ locale }: SubscribeFormProps) {
         <div
           className={`rounded-lg p-4 text-sm ${
             message.type === 'success'
-              ? 'bg-green-900 bg-opacity-20 text-green-400 border border-green-600'
-              : 'bg-red-900 bg-opacity-20 text-red-400 border border-red-600'
+              ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/30 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-600/50'
+              : 'bg-red-500/10 text-red-600 border border-red-400/40 dark:bg-red-900/20 dark:text-red-400 dark:border-red-600/50'
           }`}
         >
           {message.text}

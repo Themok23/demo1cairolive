@@ -5,14 +5,14 @@ import { GetArticleUseCase } from '@/src/application/use-cases/articles/getArtic
 import { UpdateArticleUseCase } from '@/src/application/use-cases/articles/updateArticle';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const repository = new DrizzleArticleRepository();
     const useCase = new GetArticleUseCase(repository);
 
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const repository = new DrizzleArticleRepository();
     const useCase = new UpdateArticleUseCase(repository);

@@ -6,6 +6,8 @@ import { eq, desc } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { Users, Zap, TrendingUp, ArrowRight, CheckCircle } from 'lucide-react';
 import AnimatedHero from '@/components/client/AnimatedHero';
+import { localized, type Locale } from '@/src/lib/locale';
+import { toKrtkPerson } from '@/src/lib/toKrtkPerson';
 import ArticleCarousel from '@/components/client/ArticleCarousel';
 import RotatingCards from '@/components/client/RotatingCards';
 import ScrollReveal from '@/components/client/ScrollReveal';
@@ -13,9 +15,9 @@ import ParallaxSection from '@/components/client/ParallaxSection';
 import QuoteArtworkSection from '@/components/client/QuoteArtworkSection';
 
 interface HomePageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default async function Home({ params }: HomePageProps) {
@@ -32,17 +34,19 @@ export default async function Home({ params }: HomePageProps) {
   const latestArticles = await db
     .select({
       id: articles.id,
-      slug: articles.slug,
-      title: articles.title,
-      excerpt: articles.excerpt,
+      slugEn: articles.slugEn,
+      titleEn: articles.titleEn,
+      titleAr: articles.titleAr,
+      excerptEn: articles.excerptEn,
+      excerptAr: articles.excerptAr,
       featuredImageUrl: articles.featuredImageUrl,
       publishedAt: articles.publishedAt,
-      maleFirstName: malePerson.firstName,
-      maleLastName: malePerson.lastName,
+      maleFirstNameEn: malePerson.firstNameEn,
+      maleLastNameEn: malePerson.lastNameEn,
       maleImage: malePerson.profileImageUrl,
       maleId: malePerson.id,
-      femaleFirstName: femalePerson.firstName,
-      femaleLastName: femalePerson.lastName,
+      femaleFirstNameEn: femalePerson.firstNameEn,
+      femaleLastNameEn: femalePerson.lastNameEn,
       femaleImage: femalePerson.profileImageUrl,
       femaleId: femalePerson.id,
     })
@@ -54,28 +58,22 @@ export default async function Home({ params }: HomePageProps) {
     .limit(8);
 
   const isAr = locale === 'ar';
+  const loc = locale as Locale;
 
-  // Transform people for RotatingCards
-  const rotatingPeople = featuredPeople.map((p) => ({
-    id: p.id,
-    name: `${p.firstName} ${p.lastName}`,
-    position: p.currentPosition || '',
-    company: p.currentCompany || '',
-    imageUrl: p.profileImageUrl,
-    tier: (p.tier === 'gold' || p.tier === 'silver' || p.tier === 'platinum' ? p.tier : 'bronze') as 'platinum' | 'gold' | 'silver' | 'bronze',
-  }));
+  // Transform people for RotatingCards (uses shared Krtk component)
+  const rotatingPeople = featuredPeople.map((p) => toKrtkPerson(p, loc));
 
   // Transform articles for carousel with tagged people
   const carouselArticles = latestArticles.map((a) => ({
     id: a.id,
-    slug: a.slug,
-    title: a.title,
-    excerpt: a.excerpt || '',
+    slug: a.slugEn,
+    title: localized(loc, a.titleEn, a.titleAr),
+    excerpt: localized(loc, a.excerptEn, a.excerptAr) || '',
     featuredImageUrl: a.featuredImageUrl,
     publishedAt: a.publishedAt,
     taggedPeople: [
-      ...(a.maleId ? [{ id: a.maleId, name: `${a.maleFirstName} ${a.maleLastName}`, imageUrl: a.maleImage }] : []),
-      ...(a.femaleId ? [{ id: a.femaleId, name: `${a.femaleFirstName} ${a.femaleLastName}`, imageUrl: a.femaleImage }] : []),
+      ...(a.maleId ? [{ id: a.maleId, name: `${a.maleFirstNameEn} ${a.maleLastNameEn}`, imageUrl: a.maleImage }] : []),
+      ...(a.femaleId ? [{ id: a.femaleId, name: `${a.femaleFirstNameEn} ${a.femaleLastNameEn}`, imageUrl: a.femaleImage }] : []),
     ],
   }));
 
