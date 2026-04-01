@@ -160,6 +160,8 @@ const ArticleCarousel = ({ articles, locale = 'en' }: ArticleCarouselProps) => {
               <div className="absolute inset-0">
                 {article.featuredImageUrl ? (
                   <Image src={article.featuredImageUrl} alt={article.title} fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 280px"
+                    loading="lazy"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-surface to-surface-elevated" />

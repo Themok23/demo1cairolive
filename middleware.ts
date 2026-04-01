@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
+import { createHmac } from 'crypto';
 import { locales, defaultLocale } from './src/i18n';
 
 const intlMiddleware = createIntlMiddleware({
@@ -24,26 +25,31 @@ function isPublic(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathname.startsWith(p));
 }
 
+/** Must match the token generation in /api/auth/unlock */
+function makeToken(password: string): string {
+  const secret = process.env.NEXTAUTH_SECRET || 'cairo-live-secret';
+  return createHmac('sha256', secret).update(password).digest('hex');
+}
+
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  /* Always let public paths through */
   if (isPublic(pathname)) {
     return NextResponse.next();
   }
 
-  /* Check access cookie */
-  const cookieVal = req.cookies.get('cs_auth')?.value;
   const expected = process.env.COMING_SOON_PASSWORD;
+  const cookieVal = req.cookies.get('cs_auth')?.value;
 
-  if (!expected || cookieVal !== expected) {
-    /* Not authenticated — redirect to coming soon */
+  /* Verify cookie is the HMAC of the current password, not the password itself */
+  const validToken = expected ? makeToken(expected) : null;
+
+  if (!validToken || cookieVal !== validToken) {
     const url = req.nextUrl.clone();
     url.pathname = '/coming-soon';
     return NextResponse.redirect(url);
   }
 
-  /* Authenticated — run normal i18n middleware */
   return intlMiddleware(req);
 }
 

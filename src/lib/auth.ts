@@ -4,9 +4,8 @@ import { compare } from 'bcryptjs';
 import type { NextAuthConfig } from 'next-auth';
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'mokhtar@themok.company';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
-
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; // plaintext fallback for dev only
 
 const authConfig: NextAuthConfig = {
   providers: [
@@ -28,30 +27,16 @@ const authConfig: NextAuthConfig = {
           throw new Error('Invalid email or password');
         }
 
-        // Check against plaintext password first (for development)
-        if (ADMIN_PASSWORD) {
-          if (password === ADMIN_PASSWORD) {
-            return {
-              id: '1',
-              email: ADMIN_EMAIL,
-              name: 'Admin',
-            };
-          }
+        /* Prefer bcrypt hash if available (production) */
+        if (ADMIN_PASSWORD_HASH) {
+          const match = await compare(password, ADMIN_PASSWORD_HASH);
+          if (match) return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
+          throw new Error('Invalid email or password');
         }
 
-        // Check against bcrypt hash
-        if (ADMIN_PASSWORD_HASH) {
-          const passwordMatch = await compare(
-            password,
-            ADMIN_PASSWORD_HASH
-          );
-          if (passwordMatch) {
-            return {
-              id: '1',
-              email: ADMIN_EMAIL,
-              name: 'Admin',
-            };
-          }
+        /* Plaintext fallback — only acceptable before hash is configured */
+        if (ADMIN_PASSWORD && password === ADMIN_PASSWORD) {
+          return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
         }
 
         throw new Error('Invalid email or password');
@@ -63,19 +48,15 @@ const authConfig: NextAuthConfig = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 8 * 60 * 60, // 8 hours
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
+      if (user) token.id = user.id;
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-      }
+      if (session.user) session.user.id = token.id as string;
       return session;
     },
   },
