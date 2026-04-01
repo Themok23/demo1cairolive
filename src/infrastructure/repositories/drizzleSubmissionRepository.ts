@@ -162,7 +162,8 @@ export class DrizzleSubmissionRepository implements SubmissionRepository {
     person: Person
   ): Promise<{ submission: Submission; person: Person }> {
     return await db.transaction(async (tx) => {
-      await tx.insert(persons).values({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (tx as any).insert(persons).values({
         id: person.id,
         firstNameEn: person.firstNameEn,
         lastNameEn: person.lastNameEn,
