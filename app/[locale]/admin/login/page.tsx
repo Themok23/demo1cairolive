@@ -17,9 +17,15 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const rawCallback = searchParams.get('callbackUrl') || `/${locale}/admin`;
-  // Prevent open redirect: only allow relative paths, block protocol-relative URLs
-  const callbackUrl = rawCallback.startsWith('/') && !rawCallback.startsWith('//') ? rawCallback : `/${locale}/admin`;
+  // Prevent open redirect: only allow strict relative paths on the same origin
+  const callbackUrl = (() => {
+    const raw = searchParams.get('callbackUrl') || '';
+    if (!raw) return `/${locale}/admin`;
+    // Block protocol-relative, backslash, encoded slashes, or anything without leading /word
+    if (/^(\/\/|\\|%2[fF]|https?:)/i.test(raw)) return `/${locale}/admin`;
+    if (!/^\/[a-zA-Z]/.test(raw)) return `/${locale}/admin`;
+    return raw;
+  })();
   const isAr = locale === 'ar';
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {

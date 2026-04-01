@@ -1,8 +1,9 @@
 import sanitizeHtml from 'sanitize-html';
 
 /**
- * Sanitizes HTML content from the database before rendering with dangerouslySetInnerHTML.
- * Allows a safe subset of HTML tags and attributes for rich article content.
+ * Sanitizes HTML content before rendering with dangerouslySetInnerHTML.
+ * Allows a safe subset of HTML tags. Blocks data: URIs, wildcard attributes,
+ * and other XSS vectors.
  */
 export function sanitizeContent(dirty: string): string {
   return sanitizeHtml(dirty, {
@@ -18,16 +19,22 @@ export function sanitizeContent(dirty: string): string {
     ],
     allowedAttributes: {
       'a': ['href', 'target', 'rel'],
-      'img': ['src', 'alt', 'width', 'height', 'class'],
-      'code': ['class'],
+      'img': ['src', 'alt', 'width', 'height'],
+      'code': ['class'],    // syntax highlighting only
       'pre': ['class'],
-      '*': ['class', 'id', 'dir'],
+      'div': ['class', 'dir'],
+      'span': ['class', 'dir'],
+      'p': ['dir'],
+      'h1': ['dir'], 'h2': ['dir'], 'h3': ['dir'],
+      'h4': ['dir'], 'h5': ['dir'], 'h6': ['dir'],
+      'td': ['colspan', 'rowspan'], 'th': ['colspan', 'rowspan'],
     },
+    /* Only https:// and mailto: — data: URIs are blocked (XSS vector) */
     allowedSchemes: ['https', 'mailto', 'tel'],
     allowedSchemesByTag: {
-      'img': ['https', 'data'],
+      'img': ['https'],
     },
-    // Force all links to open in a new tab with noopener for safety
+    /* Force all links to open in a new tab safely */
     transformTags: {
       'a': (tagName, attribs) => ({
         tagName,

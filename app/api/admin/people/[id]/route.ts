@@ -50,7 +50,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const person = await db.select().from(persons).where(eq(persons.id, id));
     if (!person.length) return NextResponse.json({ error: 'Person not found' }, { status: 404 });
 
-    return NextResponse.json(person[0]);
+    const found = person[0];
+    if (!found) return NextResponse.json({ error: 'Person not found' }, { status: 404 });
+    return NextResponse.json(found);
   } catch (error) {
     console.error('Error fetching person:', error);
     return NextResponse.json({ error: 'Failed to fetch person' }, { status: 500 });
