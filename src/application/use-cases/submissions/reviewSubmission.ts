@@ -54,6 +54,8 @@ export class ReviewSubmissionUseCase {
       let submission: Submission | null = null;
       let person: Person | undefined = undefined;
 
+      const now = new Date();
+
       if (validated.action === 'approve') {
         const personData: Person = {
           id: randomUUID(),
@@ -76,16 +78,17 @@ export class ReviewSubmissionUseCase {
           twitterUrl: existing.twitterUrl,
           instagramUrl: existing.instagramUrl,
           websiteUrl: existing.websiteUrl,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: now,
+          updatedAt: now,
         };
 
-        person = await this.personRepository.create(personData);
-
-        submission = await this.submissionRepository.approve(
+        const result = await this.submissionRepository.approveWithPerson(
           validated.id,
-          validated.reviewedBy
+          validated.reviewedBy,
+          personData
         );
+        submission = result.submission;
+        person = result.person;
       } else {
         submission = await this.submissionRepository.reject(
           validated.id,

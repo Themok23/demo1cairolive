@@ -438,9 +438,18 @@ Both believe that Egypt's biggest competitive advantage is its young population.
 
 Both are optimistic about Egypt's trajectory, but with eyes open to challenges. "The question isn't whether Egypt has the talent," Mariam says. "We do. The question is whether we can create structures that allow talent to flourish. Whether we fund research and innovation. Whether we protect press freedom and artistic freedom. Whether we invest in education. If we do those things, Egypt will lead. If we don't, talent will continue migrating. But I'm hopeful because I see the work that young Egyptians are doing, and it's extraordinary."`;
 
+    const articleId1 = randomUUID();
+    const articleId2 = randomUUID();
+    const articleId3 = randomUUID();
+    const articleId4 = randomUUID();
+    const articleId5 = randomUUID();
+    const articleId6 = randomUUID();
+    const articleId7 = randomUUID();
+    const articleId8 = randomUUID();
+
     await db.insert(articles).values([
       {
-        id: 'article-tech-titans-nile',
+        id: articleId1,
         titleEn: 'Tech Titans of the Nile',
         slugEn: 'tech-titans-of-the-nile',
         contentEn: article1Content,
@@ -460,7 +469,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         femalePersonId: nourhranId,
       },
       {
-        id: 'article-designing-egypt-future',
+        id: articleId2,
         titleEn: 'Designing Egypt\'s Future',
         slugEn: 'designing-egypts-future',
         contentEn: article2Content,
@@ -480,7 +489,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         femalePersonId: mariamId,
       },
       {
-        id: 'article-cairo-creative-revolution',
+        id: articleId3,
         titleEn: 'Cairo\'s Creative Revolution',
         slugEn: 'cairo-creative-revolution',
         contentEn: article3Content,
@@ -500,7 +509,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         femalePersonId: yasmineId,
       },
       {
-        id: 'article-innovation-crossroads',
+        id: articleId4,
         titleEn: 'Innovation at the Crossroads',
         slugEn: 'innovation-at-the-crossroads',
         contentEn: article4Content,
@@ -520,7 +529,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         femalePersonId: mariamId,
       },
       {
-        id: 'article-stories-shape-nation',
+        id: articleId5,
         titleEn: 'Stories That Shape a Nation',
         slugEn: 'stories-that-shape-a-nation',
         contentEn: article5Content,
@@ -540,7 +549,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         femalePersonId: nourhranId,
       },
       {
-        id: 'article-nile-to-world',
+        id: articleId6,
         titleEn: 'From the Nile to the World',
         slugEn: 'from-the-nile-to-the-world',
         contentEn: article6Content,
@@ -560,7 +569,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         femalePersonId: yasmineId,
       },
       {
-        id: 'article-healthcare-innovation',
+        id: articleId7,
         titleEn: 'Healthcare Innovation at Scale',
         slugEn: 'healthcare-innovation-at-scale',
         contentEn: article7Content,
@@ -580,7 +589,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         femalePersonId: mariamId,
       },
       {
-        id: 'article-youth-leadership',
+        id: articleId8,
         titleEn: 'Mentoring the Next Generation of Leaders',
         slugEn: 'mentoring-next-generation-leaders',
         contentEn: article8Content,
@@ -634,7 +643,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
     // 2 subscribers (active)
     await db.insert(subscribers).values([
       {
-        id: `subscriber-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: randomUUID(),
         email: 'hassan.ahmed@example.com',
         firstName: 'Hassan',
         lastName: 'Ahmed',
@@ -643,7 +652,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
         updatedAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000),
       },
       {
-        id: `subscriber-${Date.now() + 1}-${Math.random().toString(36).substr(2, 9)}`,
+        id: randomUUID(),
         email: 'fatima.khalil@example.com',
         firstName: 'Fatima',
         lastName: 'Khalil',
