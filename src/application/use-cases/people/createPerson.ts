@@ -53,7 +53,7 @@ export class CreatePersonUseCase {
 
       const now = new Date();
       const person: Person = {
-        id: this.generateId(),
+        id: randomUUID(),
         firstNameEn: validated.firstNameEn,
         lastNameEn: validated.lastNameEn,
         email: validated.email,
@@ -97,7 +97,4 @@ export class CreatePersonUseCase {
     }
   }
 
-  private generateId(): string {
-    return `person-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
 }

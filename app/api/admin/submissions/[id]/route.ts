@@ -59,47 +59,51 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
     }
 
-    // If approved, create a person from the submission
-    if (status === 'approved') {
-      const personId = crypto.randomUUID();
-      await db.insert(persons).values({
-        id: personId,
-        firstNameEn: submission.firstName,
-        lastNameEn: submission.lastName,
-        email: submission.email,
-        phoneNumber: submission.phoneNumber,
-        dateOfBirth: submission.dateOfBirth,
-        gender: submission.gender,
-        bioEn: submission.bio,
-        profileImageUrl: submission.profileImageUrl,
-        coverImageUrl: null,
-        currentPositionEn: submission.currentPosition,
-        currentCompanyEn: submission.currentCompany,
-        locationEn: submission.location,
-        tier: 'bronze',
-        isVerified: false,
-        isClaimed: false,
-        claimedBy: null,
-        keywords: submission.keywords,
-        linkedinUrl: submission.linkedinUrl,
-        twitterUrl: submission.twitterUrl,
-        instagramUrl: submission.instagramUrl,
-        websiteUrl: submission.websiteUrl,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    }
-
-    // Update submission status
     const now = new Date();
-    await db
-      .update(submissions)
-      .set({
-        status,
-        reviewedAt: now,
-        updatedAt: now,
-      })
-      .where(eq(submissions.id, id));
+
+    // Wrap approval in a transaction to prevent orphaned person records
+    if (status === 'approved') {
+      await db.transaction(async (tx) => {
+        const personId = crypto.randomUUID();
+        await tx.insert(persons).values({
+          id: personId,
+          firstNameEn: submission.firstName,
+          lastNameEn: submission.lastName,
+          email: submission.email,
+          phoneNumber: submission.phoneNumber,
+          dateOfBirth: submission.dateOfBirth,
+          gender: submission.gender,
+          bioEn: submission.bio,
+          profileImageUrl: submission.profileImageUrl,
+          coverImageUrl: null,
+          currentPositionEn: submission.currentPosition,
+          currentCompanyEn: submission.currentCompany,
+          locationEn: submission.location,
+          tier: 'bronze',
+          isVerified: false,
+          isClaimed: false,
+          claimedBy: null,
+          keywords: submission.keywords,
+          linkedinUrl: submission.linkedinUrl,
+          twitterUrl: submission.twitterUrl,
+          instagramUrl: submission.instagramUrl,
+          websiteUrl: submission.websiteUrl,
+          createdAt: now,
+          updatedAt: now,
+        });
+
+        await tx
+          .update(submissions)
+          .set({ status, reviewedAt: now, updatedAt: now })
+          .where(eq(submissions.id, id));
+      });
+    } else {
+      // Rejection: just update status
+      await db
+        .update(submissions)
+        .set({ status, reviewedAt: now, updatedAt: now })
+        .where(eq(submissions.id, id));
+    }
 
     return NextResponse.json({ message: `Submission ${status}` });
   } catch (error) {

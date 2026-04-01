@@ -1,8 +1,10 @@
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { Submission } from '../../../domain/entities/submission';
 import { SubmissionRepository } from '../../../domain/repositories/submissionRepository';
 import { PersonRepository } from '../../../domain/repositories/personRepository';
 import { Person } from '../../../domain/entities/person';
+import { Gender } from '../../../domain/value-objects/gender';
 
 const ReviewSubmissionSchema = z.object({
   id: z.string().min(1),
@@ -52,15 +54,17 @@ export class ReviewSubmissionUseCase {
       let submission: Submission | null = null;
       let person: Person | undefined = undefined;
 
+      const now = new Date();
+
       if (validated.action === 'approve') {
         const personData: Person = {
-          id: this.generateId(),
+          id: randomUUID(),
           firstNameEn: existing.firstName,
           lastNameEn: existing.lastName,
           email: existing.email,
           phoneNumber: existing.phoneNumber,
           dateOfBirth: existing.dateOfBirth,
-          gender: existing.gender as any,
+          gender: existing.gender as Gender,
           bioEn: existing.bio,
           profileImageUrl: existing.profileImageUrl,
           currentPositionEn: existing.currentPosition,
@@ -74,16 +78,17 @@ export class ReviewSubmissionUseCase {
           twitterUrl: existing.twitterUrl,
           instagramUrl: existing.instagramUrl,
           websiteUrl: existing.websiteUrl,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: now,
+          updatedAt: now,
         };
 
-        person = await this.personRepository.create(personData);
-
-        submission = await this.submissionRepository.approve(
+        const result = await this.submissionRepository.approveWithPerson(
           validated.id,
-          validated.reviewedBy
+          validated.reviewedBy,
+          personData
         );
+        submission = result.submission;
+        person = result.person;
       } else {
         submission = await this.submissionRepository.reject(
           validated.id,
@@ -120,7 +125,4 @@ export class ReviewSubmissionUseCase {
     }
   }
 
-  private generateId(): string {
-    return `person-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
 }

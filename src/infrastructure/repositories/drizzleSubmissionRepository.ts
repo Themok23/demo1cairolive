@@ -1,7 +1,8 @@
 import { eq, desc, sql } from 'drizzle-orm';
 import { db } from '../db/client';
-import { submissions } from '../db/schema';
+import { submissions, persons } from '../db/schema';
 import { Submission } from '../../domain/entities/submission';
+import { Person } from '../../domain/entities/person';
 import { SubmissionRepository } from '../../domain/repositories/submissionRepository';
 
 export class DrizzleSubmissionRepository implements SubmissionRepository {
@@ -153,6 +154,57 @@ export class DrizzleSubmissionRepository implements SubmissionRepository {
       .returning();
 
     return updated ? this.parseSubmission(updated) : null;
+  }
+
+  async approveWithPerson(
+    id: string,
+    reviewedBy: string,
+    person: Person
+  ): Promise<{ submission: Submission; person: Person }> {
+    return await db.transaction(async (tx) => {
+      await tx.insert(persons).values({
+        id: person.id,
+        firstNameEn: person.firstNameEn,
+        lastNameEn: person.lastNameEn,
+        email: person.email,
+        phoneNumber: person.phoneNumber,
+        dateOfBirth: person.dateOfBirth,
+        gender: person.gender,
+        bioEn: person.bioEn,
+        profileImageUrl: person.profileImageUrl,
+        coverImageUrl: person.coverImageUrl ?? null,
+        currentPositionEn: person.currentPositionEn,
+        currentCompanyEn: person.currentCompanyEn,
+        locationEn: person.locationEn,
+        tier: person.tier,
+        isVerified: person.isVerified,
+        isClaimed: person.isClaimed,
+        claimedBy: person.claimedBy ?? null,
+        keywords: person.keywords ? JSON.stringify(person.keywords) : null,
+        linkedinUrl: person.linkedinUrl,
+        twitterUrl: person.twitterUrl,
+        instagramUrl: person.instagramUrl,
+        websiteUrl: person.websiteUrl,
+        createdAt: person.createdAt,
+        updatedAt: person.updatedAt,
+      });
+
+      const [updated] = await tx
+        .update(submissions)
+        .set({
+          status: 'approved',
+          reviewedBy,
+          reviewedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(eq(submissions.id, id))
+        .returning();
+
+      return {
+        submission: this.parseSubmission(updated),
+        person,
+      };
+    });
   }
 
   async reject(
