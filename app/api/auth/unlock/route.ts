@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHmac } from 'crypto';
 
-/* Simple in-memory rate limiter — resets on server restart, fine for a preview gate */
+/* Simple in-memory rate limiter */
 const attempts = new Map<string, { count: number; resetAt: number }>();
 const MAX_ATTEMPTS = 5;
-const WINDOW_MS = 15 * 60 * 1000; // 15 min
+const WINDOW_MS = 15 * 60 * 1000;
 
 function getClientIp(req: NextRequest): string {
   return (
@@ -25,12 +24,6 @@ function isRateLimited(ip: string): boolean {
   return record.count > MAX_ATTEMPTS;
 }
 
-/** HMAC token derived from password — never store the raw password in a cookie */
-function makeToken(password: string): string {
-  const secret = process.env.NEXTAUTH_SECRET || 'cairo-live-secret';
-  return createHmac('sha256', secret).update(password).digest('hex');
-}
-
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
 
@@ -43,19 +36,19 @@ export async function POST(req: NextRequest) {
 
   const { password } = await req.json();
   const correct = process.env.COMING_SOON_PASSWORD;
+  const token = process.env.COMING_SOON_TOKEN;
 
-  if (!correct || password !== correct) {
+  if (!correct || !token || password !== correct) {
     return NextResponse.json({ error: 'Wrong password' }, { status: 401 });
   }
 
-  /* Store HMAC token — not the password itself */
-  const token = makeToken(correct);
+  /* Set the static token as the cookie — middleware validates against this */
   const res = NextResponse.json({ ok: true });
   res.cookies.set('cs_auth', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 14, // 14 days
+    maxAge: 60 * 60 * 24 * 14,
     path: '/',
   });
   return res;
