@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { Subscriber } from '../../../domain/entities/subscriber';
 import { SubscriberRepository } from '../../../domain/repositories/subscriberRepository';
@@ -59,7 +60,7 @@ export class SubscribeUseCase {
 
       const now = new Date();
       const subscriber: Subscriber = {
-        id: this.generateId(),
+        id: randomUUID(),
         email: validated.email,
         firstName: validated.firstName,
         lastName: validated.lastName,
@@ -87,7 +88,4 @@ export class SubscribeUseCase {
     }
   }
 
-  private generateId(): string {
-    return `subscriber-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
 }

@@ -5,7 +5,16 @@ import type { NextAuthConfig } from 'next-auth';
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'mokhtar@themok.company';
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+<<<<<<< Updated upstream
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; // plaintext fallback for dev only
+=======
+
+if (!ADMIN_PASSWORD_HASH) {
+  console.warn(
+    'ADMIN_PASSWORD_HASH is not set. Admin login will not work until a bcrypt hash is configured.'
+  );
+}
+>>>>>>> Stashed changes
 
 const authConfig: NextAuthConfig = {
   providers: [
@@ -27,6 +36,7 @@ const authConfig: NextAuthConfig = {
           throw new Error('Invalid email or password');
         }
 
+<<<<<<< Updated upstream
         /* Prefer bcrypt hash if available (production) */
         if (ADMIN_PASSWORD_HASH) {
           const match = await compare(password, ADMIN_PASSWORD_HASH);
@@ -37,9 +47,18 @@ const authConfig: NextAuthConfig = {
         /* Plaintext fallback — only acceptable before hash is configured */
         if (ADMIN_PASSWORD && password === ADMIN_PASSWORD) {
           return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
+=======
+        if (!ADMIN_PASSWORD_HASH) {
+          throw new Error('Admin authentication is not configured');
         }
 
-        throw new Error('Invalid email or password');
+        const match = await compare(password, ADMIN_PASSWORD_HASH);
+        if (!match) {
+          throw new Error('Invalid email or password');
+>>>>>>> Stashed changes
+        }
+
+        return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
       },
     }),
   ],

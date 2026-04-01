@@ -21,7 +21,7 @@ export function LanguageSwitcher() {
       className="px-3 py-1.5 rounded-lg text-sm font-medium border border-white/10 hover:border-[#D4A853]/50 hover:text-[#D4A853] transition-all duration-200"
       aria-label={locale === 'en' ? 'Switch to Arabic' : 'Switch to English'}
     >
-      {locale === 'en' ? 'عربي' : 'EN'}
+      {locale === 'en' ? 'AR' : 'EN'}
     </button>
   );
 }

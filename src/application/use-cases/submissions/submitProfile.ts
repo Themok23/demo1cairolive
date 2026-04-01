@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { Submission, SubmissionEntity } from '../../../domain/entities/submission';
 import { SubmissionRepository } from '../../../domain/repositories/submissionRepository';
@@ -39,7 +40,7 @@ export class SubmitProfileUseCase {
 
       const now = new Date();
       const submission: Submission = {
-        id: this.generateId(),
+        id: randomUUID(),
         firstName: validated.firstName,
         lastName: validated.lastName,
         email: validated.email,
@@ -81,7 +82,4 @@ export class SubmitProfileUseCase {
     }
   }
 
-  private generateId(): string {
-    return `submission-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
 }

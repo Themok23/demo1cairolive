@@ -1,8 +1,10 @@
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { Submission } from '../../../domain/entities/submission';
 import { SubmissionRepository } from '../../../domain/repositories/submissionRepository';
 import { PersonRepository } from '../../../domain/repositories/personRepository';
 import { Person } from '../../../domain/entities/person';
+import { Gender } from '../../../domain/value-objects/gender';
 
 const ReviewSubmissionSchema = z.object({
   id: z.string().min(1),
@@ -54,13 +56,13 @@ export class ReviewSubmissionUseCase {
 
       if (validated.action === 'approve') {
         const personData: Person = {
-          id: this.generateId(),
+          id: randomUUID(),
           firstNameEn: existing.firstName,
           lastNameEn: existing.lastName,
           email: existing.email,
           phoneNumber: existing.phoneNumber,
           dateOfBirth: existing.dateOfBirth,
-          gender: existing.gender as any,
+          gender: existing.gender as Gender,
           bioEn: existing.bio,
           profileImageUrl: existing.profileImageUrl,
           currentPositionEn: existing.currentPosition,
@@ -120,7 +122,4 @@ export class ReviewSubmissionUseCase {
     }
   }
 
-  private generateId(): string {
-    return `person-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
 }

@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { db } from '../db/client';
 import { persons, articles, submissions, subscribers } from '../db/schema';
 import { sql } from 'drizzle-orm';
@@ -16,12 +17,12 @@ async function seed() {
     const now = new Date();
 
     // Use slug-friendly IDs for 6 people (3 male, 3 female)
-    const ahmedId = 'ahmed-essam';
-    const nourhranId = 'nourhan-el-sherif';
-    const karimId = 'karim-abdel-aziz';
-    const mariamId = 'mariam-hassan';
-    const omarId = 'omar-farouk';
-    const yasmineId = 'yasmine-nabil';
+    const ahmedId = randomUUID();
+    const nourhranId = randomUUID();
+    const karimId = randomUUID();
+    const mariamId = randomUUID();
+    const omarId = randomUUID();
+    const yasmineId = randomUUID();
 
     await db.insert(persons).values([
       {
@@ -603,7 +604,7 @@ Both are optimistic about Egypt's trajectory, but with eyes open to challenges. 
     console.log('Created 8 published articles with rich bilingual content');
 
     // 1 submission (pending)
-    const submissionId = `submission-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const submissionId = randomUUID();
 
     await db.insert(submissions).values([
       {

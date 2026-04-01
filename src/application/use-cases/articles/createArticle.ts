@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import { Article, ArticleEntity } from '../../../domain/entities/article';
 import { ArticleRepository } from '../../../domain/repositories/articleRepository';
@@ -54,7 +55,7 @@ export class CreateArticleUseCase {
       const now = new Date();
 
       const article: Article = {
-        id: this.generateId(),
+        id: randomUUID(),
         titleEn: validated.titleEn,
         slugEn: validated.slugEn,
         contentEn: validated.contentEn,
@@ -96,7 +97,4 @@ export class CreateArticleUseCase {
     return Math.ceil(wordCount / wordsPerMinute);
   }
 
-  private generateId(): string {
-    return `article-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
 }
