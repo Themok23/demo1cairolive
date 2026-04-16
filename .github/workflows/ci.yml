@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, staging]
+    branches: [master, main, staging]
   pull_request:
-    branches: [main, staging]
+    branches: [master, main, staging]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -29,4 +29,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
