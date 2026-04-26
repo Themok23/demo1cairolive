@@ -58,11 +58,11 @@ A sleek, modern platform that publishes articles about notable Egyptian people -
 
 ## Architecture
 
-Clean Architecture in Next.js:
-- `src/domain/` - Pure business logic, zero framework deps
-- `src/application/` - Use cases (one class = one action)
-- `src/infrastructure/` - All I/O: DB, external APIs
-- `src/presentation/` - Next.js layer: pages, components, API routes
+Clean Architecture in Next.js. All paths are relative to `04-Development/`:
+- `04-Development/src/domain/` - Pure business logic, zero framework deps
+- `04-Development/src/application/` - Use cases (one class = one action)
+- `04-Development/src/infrastructure/` - All I/O: DB, external APIs
+- `04-Development/app/`, `04-Development/components/`, `04-Development/lib/` - Next.js presentation layer (pages, components, API routes, helpers)
 
 ---
 
@@ -129,10 +129,18 @@ Before doing anything in this project, refer to `context/guidelines.md` in the m
 Key rules:
 - File naming: `[ClientCode]-[DocumentType]-[Version]-[Status].ext`
   Example: `D1CL-CompanyProfile-v2.1-CLIENT-REVIEW.pptx`
-- Standard project subfolders: `00-Brief/`, `01-Research/`, `02-Content/`, `03-Design/`, `04-Exports/`, `05-Client-Comms/`, `06-Final/`
-- All exports go in `04-Exports/` - never overwrite a version
+- Standard project subfolders (9-folder layout per workspace `dev-scope.md`):
+  - `00-Brief/` - Client brief, background, requirements
+  - `01-Solution-Architecture/` - Technical architecture, system design docs (IMPLEMENTATION_PLAN, PROJECT_STATISTICS)
+  - `02-Branding/` - Brand assets, logos, color palettes, typography
+  - `03-Design/` - UI/UX designs, wireframes, mockups
+  - `04-Development/` - All Next.js source code, configs, env files, deps
+  - `05-Testing/` - Test plans, QA reports, code reviews, test-scripts
+  - `06-Client-Comms/` - Client emails, meeting notes, feedback
+  - `07-Exports/` - Deliverable exports (PDFs, zips, builds) - never overwrite a version
+  - `08-Final/` - Final approved deliverables per phase
 - Nothing ships without passing `/review`
-- Get all client feedback in writing - log it in `05-Client-Comms/`
+- Get all client feedback in writing - log it in `06-Client-Comms/`
 
 ---
 
@@ -174,11 +182,31 @@ Key rules:
 
 ---
 
+## How To Run / Develop
+
+All Next.js commands run from inside `04-Development/`:
+
+```powershell
+cd "C:\xampp\htdocs\AI Space\Project folders\Demo1cairolive\04-Development"
+npm install
+npm run dev          # local dev server
+npm run build        # production build
+npm run lint         # eslint
+npm run test         # vitest
+```
+
+**Vercel:** the Vercel project root needs to point to `04-Development/`. After this reorg, in the Vercel dashboard go to Project Settings -> General -> Root Directory and set it to `04-Development`. Otherwise builds will fail.
+
+**Env files:** `.env.local` and `.env.example` now live in `04-Development/` and are loaded by Next.js automatically when commands run from there.
+
+---
+
 ## Key Decisions Made on This Project
 
 - 2026-03-27: Project folder created with full master prompt spec. Clean architecture with Next.js 14, Drizzle ORM, Neon PostgreSQL, NextAuth v5.
 - 2026-03-27: Identity mode set to Product & Dev (Jinx + engineering-minded).
 - 2026-03-27: Design direction: dark mode primary, gold/amber accents, GSAP animations, premium business card aesthetic for Micro KRTK.
+- 2026-04-26: Folder reorganization to match workspace 9-folder standard. All Next.js source/configs moved into `04-Development/`. Docs moved to `01-Solution-Architecture/` and `05-Testing/`. Branch: `feat/folder-reorganization`.
 
 ---
 
