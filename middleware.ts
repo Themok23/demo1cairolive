@@ -26,19 +26,31 @@ function isPublic(pathname: string): boolean {
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (isPublic(pathname)) return NextResponse.next();
+  // Always pass the pathname to server components via a custom header
+  // so layouts can know what path they're rendering for.
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set('x-pathname', pathname);
 
-  /* Compare against the pre-computed static token — no crypto needed in Edge */
-  const validToken = process.env.COMING_SOON_TOKEN;
-  const cookieVal = req.cookies.get('cs_auth')?.value;
-
-  if (!validToken || cookieVal !== validToken) {
-    const url = req.nextUrl.clone();
-    url.pathname = '/coming-soon';
-    return NextResponse.redirect(url);
+  if (isPublic(pathname)) {
+    return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
-  return intlMiddleware(req);
+  /* Coming-soon gate — only enforced when COMING_SOON_TOKEN is set.
+     This way local dev doesn't need to bypass anything; the gate is opt-in. */
+  const validToken = process.env.COMING_SOON_TOKEN;
+  if (validToken) {
+    const cookieVal = req.cookies.get('cs_auth')?.value;
+    if (cookieVal !== validToken) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/coming-soon';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // intlMiddleware returns its own response; merge our header into it.
+  const intlResponse = intlMiddleware(req);
+  intlResponse.headers.set('x-pathname', pathname);
+  return intlResponse;
 }
 
 export const config = {
