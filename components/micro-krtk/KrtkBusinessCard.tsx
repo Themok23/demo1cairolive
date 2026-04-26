@@ -14,6 +14,7 @@ import {
   Download,
 } from 'lucide-react';
 import TierBadge from '@/components/ui/TierBadge';
+import WhatsAppShareButton from '@/components/ui/WhatsAppShareButton';
 import { localized, type Locale } from '@/src/lib/locale';
 
 interface KrtkBusinessCardProps {
@@ -356,6 +357,16 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
                   : (isAr ? 'مشاركة' : 'Share')
                 }
               </button>
+              <WhatsAppShareButton
+                variant="minimal"
+                url={`/${locale}/krtk/${person.id}`}
+                text={
+                  isAr
+                    ? `بطاقة ${fullName} الرقمية على Cairo Live`
+                    : `Check out ${fullName}'s digital business card on Cairo Live`
+                }
+                locale={locale}
+              />
               <button
                 onClick={handleDownloadVCard}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium text-text-secondary hover:text-gold hover:bg-gold/[0.06] transition-all duration-200 cursor-pointer"
