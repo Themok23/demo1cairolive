@@ -94,6 +94,12 @@ export const articles = pgTable(
     category:        varchar('category', { length: 100 }),
     readTimeMinutes: integer('read_time_minutes').default(0),
     viewCount:       integer('view_count').default(0),
+    // Article type — Path 1 from D1CL plan §1d
+    // 'people' (current default): 2 Egyptians (male + female) embedded with KRTK profiles
+    // 'place':  spotlights a place/entity (e.g. Grand Egyptian Museum)
+    // 'entity': generic entity article (organization, event, brand)
+    articleType:     varchar('article_type', { length: 20 }).default('people').notNull(),
+    placeId:         varchar('place_id', { length: 36 }), // FK to places (only for type='place')
     malePersonId:    varchar('male_person_id',   { length: 36 }),
     femalePersonId:  varchar('female_person_id', { length: 36 }),
   },
@@ -102,6 +108,8 @@ export const articles = pgTable(
     authorIdx:      index('articles_author_idx').on(table.authorId),
     statusIdx:      index('articles_status_idx').on(table.status),
     publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt),
+    articleTypeIdx: index('articles_type_idx').on(table.articleType),
+    placeIdx:       index('articles_place_idx').on(table.placeId),
     malePersonIdx:  index('articles_male_person_idx').on(table.malePersonId),
     femalePersonIdx:index('articles_female_person_idx').on(table.femalePersonId),
   })

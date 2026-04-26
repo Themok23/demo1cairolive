@@ -22,6 +22,9 @@ const createArticleSchema = z.object({
   category:        z.string().max(100).optional().nullable(),
   featuredImageUrl: optionalImagePath.optional(),
   status:          z.enum(['draft', 'published']).default('draft'),
+  // Article type — Path 1 from D1CL plan
+  articleType:     z.enum(['people', 'place', 'entity']).default('people'),
+  placeId:         z.string().uuid().optional().nullable(),
   malePersonId:    z.string().uuid().optional().nullable(),
   femalePersonId:  z.string().uuid().optional().nullable(),
 });
@@ -85,8 +88,10 @@ export async function POST(request: NextRequest) {
       category:        body.category || null,
       readTimeMinutes: 0,
       viewCount:       0,
-      malePersonId:   body.malePersonId || null,
-      femalePersonId: body.femalePersonId || null,
+      articleType:    body.articleType ?? 'people',
+      placeId:        body.articleType === 'place' ? (body.placeId || null) : null,
+      malePersonId:   body.articleType === 'people' ? (body.malePersonId || null)   : null,
+      femalePersonId: body.articleType === 'people' ? (body.femalePersonId || null) : null,
     };
 
     await db.insert(articles).values(article);

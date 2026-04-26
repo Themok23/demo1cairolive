@@ -20,6 +20,8 @@ const updateArticleSchema = z.object({
   category:        z.string().max(100).optional().nullable(),
   featuredImageUrl: optionalImagePath.optional(),
   status:          z.enum(['draft', 'published']).default('draft'),
+  articleType:     z.enum(['people', 'place', 'entity']).default('people'),
+  placeId:         optionalPersonId.optional(),
   malePersonId:    optionalPersonId.optional(),
   femalePersonId:  optionalPersonId.optional(),
 });
@@ -71,8 +73,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       publishedAt: body.status === 'published' ? new Date() : null,
       category:        body.category ?? null,
       featuredImageUrl: body.featuredImageUrl ?? null,
-      malePersonId:   body.malePersonId ?? null,
-      femalePersonId: body.femalePersonId ?? null,
+      articleType:    body.articleType ?? 'people',
+      placeId:        body.articleType === 'place'  ? (body.placeId ?? null) : null,
+      malePersonId:   body.articleType === 'people' ? (body.malePersonId ?? null)   : null,
+      femalePersonId: body.articleType === 'people' ? (body.femalePersonId ?? null) : null,
       updatedAt: new Date(),
     };
 

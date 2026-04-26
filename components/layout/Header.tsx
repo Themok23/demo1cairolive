@@ -76,6 +76,18 @@ export default function Header() {
               label={isAr ? 'محاور' : 'Explore'}
             />
             <Link
+              href={`/${locale}/places`}
+              className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
+            >
+              {isAr ? 'أماكن' : 'Places'}
+            </Link>
+            <Link
+              href={`/${locale}/map`}
+              className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
+            >
+              {isAr ? 'خريطة' : 'Map'}
+            </Link>
+            <Link
               href={`/${locale}/people`}
               className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
             >
