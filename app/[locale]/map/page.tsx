@@ -1,10 +1,10 @@
-import dynamic from 'next/dynamic';
 import { db } from '@/src/infrastructure/db/client';
 import { places, pillars } from '@/src/infrastructure/db/schema';
 import { and, eq, isNotNull } from 'drizzle-orm';
 import FadeIn from '@/components/animations/FadeIn';
+import PlacesMapEmbed from '@/components/client/PlacesMapEmbed';
 
-// Map color per pillar slug — keep in sync with the colors used elsewhere
+// Map color per pillar slug - keep in sync with the colors used elsewhere
 const PILLAR_COLORS: Record<string, string> = {
   tourism:       '#D4A853', // gold
   restaurants:   '#F87171', // rose
@@ -13,16 +13,6 @@ const PILLAR_COLORS: Record<string, string> = {
   tech:          '#4ADE80', // emerald
 };
 const DEFAULT_COLOR = '#D4A853';
-
-// Leaflet needs window — disable SSR for the map component.
-const PlacesMap = dynamic(() => import('@/components/client/PlacesMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full w-full items-center justify-center bg-surface-elevated rounded-xl text-text-secondary">
-      Loading map...
-    </div>
-  ),
-});
 
 interface MapPageProps {
   params: Promise<{ locale: string }>;
@@ -127,7 +117,7 @@ export default async function MapPage({ params }: MapPageProps) {
         <div className="mx-auto max-w-7xl">
           <div className="h-[70vh] min-h-[500px] w-full rounded-xl overflow-hidden border border-border bg-surface-elevated">
             {pins.length > 0 ? (
-              <PlacesMap places={pins} locale={locale} />
+              <PlacesMapEmbed places={pins} locale={locale} />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-text-secondary">
                 {isAr ? 'لا توجد أماكن للعرض' : 'No places with coordinates yet'}

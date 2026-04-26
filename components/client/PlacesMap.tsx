@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import Link from 'next/link';
 
 export interface PlaceMapPin {
   id: string;
@@ -26,120 +24,109 @@ interface PlacesMapProps {
   locale: string;
 }
 
-/** Build a colored circle SVG icon for each pillar. Avoids the broken default
- *  Leaflet icon URLs that webpack/Next.js have trouble bundling. */
-function buildIcon(color: string): L.DivIcon {
-  return L.divIcon({
-    className: 'd1cl-pin',
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-    html: `
-      <div style="
-        width:28px;height:28px;border-radius:50%;
-        background:${color};
-        border:3px solid white;
-        box-shadow:0 4px 12px rgba(0,0,0,0.4);
-      "></div>
-    `,
-  });
-}
-
-/** Re-fits the map to show all pins whenever they change. */
-function FitToPins({ places }: { places: PlaceMapPin[] }) {
-  const map = useMap();
-  useEffect(() => {
-    if (places.length === 0) return;
-    if (places.length === 1) {
-      map.setView([places[0].latitude, places[0].longitude], 14);
-      return;
-    }
-    const bounds = L.latLngBounds(places.map((p) => [p.latitude, p.longitude]));
-    map.fitBounds(bounds, { padding: [60, 60] });
-  }, [places, map]);
-  return null;
-}
-
+// Plain Leaflet (no react-leaflet) so React Strict Mode's double-invoke
+// of effects in dev doesn't try to initialize the same DOM container twice.
+// We always check "did we already init?" before creating a map and tear it
+// down properly in the cleanup.
 export default function PlacesMap({ places, locale }: PlacesMapProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null; // avoid SSR mismatch — Leaflet needs window
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
   const isAr = locale === 'ar';
 
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Strict-mode guard: if a previous effect run already attached a map to
+    // this container, tear it down before creating a new one.
+    const containerEl = containerRef.current as any;
+    if (containerEl._leaflet_id != null && mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
+    if (containerEl._leaflet_id != null) {
+      // The container retains the leaflet id even after .remove() in some
+      // edge cases. Reset so initialize() doesn't throw.
+      delete containerEl._leaflet_id;
+    }
+
+    const map = L.map(containerRef.current, {
+      center: [30.0444, 31.2357], // Cairo
+      zoom: 11,
+      scrollWheelZoom: true,
+    });
+    mapRef.current = map;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    const markers: L.Marker[] = [];
+    for (const p of places) {
+      const icon = L.divIcon({
+        className: 'd1cl-pin',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        html: `
+          <div style="
+            width:28px;height:28px;border-radius:50%;
+            background:${p.pillarColor};
+            border:3px solid white;
+            box-shadow:0 4px 12px rgba(0,0,0,0.4);
+          "></div>
+        `,
+      });
+      const marker = L.marker([p.latitude, p.longitude], { icon }).addTo(map);
+
+      const name = isAr && p.nameAr ? p.nameAr : p.nameEn;
+      const tagline = isAr && p.taglineAr ? p.taglineAr : p.taglineEn;
+      const linkLabel = isAr ? 'افتح الصفحة ←' : 'Open page →';
+
+      const html = `
+        <div style="min-width:200px">
+          ${
+            p.coverImageUrl
+              ? `<img src="${p.coverImageUrl}" alt="${name.replace(/"/g, '&quot;')}" style="width:100%;height:100px;object-fit:cover;border-radius:6px;margin-bottom:8px" />`
+              : ''
+          }
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px" lang="${locale}">${name}</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#888;margin-bottom:6px">${p.type}</div>
+          ${
+            tagline
+              ? `<p style="font-size:12px;color:#444;margin:4px 0 8px" lang="${locale}">${tagline}</p>`
+              : ''
+          }
+          <a href="/${locale}/pillars/${p.pillarSlug}/${p.slug}" style="display:inline-block;font-size:12px;font-weight:600;color:#D4A853;text-decoration:none">${linkLabel}</a>
+        </div>
+      `;
+      marker.bindPopup(html);
+      markers.push(marker);
+    }
+
+    // Auto-fit to all pins.
+    if (places.length === 1) {
+      map.setView([places[0].latitude, places[0].longitude], 14);
+    } else if (places.length > 1) {
+      const bounds = L.latLngBounds(places.map((p) => [p.latitude, p.longitude]));
+      map.fitBounds(bounds, { padding: [60, 60] });
+    }
+
+    // Cleanup on unmount (or before re-running the effect in Strict Mode).
+    return () => {
+      markers.forEach((m) => m.remove());
+      map.remove();
+      mapRef.current = null;
+      // Reset the container so a future mount can init cleanly.
+      if (containerRef.current) {
+        delete (containerRef.current as any)._leaflet_id;
+      }
+    };
+  }, [places, locale, isAr]);
+
   return (
-    <MapContainer
-      center={[30.0444, 31.2357] as [number, number]} // Cairo center
-      zoom={11}
-      scrollWheelZoom
+    <div
+      ref={containerRef}
       style={{ height: '100%', width: '100%', borderRadius: '12px' }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <FitToPins places={places} />
-      {places.map((p) => {
-        const name = isAr && p.nameAr ? p.nameAr : p.nameEn;
-        const tagline = isAr && p.taglineAr ? p.taglineAr : p.taglineEn;
-        return (
-          <Marker
-            key={p.id}
-            position={[p.latitude, p.longitude]}
-            icon={buildIcon(p.pillarColor)}
-          >
-            <Popup>
-              <div style={{ minWidth: 200 }}>
-                {p.coverImageUrl && (
-                  <img
-                    src={p.coverImageUrl}
-                    alt={name}
-                    style={{
-                      width: '100%',
-                      height: 100,
-                      objectFit: 'cover',
-                      borderRadius: 6,
-                      marginBottom: 8,
-                    }}
-                  />
-                )}
-                <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }} lang={locale}>
-                  {name}
-                </div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    color: '#888',
-                    marginBottom: 6,
-                  }}
-                >
-                  {p.type}
-                </div>
-                {tagline && (
-                  <p
-                    style={{ fontSize: 12, color: '#444', margin: '4px 0 8px' }}
-                    lang={locale}
-                  >
-                    {tagline}
-                  </p>
-                )}
-                <Link
-                  href={`/${locale}/pillars/${p.pillarSlug}/${p.slug}` as any}
-                  style={{
-                    display: 'inline-block',
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: '#D4A853',
-                    textDecoration: 'none',
-                  }}
-                >
-                  {isAr ? 'افتح الصفحة ←' : 'Open page →'}
-                </Link>
-              </div>
-            </Popup>
-          </Marker>
-        );
-      })}
-    </MapContainer>
+    />
   );
 }
