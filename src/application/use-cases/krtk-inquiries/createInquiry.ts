@@ -22,7 +22,7 @@ export class CreateInquiryUseCase {
       return { success: true, data };
     } catch (error) {
       if (error instanceof z.ZodError) return { success: false, error: error.errors[0].message };
-      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+      return { success: false, error: 'An unexpected error occurred' };
     }
   }
 }

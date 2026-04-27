@@ -1,7 +1,8 @@
+import { auth } from '@/src/lib/auth';
 import { db } from '@/src/infrastructure/db/client';
 import { persons } from '@/src/infrastructure/db/schema';
 import { eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import PersonSubResourceTabs from '@/components/admin/person-sub-resource-tabs';
 
 interface EditPersonPageProps {
@@ -9,6 +10,9 @@ interface EditPersonPageProps {
 }
 
 export default async function AdminEditPersonPage({ params }: EditPersonPageProps) {
+  const session = await auth();
+  if (!session) redirect('/en/admin/login');
+
   const { id } = await params;
   const person = await db
     .select()

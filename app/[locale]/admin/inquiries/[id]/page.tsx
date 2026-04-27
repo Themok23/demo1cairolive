@@ -18,10 +18,11 @@ export default async function AdminInquiryDetailPage({ params }: Props) {
   const inquiry = await repo.findById(id);
   if (!inquiry) notFound();
 
+  let displayInquiry = inquiry;
   if (inquiry.status === 'new') {
     await new MarkInquiryReadUseCase(repo).execute(id);
-    inquiry.status = 'read';
+    displayInquiry = { ...inquiry, status: 'read' as const };
   }
 
-  return <AdminInquiryDetail inquiry={inquiry} />;
+  return <AdminInquiryDetail inquiry={displayInquiry} />;
 }

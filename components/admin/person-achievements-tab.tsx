@@ -22,15 +22,13 @@ export default function PersonAchievementsTab({ personId }: Props) {
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState('');
 
-  useEffect(() => { load(); }, []);
-
-  async function load() {
+  useEffect(() => {
     setLoading(true);
-    const res = await fetch(`/api/admin/people/${personId}/achievements`);
-    const json = await res.json();
-    setItems(json.data ?? []);
-    setLoading(false);
-  }
+    fetch(`/api/admin/people/${personId}/achievements`)
+      .then(r => r.json())
+      .then(json => { setItems(json.data ?? []); setLoading(false); })
+      .catch(() => { setErr('Failed to load'); setLoading(false); });
+  }, [personId]);
 
   function set(field: keyof Draft, value: string) {
     setDraft((d) => ({ ...d, [field]: value }));
@@ -38,15 +36,20 @@ export default function PersonAchievementsTab({ personId }: Props) {
 
   async function save() {
     setSaving(true); setErr('');
-    const res = await fetch(`/api/admin/people/${personId}/achievements`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(draft),
-    });
-    const json = await res.json();
-    setSaving(false);
-    if (json.data) { setItems((p) => [...p, json.data]); setDraft(blank); setShowForm(false); }
-    else setErr(json.error ?? 'Failed');
+    try {
+      const res = await fetch(`/api/admin/people/${personId}/achievements`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(draft),
+      });
+      const json = await res.json();
+      if (json.data) { setItems((p) => [...p, json.data]); setDraft(blank); setShowForm(false); }
+      else setErr(json.error ?? 'Failed');
+    } catch {
+      setErr('Network error. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function remove(id: string) {

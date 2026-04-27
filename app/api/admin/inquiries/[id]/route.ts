@@ -19,19 +19,27 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!parsed.success) return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 422 });
 
   const repo = new DrizzleKrtkInquiryRepository();
-  let updated;
 
   if (parsed.data.action === 'read') {
-    updated = await new MarkInquiryReadUseCase(repo).execute(id);
-  } else if (parsed.data.action === 'forwarded') {
-    if (!parsed.data.forwardedTo) return NextResponse.json({ error: 'forwardedTo required' }, { status: 422 });
-    updated = await repo.markForwarded(id, parsed.data.forwardedTo);
-    return NextResponse.json({ success: true, data: updated });
-  } else {
-    const data = await repo.markArchived(id);
-    return NextResponse.json({ success: true, data });
+    const result = await new MarkInquiryReadUseCase(repo).execute(id);
+    if (!result.success) return NextResponse.json({ error: result.error }, { status: 500 });
+    return NextResponse.json({ success: true, data: result.data });
   }
 
-  if (!updated.success) return NextResponse.json({ error: updated.error }, { status: 500 });
-  return NextResponse.json({ success: true, data: updated.data });
+  if (parsed.data.action === 'forwarded') {
+    if (!parsed.data.forwardedTo) return NextResponse.json({ error: 'forwardedTo required' }, { status: 422 });
+    try {
+      const data = await repo.markForwarded(id, parsed.data.forwardedTo);
+      return NextResponse.json({ success: true, data });
+    } catch {
+      return NextResponse.json({ error: 'Failed to update inquiry' }, { status: 500 });
+    }
+  }
+
+  try {
+    const data = await repo.markArchived(id);
+    return NextResponse.json({ success: true, data });
+  } catch {
+    return NextResponse.json({ error: 'Failed to update inquiry' }, { status: 500 });
+  }
 }

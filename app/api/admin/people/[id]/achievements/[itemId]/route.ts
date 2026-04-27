@@ -11,6 +11,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { itemId } = await params;
   const body = await req.json().catch(() => null);
+  if (!body) return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   const repo = new DrizzlePersonAchievementRepository();
   const result = await new UpdatePersonAchievementUseCase(repo).execute(itemId, body);
   if (!result.success) return NextResponse.json({ error: result.error }, { status: 422 });
