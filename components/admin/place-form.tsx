@@ -15,6 +15,7 @@ interface Pillar {
 }
 
 interface PlaceFormProps {
+  locale: string;
   pillars: Pillar[];
   initialData?: {
     id: string;
@@ -54,7 +55,7 @@ const PLACE_TYPES = [
   { value: 'hotel', label: 'Hotel' },
 ];
 
-export default function PlaceForm({ pillars, initialData }: PlaceFormProps) {
+export default function PlaceForm({ locale, pillars, initialData }: PlaceFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -122,11 +123,10 @@ export default function PlaceForm({ pillars, initialData }: PlaceFormProps) {
         setError(data.error || 'Failed to save place');
         return;
       }
-      router.push('/admin/places');
+      router.push(`/${locale}/admin/places`);
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -138,7 +138,7 @@ export default function PlaceForm({ pillars, initialData }: PlaceFormProps) {
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/places" className="p-2 hover:bg-surface-elevated rounded-lg transition-colors">
+        <Link href={`/${locale}/admin/places`} className="p-2 hover:bg-surface-elevated rounded-lg transition-colors">
           <ArrowLeft className="text-text-secondary" size={24} />
         </Link>
         <div>
@@ -197,7 +197,7 @@ export default function PlaceForm({ pillars, initialData }: PlaceFormProps) {
             valueAr={formData.nameAr}
             onChangeEn={handleNameEnChange}
             onChangeAr={(v) => setField('nameAr', v)}
-            requiredEn
+            required
           />
         </div>
 
@@ -345,8 +345,9 @@ export default function PlaceForm({ pillars, initialData }: PlaceFormProps) {
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2">Cover image</label>
             <ImageUpload
-              currentImage={formData.coverImageUrl}
-              onUpload={(url) => setField('coverImageUrl', url)}
+              label="Cover image"
+              value={formData.coverImageUrl}
+              onChange={(url) => setField('coverImageUrl', url)}
             />
           </div>
           <div>
@@ -401,7 +402,7 @@ export default function PlaceForm({ pillars, initialData }: PlaceFormProps) {
             {loading ? 'Saving...' : initialData ? 'Update Place' : 'Create Place'}
           </button>
           <Link
-            href="/admin/places"
+            href={`/${locale}/admin/places`}
             className="px-6 py-3 bg-surface-elevated text-text-primary font-semibold rounded-lg hover:bg-border/30 transition-colors"
           >
             Cancel

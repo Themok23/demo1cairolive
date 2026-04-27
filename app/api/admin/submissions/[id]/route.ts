@@ -27,8 +27,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json(submission[0]);
-  } catch (error) {
-    console.error('Error fetching submission:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to fetch submission' }, { status: 500 });
   }
 }
@@ -106,8 +106,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json({ message: `Submission ${status}` });
-  } catch (error) {
-    console.error('Error updating submission:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to update submission' }, { status: 500 });
   }
 }

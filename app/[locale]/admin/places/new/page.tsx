@@ -5,9 +5,14 @@ import { db } from '@/src/infrastructure/db/client';
 import { pillars } from '@/src/infrastructure/db/schema';
 import { asc, eq } from 'drizzle-orm';
 
-export default async function NewPlacePage() {
+interface NewPlacePageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function NewPlacePage({ params }: NewPlacePageProps) {
   const session = await auth();
-  if (!session) redirect('/admin/login');
+  const { locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
 
   const allPillars = await db
     .select({ id: pillars.id, slug: pillars.slug, nameEn: pillars.nameEn })
@@ -15,5 +20,5 @@ export default async function NewPlacePage() {
     .where(eq(pillars.isActive, true))
     .orderBy(asc(pillars.displayOrder), asc(pillars.nameEn));
 
-  return <PlaceForm pillars={allPillars} />;
+  return <PlaceForm locale={locale} pillars={allPillars} />;
 }

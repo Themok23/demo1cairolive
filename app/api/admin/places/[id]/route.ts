@@ -53,8 +53,8 @@ export async function GET(
     const result = await db.select().from(places).where(eq(places.id, id)).limit(1);
     if (result.length === 0) return NextResponse.json({ error: 'Place not found' }, { status: 404 });
     return NextResponse.json(result[0]);
-  } catch (error) {
-    console.error('Error fetching place:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to fetch place' }, { status: 500 });
   }
 }
@@ -105,8 +105,8 @@ export async function PUT(
     const result = await db.update(places).set(updates).where(eq(places.id, id)).returning();
     if (result.length === 0) return NextResponse.json({ error: 'Place not found' }, { status: 404 });
     return NextResponse.json(result[0]);
-  } catch (error) {
-    console.error('Error updating place:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to update place' }, { status: 500 });
   }
 }
@@ -125,8 +125,8 @@ export async function DELETE(
     const result = await db.delete(places).where(eq(places.id, id)).returning();
     if (result.length === 0) return NextResponse.json({ error: 'Place not found' }, { status: 404 });
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error('Error deleting place:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to delete place' }, { status: 500 });
   }
 }

@@ -11,9 +11,8 @@ interface PageProps {
 
 export default async function AdminPlacesPage({ params }: PageProps) {
   const session = await auth();
-  if (!session) redirect('/admin/login');
-
   const { locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
   const data = await db
     .select({
       id: places.id,

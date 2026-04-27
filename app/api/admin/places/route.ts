@@ -1,4 +1,4 @@
-import { auth } from '@/src/lib/auth';
+﻿import { auth } from '@/src/lib/auth';
 import { db } from '@/src/infrastructure/db/client';
 import { places, pillars } from '@/src/infrastructure/db/schema';
 import { desc, eq } from 'drizzle-orm';
@@ -73,8 +73,7 @@ export async function GET(request: NextRequest) {
       .offset(offset);
 
     return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching places:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch places' }, { status: 500 });
   }
 }
@@ -137,8 +136,7 @@ export async function POST(request: NextRequest) {
 
     await db.insert(places).values(place);
     return NextResponse.json(place, { status: 201 });
-  } catch (error) {
-    console.error('Error creating place:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to create place' }, { status: 500 });
   }
 }

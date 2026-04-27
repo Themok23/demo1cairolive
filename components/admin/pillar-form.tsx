@@ -9,6 +9,7 @@ import BilingualInput from '@/components/ui/BilingualInput';
 import { safeSlugify } from '@/src/application/utils/slugify';
 
 interface PillarFormProps {
+  locale: string;
   initialData?: {
     id: string;
     slug: string;
@@ -29,7 +30,7 @@ const COMMON_ICONS = [
   'BookOpen', 'Coffee', 'Heart', 'Star',
 ];
 
-export default function PillarForm({ initialData }: PillarFormProps) {
+export default function PillarForm({ locale, initialData }: PillarFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -77,11 +78,10 @@ export default function PillarForm({ initialData }: PillarFormProps) {
         setError(data.error || 'Failed to save pillar');
         return;
       }
-      router.push('/admin/pillars');
+      router.push(`/${locale}/admin/pillars`);
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -93,7 +93,7 @@ export default function PillarForm({ initialData }: PillarFormProps) {
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/pillars" className="p-2 hover:bg-surface-elevated rounded-lg transition-colors">
+        <Link href={`/${locale}/admin/pillars`} className="p-2 hover:bg-surface-elevated rounded-lg transition-colors">
           <ArrowLeft className="text-text-secondary" size={24} />
         </Link>
         <div>
@@ -122,7 +122,7 @@ export default function PillarForm({ initialData }: PillarFormProps) {
             valueAr={formData.nameAr}
             onChangeEn={handleNameEnChange}
             onChangeAr={(v) => setField('nameAr', v)}
-            requiredEn
+            required
           />
         </div>
 
@@ -180,8 +180,9 @@ export default function PillarForm({ initialData }: PillarFormProps) {
               Cover image
             </label>
             <ImageUpload
-              currentImage={formData.coverImageUrl}
-              onUpload={(url) => setField('coverImageUrl', url)}
+              label="Cover image"
+              value={formData.coverImageUrl}
+              onChange={(url) => setField('coverImageUrl', url)}
             />
           </div>
         </div>
@@ -225,7 +226,7 @@ export default function PillarForm({ initialData }: PillarFormProps) {
             {loading ? 'Saving...' : initialData ? 'Update Pillar' : 'Create Pillar'}
           </button>
           <Link
-            href="/admin/pillars"
+            href={`/${locale}/admin/pillars`}
             className="px-6 py-3 bg-surface-elevated text-text-primary font-semibold rounded-lg hover:bg-border/30 transition-colors"
           >
             Cancel

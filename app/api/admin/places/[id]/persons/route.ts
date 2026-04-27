@@ -42,8 +42,8 @@ export async function GET(
       .orderBy(asc(placePersons.displayOrder));
 
     return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching place persons:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }
@@ -80,8 +80,8 @@ export async function POST(
       .onConflictDoNothing();
 
     return NextResponse.json({ ok: true }, { status: 201 });
-  } catch (error) {
-    console.error('Error linking person to place:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }
@@ -116,8 +116,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Link not found' }, { status: 404 });
     }
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error('Error unlinking person from place:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }

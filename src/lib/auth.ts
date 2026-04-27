@@ -50,40 +50,27 @@ const authConfig: NextAuthConfig = {
             return null;
           }
 
-          console.log(
-            `[auth] Auth attempt — password length: ${password.length}, ` +
-              `hash configured: ${!!ADMIN_PASSWORD_HASH} (length ${ADMIN_PASSWORD_HASH?.length ?? 0}), ` +
-              `plain configured: ${!!ADMIN_PASSWORD_PLAIN} (length ${ADMIN_PASSWORD_PLAIN?.length ?? 0})`
-          );
-
           // Try bcrypt hash first.
           if (ADMIN_PASSWORD_HASH) {
             const match = await compare(password, ADMIN_PASSWORD_HASH);
             if (match) {
-              console.log('[auth] Admin signed in via bcrypt hash');
               return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
             }
-            console.warn('[auth] Bcrypt hash mismatch — falling back to plain compare if configured');
           }
 
-          // Plain compare fallback (works in dev even when hash is also set).
+          // Plaintext fallback — prefer ADMIN_PASSWORD_HASH in production.
           if (ADMIN_PASSWORD_PLAIN) {
-            if (password === ADMIN_PASSWORD_PLAIN) {
-              console.log('[auth] Admin signed in via plain ADMIN_PASSWORD');
+            if (process.env.NODE_ENV === 'production') {
+              console.warn('[auth] Plain password used in production — set ADMIN_PASSWORD_HASH instead');
+            }
+            if (password === ADMIN_PASSWORD_PLAIN || password.trim() === ADMIN_PASSWORD_PLAIN.trim()) {
               return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
             }
-            // Trim & retry — defends against trailing whitespace in .env files.
-            if (password.trim() === ADMIN_PASSWORD_PLAIN.trim()) {
-              console.log('[auth] Admin signed in via plain ADMIN_PASSWORD (after trim)');
-              return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
-            }
-            console.warn(
-              `[auth] Plain mismatch — received "${password.slice(0, 3)}..." (len ${password.length}), expected "${ADMIN_PASSWORD_PLAIN.slice(0, 3)}..." (len ${ADMIN_PASSWORD_PLAIN.length})`
-            );
+            console.warn('[auth] Password mismatch');
             return null;
           }
 
-          console.error('[auth] No password mechanism configured (no hash, no plain)');
+          console.warn('[auth] No password mechanism configured');
           return null;
         } catch (err) {
           console.error('[auth] Unexpected error in authorize:', err);

@@ -21,9 +21,10 @@ export async function GET() {
       .from(pillars)
       .where(eq(pillars.isActive, true))
       .orderBy(asc(pillars.displayOrder), asc(pillars.nameEn));
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching public pillars:', error);
+    return NextResponse.json(data, {
+      headers: { 'Cache-Control': 'public, max-age=60, stale-while-revalidate=300' },
+    });
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch pillars' }, { status: 500 });
   }
 }

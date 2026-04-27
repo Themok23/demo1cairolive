@@ -43,8 +43,7 @@ export async function GET(request: NextRequest) {
       .offset(offset);
 
     return NextResponse.json(allPillars);
-  } catch (error) {
-    console.error('Error fetching pillars:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch pillars' }, { status: 500 });
   }
 }
@@ -94,8 +93,7 @@ export async function POST(request: NextRequest) {
 
     await db.insert(pillars).values(pillar);
     return NextResponse.json(pillar, { status: 201 });
-  } catch (error) {
-    console.error('Error creating pillar:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to create pillar' }, { status: 500 });
   }
 }

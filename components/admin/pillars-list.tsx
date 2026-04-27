@@ -25,28 +25,63 @@ interface PillarsListProps {
 export default function AdminPillarsList({ pillars, locale }: PillarsListProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete pillar "${name}"? This cannot be undone.`)) return;
+  const handleDeleteClick = (id: string, name: string) => {
+    setPendingDelete({ id, name });
+    setDeleteError(null);
+  };
 
-    setIsDeleting(id);
+  const handleDeleteConfirm = async () => {
+    if (!pendingDelete) return;
+    setIsDeleting(pendingDelete.id);
     try {
-      const response = await fetch(`/api/admin/pillars/${id}`, { method: 'DELETE' });
+      const response = await fetch(`/api/admin/pillars/${pendingDelete.id}`, { method: 'DELETE' });
       if (response.ok) {
+        setPendingDelete(null);
         router.refresh();
       } else {
-        alert('Failed to delete pillar');
+        setDeleteError('Failed to delete pillar');
       }
-    } catch (error) {
-      alert('Error deleting pillar');
-      console.error(error);
+    } catch {
+      setDeleteError('Error deleting pillar');
     } finally {
       setIsDeleting(null);
     }
   };
 
+  const handleDeleteCancel = () => {
+    setPendingDelete(null);
+    setDeleteError(null);
+  };
+
   return (
     <div className="p-8 space-y-6">
+      {pendingDelete && (
+        <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center justify-between gap-4">
+          <div>
+            <p className="text-red-400 font-medium">Delete &quot;{pendingDelete.name}&quot;? This cannot be undone.</p>
+            {deleteError && <p className="text-red-400 text-sm mt-1">{deleteError}</p>}
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <button
+              onClick={handleDeleteCancel}
+              className="px-4 py-2 text-sm rounded-lg bg-[#1a1a1f] text-gray-300 hover:bg-[#D4A853]/10 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting !== null}
+              className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 transition-colors"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -132,8 +167,8 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
                             <Edit2 size={18} />
                           </Link>
                           <button
-                            onClick={() => handleDelete(p.id, p.nameEn)}
-                            disabled={isDeleting === p.id}
+                            onClick={() => handleDeleteClick(p.id, p.nameEn)}
+                            disabled={isDeleting !== null}
                             className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50"
                           >
                             <Trash2 size={18} />

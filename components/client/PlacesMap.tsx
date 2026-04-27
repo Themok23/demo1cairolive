@@ -24,6 +24,15 @@ interface PlacesMapProps {
   locale: string;
 }
 
+function escHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 // Plain Leaflet (no react-leaflet) so React Strict Mode's double-invoke
 // of effects in dev doesn't try to initialize the same DOM container twice.
 // We always check "did we already init?" before creating a map and tear it
@@ -86,14 +95,14 @@ export default function PlacesMap({ places, locale }: PlacesMapProps) {
         <div style="min-width:200px">
           ${
             p.coverImageUrl
-              ? `<img src="${p.coverImageUrl}" alt="${name.replace(/"/g, '&quot;')}" style="width:100%;height:100px;object-fit:cover;border-radius:6px;margin-bottom:8px" />`
+              ? `<img src="${escHtml(p.coverImageUrl)}" alt="${escHtml(name)}" style="width:100%;height:100px;object-fit:cover;border-radius:6px;margin-bottom:8px" />`
               : ''
           }
-          <div style="font-weight:700;font-size:14px;margin-bottom:4px" lang="${locale}">${name}</div>
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#888;margin-bottom:6px">${p.type}</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px" lang="${locale}">${escHtml(name)}</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#888;margin-bottom:6px">${escHtml(p.type)}</div>
           ${
             tagline
-              ? `<p style="font-size:12px;color:#444;margin:4px 0 8px" lang="${locale}">${tagline}</p>`
+              ? `<p style="font-size:12px;color:#444;margin:4px 0 8px" lang="${locale}">${escHtml(tagline)}</p>`
               : ''
           }
           <a href="/${locale}/pillars/${p.pillarSlug}/${p.slug}" style="display:inline-block;font-size:12px;font-weight:600;color:#D4A853;text-decoration:none">${linkLabel}</a>

@@ -24,6 +24,7 @@ interface PlaceOption {
 }
 
 interface ArticleFormProps {
+  locale: string;
   initialData?: {
     id: string;
     titleEn: string;
@@ -45,7 +46,7 @@ interface ArticleFormProps {
   places?: PlaceOption[];
 }
 
-export default function ArticleForm({ initialData, people, places = [] }: ArticleFormProps) {
+export default function ArticleForm({ locale, initialData, people, places = [] }: ArticleFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -97,11 +98,10 @@ export default function ArticleForm({ initialData, people, places = [] }: Articl
         setError(data.error || 'Failed to save article');
         return;
       }
-      router.push('/admin/articles');
+      router.push(`/${locale}/admin/articles`);
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -113,7 +113,7 @@ export default function ArticleForm({ initialData, people, places = [] }: Articl
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/articles" className="p-2 hover:bg-surface-elevated rounded-lg transition-colors">
+        <Link href={`/${locale}/admin/articles`} className="p-2 hover:bg-surface-elevated rounded-lg transition-colors">
           <ArrowLeft className="text-text-secondary" size={24} />
         </Link>
         <div>
@@ -338,7 +338,7 @@ export default function ArticleForm({ initialData, people, places = [] }: Articl
 
         <div className="flex items-center gap-4 justify-end">
           <Link
-            href="/admin/articles"
+            href={`/${locale}/admin/articles`}
             className="px-4 py-2 rounded-lg border border-gold/20 text-text-primary hover:bg-surface-elevated transition-colors"
           >
             Cancel

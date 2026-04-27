@@ -41,11 +41,11 @@ export interface PlacePerson {
 }
 
 export class PlaceEntity implements Place {
-  id: string;
-  slug: string;
-  pillarId: string;
-  type: PlaceType;
-  nameEn: string;
+  id!: string;
+  slug!: string;
+  pillarId!: string;
+  type!: PlaceType;
+  nameEn!: string;
   nameAr?: string | null;
   taglineEn?: string | null;
   taglineAr?: string | null;
@@ -63,10 +63,10 @@ export class PlaceEntity implements Place {
   openingHoursJson?: string | null;
   coverImageUrl?: string | null;
   galleryImagesJson?: string | null;
-  isFeatured: boolean;
-  status: PlaceStatus;
-  createdAt: Date;
-  updatedAt: Date;
+  isFeatured!: boolean;
+  status!: PlaceStatus;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   constructor(data: Place) {
     Object.assign(this, data);

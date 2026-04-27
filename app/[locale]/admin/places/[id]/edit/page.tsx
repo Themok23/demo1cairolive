@@ -11,9 +11,8 @@ interface EditPageProps {
 
 export default async function EditPlacePage({ params }: EditPageProps) {
   const session = await auth();
-  if (!session) redirect('/admin/login');
-
-  const { id } = await params;
+  const { id, locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
   const result = await db.select().from(places).where(eq(places.id, id)).limit(1);
   if (result.length === 0) notFound();
 
@@ -23,5 +22,5 @@ export default async function EditPlacePage({ params }: EditPageProps) {
     .where(eq(pillars.isActive, true))
     .orderBy(asc(pillars.displayOrder), asc(pillars.nameEn));
 
-  return <PlaceForm pillars={allPillars} initialData={result[0] as any} />;
+  return <PlaceForm locale={locale} pillars={allPillars} initialData={result[0] as any} />;
 }

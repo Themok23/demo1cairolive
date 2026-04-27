@@ -1,9 +1,19 @@
+import { auth } from '@/src/lib/auth';
+import { redirect } from 'next/navigation';
 import { db } from '@/src/infrastructure/db/client';
 import { persons, places } from '@/src/infrastructure/db/schema';
 import { asc, eq } from 'drizzle-orm';
 import ArticleForm from '@/components/admin/article-form';
 
-export default async function AdminNewArticlePage() {
+interface NewArticlePageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function AdminNewArticlePage({ params }: NewArticlePageProps) {
+  const session = await auth();
+  const { locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
+
   const [allPersons, allPlaces] = await Promise.all([
     db.select().from(persons),
     db
@@ -13,5 +23,5 @@ export default async function AdminNewArticlePage() {
       .orderBy(asc(places.nameEn)),
   ]);
 
-  return <ArticleForm people={allPersons} places={allPlaces} />;
+  return <ArticleForm locale={locale} people={allPersons} places={allPlaces} />;
 }

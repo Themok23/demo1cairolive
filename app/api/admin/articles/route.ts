@@ -1,4 +1,4 @@
-import { auth } from '@/src/lib/auth';
+﻿import { auth } from '@/src/lib/auth';
 import { db } from '@/src/infrastructure/db/client';
 import { articles } from '@/src/infrastructure/db/schema';
 import { desc, eq } from 'drizzle-orm';
@@ -40,8 +40,7 @@ export async function GET(request: NextRequest) {
 
     const allArticles = await db.select().from(articles).orderBy(desc(articles.createdAt)).limit(limit).offset(offset);
     return NextResponse.json(allArticles);
-  } catch (error) {
-    console.error('Error fetching articles:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch articles' }, { status: 500 });
   }
 }
@@ -96,8 +95,7 @@ export async function POST(request: NextRequest) {
 
     await db.insert(articles).values(article);
     return NextResponse.json(article, { status: 201 });
-  } catch (error) {
-    console.error('Error creating article:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to create article' }, { status: 500 });
   }
 }

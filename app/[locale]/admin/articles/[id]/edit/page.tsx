@@ -1,15 +1,19 @@
+import { auth } from '@/src/lib/auth';
+import { redirect, notFound } from 'next/navigation';
 import { db } from '@/src/infrastructure/db/client';
 import { articles, persons, places } from '@/src/infrastructure/db/schema';
 import { asc, eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
 import ArticleForm from '@/components/admin/article-form';
 
 interface EditArticlePageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }
 
 export default async function AdminEditArticlePage({ params }: EditArticlePageProps) {
-  const { id } = await params;
+  const session = await auth();
+  const { id, locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
+
   const [article, allPersons, allPlaces] = await Promise.all([
     db
       .select()
@@ -24,9 +28,7 @@ export default async function AdminEditArticlePage({ params }: EditArticlePagePr
       .orderBy(asc(places.nameEn)),
   ]);
 
-  if (!article) {
-    notFound();
-  }
+  if (!article) notFound();
 
-  return <ArticleForm initialData={article as any} people={allPersons} places={allPlaces} />;
+  return <ArticleForm locale={locale} initialData={article as any} people={allPersons} places={allPlaces} />;
 }

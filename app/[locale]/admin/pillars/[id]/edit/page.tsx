@@ -11,11 +11,11 @@ interface EditPageProps {
 
 export default async function EditPillarPage({ params }: EditPageProps) {
   const session = await auth();
-  if (!session) redirect('/admin/login');
+  const { id, locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
 
-  const { id } = await params;
   const result = await db.select().from(pillars).where(eq(pillars.id, id)).limit(1);
   if (result.length === 0) notFound();
 
-  return <PillarForm initialData={result[0] as any} />;
+  return <PillarForm locale={locale} initialData={result[0] as any} />;
 }

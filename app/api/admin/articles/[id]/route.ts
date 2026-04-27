@@ -42,8 +42,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const found = article[0];
     if (!found) return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     return NextResponse.json(found);
-  } catch (error) {
-    console.error('Error fetching article:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to fetch article' }, { status: 500 });
   }
 }
@@ -82,8 +82,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     await db.update(articles).set(updatedArticle).where(eq(articles.id, id));
     return NextResponse.json(updatedArticle);
-  } catch (error) {
-    console.error('Error updating article:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to update article' }, { status: 500 });
   }
 }
@@ -96,8 +96,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     await db.delete(articles).where(eq(articles.id, id));
     return NextResponse.json({ message: 'Article deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting article:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 });
   }
 }

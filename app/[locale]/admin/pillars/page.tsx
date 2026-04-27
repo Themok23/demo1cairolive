@@ -11,9 +11,8 @@ interface PageProps {
 
 export default async function AdminPillarsPage({ params }: PageProps) {
   const session = await auth();
-  if (!session) redirect('/admin/login');
-
   const { locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
   const allPillars = await db
     .select()
     .from(pillars)

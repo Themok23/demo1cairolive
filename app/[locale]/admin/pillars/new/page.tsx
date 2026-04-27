@@ -2,8 +2,13 @@ import { auth } from '@/src/lib/auth';
 import { redirect } from 'next/navigation';
 import PillarForm from '@/components/admin/pillar-form';
 
-export default async function NewPillarPage() {
+interface NewPillarPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function NewPillarPage({ params }: NewPillarPageProps) {
   const session = await auth();
-  if (!session) redirect('/admin/login');
-  return <PillarForm />;
+  const { locale } = await params;
+  if (!session) redirect(`/${locale}/admin/login`);
+  return <PillarForm locale={locale} />;
 }
