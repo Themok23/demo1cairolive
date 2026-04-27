@@ -11,9 +11,10 @@ type Draft = Partial<{
   positionEn: string; positionAr: string;
   descriptionEn: string; descriptionAr: string;
   fromDate: string; toDate: string; isCurrent: boolean;
+  imageUrl: string;
 }>;
 
-const blank: Draft = { companyEn: '', companyAr: '', positionEn: '', positionAr: '', descriptionEn: '', descriptionAr: '', isCurrent: false };
+const blank: Draft = { companyEn: '', companyAr: '', positionEn: '', positionAr: '', descriptionEn: '', descriptionAr: '', isCurrent: false, imageUrl: '' };
 
 export default function PersonWorkplacesTab({ personId }: Props) {
   const [items, setItems] = useState<PersonWorkplace[]>([]);
@@ -88,6 +89,18 @@ export default function PersonWorkplacesTab({ personId }: Props) {
               <textarea value={(draft[k as keyof Draft] as string) ?? ''} onChange={(e) => set(k as keyof Draft, e.target.value as Draft[keyof Draft])} rows={2} className={inputCls + ' resize-none'} />
             </label>
           ))}
+          <label className="block">
+            <span className="text-xs text-text-secondary mb-1 block">Company Logo URL</span>
+            <input
+              value={(draft.imageUrl as string) ?? ''}
+              onChange={(e) => set('imageUrl', e.target.value as Draft['imageUrl'])}
+              placeholder="https://..."
+              className={inputCls}
+            />
+            {draft.imageUrl && (
+              <img src={draft.imageUrl} alt="preview" className="mt-2 h-12 w-12 rounded object-cover border border-gold/10" />
+            )}
+          </label>
           {err && <p className="text-sm text-red-400">{err}</p>}
           <button onClick={save} disabled={saving} className={btnCls}>{saving ? 'Saving…' : 'Save'}</button>
         </div>
@@ -99,10 +112,16 @@ export default function PersonWorkplacesTab({ personId }: Props) {
           const to = item.isCurrent ? 'Present' : item.toDate ? new Date(item.toDate).getFullYear() : null;
           return (
             <div key={item.id} className="flex items-start justify-between gap-4 p-4 rounded-xl border border-gold/10 bg-surface">
-              <div>
-                <p className="font-medium text-text-primary">{item.companyEn}</p>
-                {item.positionEn && <p className="text-sm text-text-secondary">{item.positionEn}</p>}
-                {(from || to) && <p className="text-xs text-text-tertiary">{[from, to].filter(Boolean).join(' — ')}</p>}
+              <div className="flex gap-3 items-start">
+                {item.imageUrl
+                  ? <img src={item.imageUrl} alt={item.companyEn} className="w-10 h-10 rounded object-cover flex-shrink-0 border border-gold/10" />
+                  : <div className="w-10 h-10 rounded bg-gold/5 flex-shrink-0" />
+                }
+                <div>
+                  <p className="font-medium text-text-primary">{item.companyEn}</p>
+                  {item.positionEn && <p className="text-sm text-text-secondary">{item.positionEn}</p>}
+                  {(from || to) && <p className="text-xs text-text-tertiary">{[from, to].filter(Boolean).join(' — ')}</p>}
+                </div>
               </div>
               <button onClick={() => remove(item.id)} className="shrink-0 text-text-tertiary hover:text-red-400 transition-colors">
                 <Trash2 size={16} />

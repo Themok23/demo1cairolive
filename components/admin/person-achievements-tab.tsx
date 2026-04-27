@@ -10,9 +10,10 @@ type Draft = Partial<{
   titleEn: string; titleAr: string;
   descriptionEn: string; descriptionAr: string;
   externalLink: string; iconKey: string;
+  imageUrl: string;
 }>;
 
-const blank: Draft = { titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '', externalLink: '', iconKey: '' };
+const blank: Draft = { titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '', externalLink: '', iconKey: '', imageUrl: '' };
 
 export default function PersonAchievementsTab({ personId }: Props) {
   const [items, setItems] = useState<PersonAchievement[]>([]);
@@ -83,6 +84,18 @@ export default function PersonAchievementsTab({ personId }: Props) {
               <textarea value={(draft[k] ?? '')} onChange={(e) => set(k, e.target.value)} rows={2} className={inputCls + ' resize-none'} />
             </label>
           ))}
+          <label className="block">
+            <span className="text-xs text-text-secondary mb-1 block">Image URL</span>
+            <input
+              value={(draft.imageUrl ?? '')}
+              onChange={(e) => set('imageUrl', e.target.value)}
+              placeholder="https://..."
+              className={inputCls}
+            />
+            {draft.imageUrl && (
+              <img src={draft.imageUrl} alt="preview" className="mt-2 h-12 w-12 rounded object-cover border border-gold/10" />
+            )}
+          </label>
           {err && <p className="text-sm text-red-400">{err}</p>}
           <button onClick={save} disabled={saving} className={btnCls}>{saving ? 'Saving…' : 'Save'}</button>
         </div>
@@ -91,10 +104,16 @@ export default function PersonAchievementsTab({ personId }: Props) {
       <div className="space-y-2">
         {items.map((item) => (
           <div key={item.id} className="flex items-start justify-between gap-4 p-4 rounded-xl border border-gold/10 bg-surface">
-            <div>
-              <p className="font-medium text-text-primary">{item.titleEn}</p>
-              {item.titleAr && <p className="text-sm text-text-secondary">{item.titleAr}</p>}
-              {item.descriptionEn && <p className="text-sm text-text-tertiary line-clamp-2">{item.descriptionEn}</p>}
+            <div className="flex gap-3 items-start">
+              {item.imageUrl
+                ? <img src={item.imageUrl} alt={item.titleEn} className="w-10 h-10 rounded object-cover flex-shrink-0 border border-gold/10" />
+                : <div className="w-10 h-10 rounded bg-gold/5 flex-shrink-0" />
+              }
+              <div>
+                <p className="font-medium text-text-primary">{item.titleEn}</p>
+                {item.titleAr && <p className="text-sm text-text-secondary">{item.titleAr}</p>}
+                {item.descriptionEn && <p className="text-sm text-text-tertiary line-clamp-2">{item.descriptionEn}</p>}
+              </div>
             </div>
             <button onClick={() => remove(item.id)} className="shrink-0 text-text-tertiary hover:text-red-400 transition-colors">
               <Trash2 size={16} />
