@@ -16,6 +16,7 @@ import {
   LogOut,
   Menu,
   X,
+  Sparkles,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -30,6 +31,7 @@ export default function AdminSidebar() {
     { href: `/${locale}/admin/places`,       label: 'Places',      icon: MapPin },
     { href: `/${locale}/admin/people`,       label: 'People',      icon: Users },
     { href: `/${locale}/admin/articles`,     label: 'Articles',    icon: FileText },
+    { href: `/${locale}/admin/experiences`,  label: 'Experiences', icon: Sparkles },
     { href: `/${locale}/admin/submissions`,  label: 'Submissions', icon: MessageSquare },
     { href: `/${locale}/admin/inquiries`,    label: 'Inquiries',   icon: Inbox },
     { href: `/${locale}/admin/subscribers`,  label: 'Subscribers', icon: Mail },
