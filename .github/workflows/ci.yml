@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, staging]
+    branches: [master, main, staging]
   pull_request:
-    branches: [main, staging]
+    branches: [master, main, staging]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -29,4 +29,7 @@ jobs:
 
       - name: Build
         run: npm run build
-
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
+          NEXTAUTH_SECRET: placeholder-nextauth-secret-for-ci-build
+          NEXTAUTH_URL: https://localhost:3000
