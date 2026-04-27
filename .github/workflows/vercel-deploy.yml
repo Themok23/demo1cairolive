@@ -4,11 +4,16 @@ on:
   push:
     branches:
       - master
+      - staging
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel master deploy
+      - name: Deploy master to production
         if: github.ref == 'refs/heads/master'
-        run: curl -X POST "${{ secrets.VERCEL_MASTER_DEPLOY_HOOK }}" 
+        run: curl -X POST "${{ secrets.VERCEL_MASTER_DEPLOY_HOOK }}"
+
+      - name: Deploy staging to preview
+        if: github.ref == 'refs/heads/staging'
+        run: curl -X POST "${{ secrets.VERCEL_STAGING_DEPLOY_HOOK }}"
