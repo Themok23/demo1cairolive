@@ -13,6 +13,9 @@ import RotatingCards from '@/components/client/RotatingCards';
 import ScrollReveal from '@/components/client/ScrollReveal';
 import ParallaxSection from '@/components/client/ParallaxSection';
 import QuoteArtworkSection from '@/components/client/QuoteArtworkSection';
+import { DrizzleExperienceRepository } from '@/src/infrastructure/repositories/drizzleExperienceRepository';
+import { ListPublishedExperiencesUseCase } from '@/src/application/use-cases/experiences/listPublishedExperiences';
+import ExperienceCard from '@/components/experiences/ExperienceCard';
 
 interface HomePageProps {
   params: Promise<{
@@ -56,6 +59,10 @@ export default async function Home({ params }: HomePageProps) {
     .where(eq(articles.status, 'published'))
     .orderBy(desc(articles.publishedAt))
     .limit(8);
+
+  const latestExperiences = await new ListPublishedExperiencesUseCase(new DrizzleExperienceRepository())
+    .execute({ limit: 4 })
+    .then((r) => r.data ?? []);
 
   const isAr = locale === 'ar';
   const loc = locale as Locale;
@@ -151,6 +158,40 @@ export default async function Home({ params }: HomePageProps) {
           </div>
         </div>
       </section>
+
+      {/* Latest Experiences Section */}
+      {latestExperiences.length > 0 && (
+        <section className="relative px-4 py-20 sm:px-6 lg:px-8 border-t border-border/30">
+          <div className="mx-auto max-w-5xl">
+            <ScrollReveal direction="up">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-3xl font-bold text-text-primary">
+                    {isAr ? 'أحدث التجارب' : 'Latest Experiences'}
+                  </h2>
+                  <p className="text-text-secondary mt-1">
+                    {isAr ? 'قصص حقيقية من قلب مصر' : 'Real stories from the heart of Egypt'}
+                  </p>
+                </div>
+                <Link
+                  href={`/${locale}/experiences` as any}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-gold hover:text-gold/80 transition-colors"
+                >
+                  {isAr ? 'عرض الكل' : 'View all'}
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
+            </ScrollReveal>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {latestExperiences.map((exp, i) => (
+                <ScrollReveal key={exp.id} direction="up" delay={i * 0.08}>
+                  <ExperienceCard experience={exp} locale={isAr ? 'ar' : 'en'} />
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Subscribe CTA Section */}
       <section className="relative px-4 py-20 sm:px-6 lg:px-8">
