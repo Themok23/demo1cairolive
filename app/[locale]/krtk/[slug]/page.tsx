@@ -5,7 +5,7 @@ import { persons } from '@/src/infrastructure/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import KrtkBusinessCard from '@/components/micro-krtk/KrtkBusinessCard';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 
 import { DrizzlePersonEducationRepository } from '@/src/infrastructure/repositories/drizzlePersonEducationRepository';
 import { DrizzlePersonWorkplaceRepository } from '@/src/infrastructure/repositories/drizzlePersonWorkplaceRepository';
@@ -97,7 +97,15 @@ export default async function KrtkProfilePage({ params }: KrtkPageProps) {
           <FadeIn>
             <KrtkBusinessCard person={currentPerson} locale={locale} />
           </FadeIn>
-          <div className="flex justify-end mt-4 pr-1">
+          <div className="flex justify-between items-center mt-4 pr-1">
+            <a
+              href={`/${locale}/krtk/${rawPerson.id}/pdf`}
+              download
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gold/30 text-sm font-medium text-gold hover:bg-gold/10 transition-colors"
+            >
+              <Download size={15} />
+              {isAr ? 'تحميل PDF' : 'Download PDF'}
+            </a>
             <KrtkQrCode
               url={`${process.env.NEXTAUTH_URL ?? 'https://cairolive.com'}/${locale}/krtk/${rawPerson.id}`}
               size={96}
