@@ -10,9 +10,10 @@ type Draft = Partial<{
   titleEn: string; titleAr: string;
   descriptionEn: string; descriptionAr: string;
   externalLink: string; priceText: string; isActive: boolean;
+  imageUrl: string;
 }>;
 
-const blank: Draft = { titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '', externalLink: '', priceText: '', isActive: true };
+const blank: Draft = { titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '', externalLink: '', priceText: '', isActive: true, imageUrl: '' };
 
 export default function PersonServicesTab({ personId }: Props) {
   const [items, setItems] = useState<PersonService[]>([]);
@@ -92,6 +93,18 @@ export default function PersonServicesTab({ personId }: Props) {
               <textarea value={(draft[k] as string) ?? ''} onChange={(e) => set(k, e.target.value as Draft[typeof k])} rows={2} className={inputCls + ' resize-none'} />
             </label>
           ))}
+          <label className="block">
+            <span className="text-xs text-text-secondary mb-1 block">Image URL</span>
+            <input
+              value={(draft.imageUrl as string) ?? ''}
+              onChange={(e) => set('imageUrl', e.target.value as Draft['imageUrl'])}
+              placeholder="https://..."
+              className={inputCls}
+            />
+            {draft.imageUrl && (
+              <img src={draft.imageUrl} alt="preview" className="mt-2 h-20 w-full rounded object-cover border border-gold/10" />
+            )}
+          </label>
           <label className="inline-flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
             <input type="checkbox" checked={draft.isActive ?? true} onChange={(e) => set('isActive', e.target.checked)} />
             Active (visible on profile)

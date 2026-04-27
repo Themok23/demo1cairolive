@@ -11,9 +11,10 @@ type Draft = Partial<{
   degreeEn: string; degreeAr: string;
   fieldEn: string; fieldAr: string;
   fromYear: number; toYear: number;
+  imageUrl: string;
 }>;
 
-const blank: Draft = { institutionEn: '', institutionAr: '', degreeEn: '', degreeAr: '', fieldEn: '', fieldAr: '' };
+const blank: Draft = { institutionEn: '', institutionAr: '', degreeEn: '', degreeAr: '', fieldEn: '', fieldAr: '', imageUrl: '' };
 
 export default function PersonEducationTab({ personId }: Props) {
   const [items, setItems] = useState<PersonEducation[]>([]);
@@ -110,6 +111,18 @@ export default function PersonEducationTab({ personId }: Props) {
               />
             </label>
           </div>
+          <label className="block">
+            <span className="text-xs text-text-secondary mb-1 block">Image URL (logo / photo)</span>
+            <input
+              value={(draft.imageUrl as string) ?? ''}
+              onChange={(e) => set('imageUrl', e.target.value)}
+              placeholder="https://..."
+              className={inputCls}
+            />
+            {draft.imageUrl && (
+              <img src={draft.imageUrl} alt="preview" className="mt-2 h-12 w-12 rounded object-cover border border-gold/10" />
+            )}
+          </label>
           {err && <p className="text-sm text-red-400">{err}</p>}
           <button onClick={save} disabled={saving} className={btnCls}>
             {saving ? 'Saving…' : 'Save'}
@@ -120,15 +133,21 @@ export default function PersonEducationTab({ personId }: Props) {
       <div className="space-y-2">
         {items.map((item) => (
           <div key={item.id} className="flex items-start justify-between gap-4 p-4 rounded-xl border border-gold/10 bg-surface">
-            <div>
-              <p className="font-medium text-text-primary">{item.institutionEn}</p>
-              {item.institutionAr && <p className="text-sm text-text-secondary">{item.institutionAr}</p>}
-              {(item.degreeEn || item.fieldEn) && (
-                <p className="text-sm text-text-secondary">{[item.degreeEn, item.fieldEn].filter(Boolean).join(' · ')}</p>
-              )}
-              {(item.fromYear || item.toYear) && (
-                <p className="text-xs text-text-tertiary">{[item.fromYear, item.toYear].filter(Boolean).join(' — ')}</p>
-              )}
+            <div className="flex gap-3 items-start">
+              {item.imageUrl
+                ? <img src={item.imageUrl} alt={item.institutionEn} className="w-10 h-10 rounded object-cover flex-shrink-0 border border-gold/10" />
+                : <div className="w-10 h-10 rounded bg-gold/5 flex-shrink-0" />
+              }
+              <div>
+                <p className="font-medium text-text-primary">{item.institutionEn}</p>
+                {item.institutionAr && <p className="text-sm text-text-secondary">{item.institutionAr}</p>}
+                {(item.degreeEn || item.fieldEn) && (
+                  <p className="text-sm text-text-secondary">{[item.degreeEn, item.fieldEn].filter(Boolean).join(' · ')}</p>
+                )}
+                {(item.fromYear || item.toYear) && (
+                  <p className="text-xs text-text-tertiary">{[item.fromYear, item.toYear].filter(Boolean).join(' — ')}</p>
+                )}
+              </div>
             </div>
             <button onClick={() => remove(item.id)} className="shrink-0 text-text-tertiary hover:text-red-400 transition-colors">
               <Trash2 size={16} />
