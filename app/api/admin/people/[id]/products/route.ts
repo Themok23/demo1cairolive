@@ -1,17 +1,17 @@
 import { auth } from '@/src/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { DrizzlePersonWorkplaceRepository } from '@/src/infrastructure/repositories/drizzlePersonWorkplaceRepository';
-import { ListPersonWorkplacesUseCase } from '@/src/application/use-cases/person-workplaces/listByPerson';
-import { CreatePersonWorkplaceUseCase } from '@/src/application/use-cases/person-workplaces/create';
+import { DrizzlePersonProductRepository } from '@/src/infrastructure/repositories/drizzlePersonProductRepository';
+import { ListPersonProductsUseCase } from '@/src/application/use-cases/person-products/listByPerson';
+import { CreatePersonProductUseCase } from '@/src/application/use-cases/person-products/create';
 
-type Ctx = { params: Promise<{ personId: string }> };
+type Ctx = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, { params }: Ctx) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { personId } = await params;
-  const repo = new DrizzlePersonWorkplaceRepository();
-  const result = await new ListPersonWorkplacesUseCase(repo).execute(personId);
+  const { id: personId } = await params;
+  const repo = new DrizzlePersonProductRepository();
+  const result = await new ListPersonProductsUseCase(repo).execute(personId);
   if (!result.success) return NextResponse.json({ error: result.error }, { status: 500 });
   return NextResponse.json({ data: result.data });
 }
@@ -19,11 +19,11 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
 export async function POST(req: NextRequest, { params }: Ctx) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { personId } = await params;
+  const { id: personId } = await params;
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
-  const repo = new DrizzlePersonWorkplaceRepository();
-  const result = await new CreatePersonWorkplaceUseCase(repo).execute({ ...body, personId });
+  const repo = new DrizzlePersonProductRepository();
+  const result = await new CreatePersonProductUseCase(repo).execute({ ...body, personId });
   if (!result.success) return NextResponse.json({ error: result.error }, { status: 422 });
   return NextResponse.json({ data: result.data }, { status: 201 });
 }

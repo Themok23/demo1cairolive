@@ -4,12 +4,12 @@ import { DrizzlePersonServiceRepository } from '@/src/infrastructure/repositorie
 import { ListPersonServicesUseCase } from '@/src/application/use-cases/person-services/listByPerson';
 import { CreatePersonServiceUseCase } from '@/src/application/use-cases/person-services/create';
 
-type Ctx = { params: Promise<{ personId: string }> };
+type Ctx = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, { params }: Ctx) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { personId } = await params;
+  const { id: personId } = await params;
   const repo = new DrizzlePersonServiceRepository();
   const result = await new ListPersonServicesUseCase(repo).execute(personId);
   if (!result.success) return NextResponse.json({ error: result.error }, { status: 500 });
@@ -19,7 +19,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
 export async function POST(req: NextRequest, { params }: Ctx) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { personId } = await params;
+  const { id: personId } = await params;
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
   const repo = new DrizzlePersonServiceRepository();
