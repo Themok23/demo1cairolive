@@ -8,8 +8,8 @@ function buildUserIdentifier(req: NextRequest): string {
   return createHash('sha256').update(ip).digest('hex').slice(0, 32);
 }
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug: id } = await params;
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 400 });
   const userIdentifier = buildUserIdentifier(req);
