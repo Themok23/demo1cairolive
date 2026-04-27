@@ -46,50 +46,42 @@ export default function AdminArticlesList({ articles, locale }: ArticlesListProp
   };
 
   return (
-    <div className="p-8 space-y-6">
-      {/* Header */}
+    <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Articles</h1>
-          <p className="text-gray-400">Manage all articles on the platform</p>
+          <h1 className="text-2xl font-bold text-text-primary">Articles</h1>
+          <p className="text-text-secondary text-sm mt-1">Manage all articles on the platform</p>
         </div>
         <Link
           href={`/${locale}/admin/articles/new`}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#D4A853] text-[#0a0a0f] font-semibold hover:bg-[#e8b967] transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gold text-background font-semibold hover:bg-gold/80 transition-colors text-sm"
         >
-          <Plus size={20} />
+          <Plus size={18} />
           New Article
         </Link>
       </div>
 
-      {/* Table */}
       {articles.length > 0 ? (
-        <div className="rounded-lg bg-[#1a1a1f] border border-[#D4A853]/10 overflow-hidden">
+        <div className="rounded-xl bg-surface-elevated border border-gold/10 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#D4A853]/10 bg-[#0a0a0f]">
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Title</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Status</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">
-                    Published
-                  </th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">
-                    Persons
-                  </th>
-                  <th className="text-right py-4 px-6 text-gray-400 font-medium text-sm">
-                    Actions
-                  </th>
+                <tr className="border-b border-gold/10 bg-surface">
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Title</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Status</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Published</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Persons</th>
+                  <th className="text-right py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {articles.map((article) => (
                   <tr
                     key={article.id}
-                    className="border-b border-[#D4A853]/5 hover:bg-[#2a2a2f]/50 transition-colors"
+                    className="border-b border-gold/5 hover:bg-surface-elevated/50 transition-colors"
                   >
                     <td className="py-4 px-6">
-                      <p className="text-white font-medium">{article.titleEn}</p>
+                      <p className="text-text-primary font-medium">{article.titleEn}</p>
                     </td>
                     <td className="py-4 px-6">
                       <span
@@ -103,14 +95,14 @@ export default function AdminArticlesList({ articles, locale }: ArticlesListProp
                       </span>
                     </td>
                     <td className="py-4 px-6">
-                      <p className="text-gray-400 text-sm">
+                      <p className="text-text-secondary text-sm">
                         {article.publishedAt
                           ? new Date(article.publishedAt).toLocaleDateString()
                           : '-'}
                       </p>
                     </td>
                     <td className="py-4 px-6">
-                      <p className="text-gray-400 text-sm">
+                      <p className="text-text-secondary text-sm">
                         {[article.malePersonId, article.femalePersonId].filter(Boolean).length}
                       </p>
                     </td>
@@ -118,10 +110,10 @@ export default function AdminArticlesList({ articles, locale }: ArticlesListProp
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           href={`/${locale}/admin/articles/${article.id}/edit`}
-                          className="p-2 rounded-lg hover:bg-[#2a2a2f] transition-colors text-[#D4A853]"
+                          className="p-2 rounded-lg hover:bg-surface-elevated transition-colors text-gold"
                           title="Edit"
                         >
-                          <Edit2 size={18} />
+                          <Edit2 size={16} />
                         </Link>
                         <button
                           onClick={() => handleDelete(article.id)}
@@ -129,7 +121,7 @@ export default function AdminArticlesList({ articles, locale }: ArticlesListProp
                           className="p-2 rounded-lg hover:bg-red-900/20 transition-colors text-red-400 disabled:opacity-50"
                           title="Delete"
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </td>
@@ -140,11 +132,11 @@ export default function AdminArticlesList({ articles, locale }: ArticlesListProp
           </div>
         </div>
       ) : (
-        <div className="rounded-lg bg-[#1a1a1f] border border-[#D4A853]/10 p-12 text-center">
-          <p className="text-gray-400 mb-4">No articles yet</p>
+        <div className="rounded-xl bg-surface-elevated border border-gold/10 p-12 text-center">
+          <p className="text-text-secondary mb-4">No articles yet</p>
           <Link
             href={`/${locale}/admin/articles/new`}
-            className="text-[#D4A853] hover:text-[#e8b967] font-medium"
+            className="text-gold hover:text-gold/80 font-medium"
           >
             Create the first article
           </Link>

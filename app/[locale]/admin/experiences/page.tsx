@@ -25,7 +25,7 @@ export default async function AdminExperiencesPage({ params, searchParams }: Pro
   ]);
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-text-primary">Experiences</h1>
         <p className="text-text-secondary text-sm mt-1">Review and moderate submitted experiences</p>

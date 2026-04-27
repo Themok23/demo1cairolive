@@ -22,7 +22,7 @@ export default function AdminInquiriesList({ inquiries, total }: Props) {
   const locale = params.locale as string;
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-text-primary">Inquiries</h1>

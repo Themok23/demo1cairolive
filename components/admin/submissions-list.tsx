@@ -66,44 +66,38 @@ export default function AdminSubmissionsList({ submissions }: SubmissionsListPro
   };
 
   return (
-    <div className="p-8 space-y-6">
-      {/* Header */}
+    <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2">Submissions</h1>
-        <p className="text-gray-400">Review and manage user submissions</p>
+        <h1 className="text-2xl font-bold text-text-primary">Submissions</h1>
+        <p className="text-text-secondary text-sm mt-1">Review and manage user submissions</p>
       </div>
 
-      {/* Table */}
       {submissions.length > 0 ? (
-        <div className="rounded-lg bg-[#1a1a1f] border border-[#D4A853]/10 overflow-hidden">
+        <div className="rounded-xl bg-surface-elevated border border-gold/10 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#D4A853]/10 bg-[#0a0a0f]">
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Name</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Email</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Status</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">
-                    Submitted
-                  </th>
-                  <th className="text-right py-4 px-6 text-gray-400 font-medium text-sm">
-                    Actions
-                  </th>
+                <tr className="border-b border-gold/10 bg-surface">
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Name</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Email</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Status</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Submitted</th>
+                  <th className="text-right py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {submissions.map((submission) => (
                   <tr
                     key={submission.id}
-                    className="border-b border-[#D4A853]/5 hover:bg-[#2a2a2f]/50 transition-colors"
+                    className="border-b border-gold/5 hover:bg-surface-elevated/50 transition-colors"
                   >
                     <td className="py-4 px-6">
-                      <p className="text-white font-medium">
+                      <p className="text-text-primary font-medium">
                         {submission.firstName} {submission.lastName}
                       </p>
                     </td>
                     <td className="py-4 px-6">
-                      <p className="text-gray-400 text-sm">{submission.email}</p>
+                      <p className="text-text-secondary text-sm">{submission.email}</p>
                     </td>
                     <td className="py-4 px-6">
                       <span
@@ -119,7 +113,7 @@ export default function AdminSubmissionsList({ submissions }: SubmissionsListPro
                       </span>
                     </td>
                     <td className="py-4 px-6">
-                      <p className="text-gray-400 text-sm">
+                      <p className="text-text-secondary text-sm">
                         {new Date(submission.submittedAt).toLocaleDateString()}
                       </p>
                     </td>
@@ -133,7 +127,7 @@ export default function AdminSubmissionsList({ submissions }: SubmissionsListPro
                               className="p-2 rounded-lg hover:bg-green-900/20 transition-colors text-green-400 disabled:opacity-50"
                               title="Approve"
                             >
-                              <Check size={18} />
+                              <Check size={16} />
                             </button>
                             <button
                               onClick={() => handleReject(submission.id)}
@@ -141,7 +135,7 @@ export default function AdminSubmissionsList({ submissions }: SubmissionsListPro
                               className="p-2 rounded-lg hover:bg-red-900/20 transition-colors text-red-400 disabled:opacity-50"
                               title="Reject"
                             >
-                              <X size={18} />
+                              <X size={16} />
                             </button>
                           </>
                         )}
@@ -154,8 +148,8 @@ export default function AdminSubmissionsList({ submissions }: SubmissionsListPro
           </div>
         </div>
       ) : (
-        <div className="rounded-lg bg-[#1a1a1f] border border-[#D4A853]/10 p-12 text-center">
-          <p className="text-gray-400">No submissions yet</p>
+        <div className="rounded-xl bg-surface-elevated border border-gold/10 p-12 text-center">
+          <p className="text-text-secondary">No submissions yet</p>
         </div>
       )}
     </div>

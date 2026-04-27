@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import ExperienceImageUpload from '@/components/experiences/ImageUpload';
 
 interface Props {
   locale: 'en' | 'ar';
@@ -71,11 +72,12 @@ export default function SubmitForm({ locale }: Props) {
     }
   }
 
-  const inputCls = 'w-full rounded-lg border border-gold/10 bg-background px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-gold/40 focus:outline-none';
+  const inputCls = 'w-full rounded-lg border border-gold/10 bg-background px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-gold/40 focus:outline-none transition-colors';
+  const labelCls = 'text-xs font-medium text-text-secondary mb-1.5 block';
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      {/* Honeypot — hidden from users */}
+    <form onSubmit={submit} className="space-y-5">
+      {/* Honeypot */}
       <input
         type="text"
         name="website"
@@ -86,45 +88,89 @@ export default function SubmitForm({ locale }: Props) {
         autoComplete="off"
       />
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        <label className="block">
-          <span className="text-xs text-text-secondary mb-1 block">{isAr ? 'نوع التجربة *' : 'Experience Type *'}</span>
-          <select value={form.type} onChange={(e) => set('type', e.target.value)} className={inputCls}>
-            <option value="visit">{isAr ? 'زيارة' : 'Visit'}</option>
-            <option value="book_review">{isAr ? 'مراجعة كتاب' : 'Book Review'}</option>
-            <option value="trip">{isAr ? 'رحلة' : 'Trip'}</option>
-            <option value="event">{isAr ? 'فعالية' : 'Event'}</option>
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-xs text-text-secondary mb-1 block">{isAr ? 'صورة الغلاف (URL)' : 'Cover Image (URL)'}</span>
-          <input value={form.coverImageUrl} onChange={(e) => set('coverImageUrl', e.target.value)} placeholder="https://..." className={inputCls} />
-        </label>
+      {/* Experience Type */}
+      <label className="block">
+        <span className={labelCls}>{isAr ? 'نوع التجربة *' : 'Experience Type *'}</span>
+        <select value={form.type} onChange={(e) => set('type', e.target.value)} className={inputCls}>
+          <option value="visit">{isAr ? 'زيارة' : 'Visit'}</option>
+          <option value="book_review">{isAr ? 'مراجعة كتاب' : 'Book Review'}</option>
+          <option value="trip">{isAr ? 'رحلة' : 'Trip'}</option>
+          <option value="event">{isAr ? 'فعالية' : 'Event'}</option>
+        </select>
+      </label>
+
+      {/* Title */}
+      <label className="block">
+        <span className={labelCls}>{isAr ? 'العنوان *' : 'Title *'}</span>
+        <input
+          required
+          value={form.titleEn}
+          onChange={(e) => set('titleEn', e.target.value)}
+          maxLength={280}
+          placeholder={isAr ? 'عنوان تجربتك' : 'Title of your experience'}
+          className={inputCls}
+        />
+      </label>
+
+      {/* Cover Image Upload */}
+      <div>
+        <span className={labelCls}>{isAr ? 'صورة الغلاف' : 'Cover Image'}</span>
+        <ExperienceImageUpload
+          value={form.coverImageUrl}
+          onChange={(url) => set('coverImageUrl', url)}
+          isAr={isAr}
+        />
       </div>
 
+      {/* Summary */}
       <label className="block">
-        <span className="text-xs text-text-secondary mb-1 block">{isAr ? 'العنوان *' : 'Title *'}</span>
-        <input required value={form.titleEn} onChange={(e) => set('titleEn', e.target.value)} maxLength={280} className={inputCls} />
+        <span className={labelCls}>{isAr ? 'ملخص قصير' : 'Short Summary'}</span>
+        <input
+          value={form.summaryEn}
+          onChange={(e) => set('summaryEn', e.target.value)}
+          maxLength={500}
+          placeholder={isAr ? 'جملة أو اثنتان عن تجربتك' : 'One or two sentences about your experience'}
+          className={inputCls}
+        />
       </label>
 
+      {/* Full Content */}
       <label className="block">
-        <span className="text-xs text-text-secondary mb-1 block">{isAr ? 'ملخص قصير' : 'Short Summary'}</span>
-        <input value={form.summaryEn} onChange={(e) => set('summaryEn', e.target.value)} maxLength={500} className={inputCls} />
+        <span className={labelCls}>{isAr ? 'المحتوى الكامل *' : 'Full Content *'}</span>
+        <textarea
+          required
+          value={form.contentEn}
+          onChange={(e) => set('contentEn', e.target.value)}
+          rows={8}
+          minLength={20}
+          maxLength={10000}
+          placeholder={isAr ? 'اكتب تجربتك بالتفصيل…' : 'Write your experience in detail…'}
+          className={inputCls + ' resize-y'}
+        />
       </label>
 
-      <label className="block">
-        <span className="text-xs text-text-secondary mb-1 block">{isAr ? 'المحتوى الكامل *' : 'Full Content *'}</span>
-        <textarea required value={form.contentEn} onChange={(e) => set('contentEn', e.target.value)} rows={8} minLength={20} maxLength={10000} className={inputCls + ' resize-y'} />
-      </label>
-
+      {/* Name + Email */}
       <div className="grid sm:grid-cols-2 gap-4">
         <label className="block">
-          <span className="text-xs text-text-secondary mb-1 block">{isAr ? 'اسمك *' : 'Your Name *'}</span>
-          <input required value={form.submittedByName} onChange={(e) => set('submittedByName', e.target.value)} maxLength={200} className={inputCls} />
+          <span className={labelCls}>{isAr ? 'اسمك *' : 'Your Name *'}</span>
+          <input
+            required
+            value={form.submittedByName}
+            onChange={(e) => set('submittedByName', e.target.value)}
+            maxLength={200}
+            className={inputCls}
+          />
         </label>
         <label className="block">
-          <span className="text-xs text-text-secondary mb-1 block">{isAr ? 'بريدك الإلكتروني *' : 'Your Email *'}</span>
-          <input required type="email" value={form.submittedByEmail} onChange={(e) => set('submittedByEmail', e.target.value)} maxLength={200} className={inputCls} />
+          <span className={labelCls}>{isAr ? 'بريدك الإلكتروني *' : 'Your Email *'}</span>
+          <input
+            required
+            type="email"
+            value={form.submittedByEmail}
+            onChange={(e) => set('submittedByEmail', e.target.value)}
+            maxLength={200}
+            className={inputCls}
+          />
         </label>
       </div>
 
@@ -135,7 +181,9 @@ export default function SubmitForm({ locale }: Props) {
         disabled={saving}
         className="w-full py-3 rounded-xl bg-gold text-background font-semibold hover:bg-gold/90 disabled:opacity-50 transition-colors"
       >
-        {saving ? (isAr ? 'جارٍ الإرسال…' : 'Submitting…') : (isAr ? 'إرسال التجربة' : 'Submit Experience')}
+        {saving
+          ? (isAr ? 'جارٍ الإرسال…' : 'Submitting…')
+          : (isAr ? 'إرسال التجربة' : 'Submit Experience')}
       </button>
     </form>
   );
