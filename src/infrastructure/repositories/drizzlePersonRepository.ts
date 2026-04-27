@@ -189,4 +189,11 @@ export class DrizzlePersonRepository implements PersonRepository {
 
     return results.map(r => this.parsePerson(r));
   }
+
+  async incrementViewCount(id: string): Promise<void> {
+    await db
+      .update(persons)
+      .set({ viewCount: sql`${persons.viewCount} + 1` })
+      .where(eq(persons.id, id));
+  }
 }

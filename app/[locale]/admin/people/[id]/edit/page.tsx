@@ -2,7 +2,7 @@ import { db } from '@/src/infrastructure/db/client';
 import { persons } from '@/src/infrastructure/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
-import PersonForm from '@/components/admin/person-form';
+import PersonSubResourceTabs from '@/components/admin/person-sub-resource-tabs';
 
 interface EditPersonPageProps {
   params: Promise<{ id: string }>;
@@ -16,17 +16,12 @@ export default async function AdminEditPersonPage({ params }: EditPersonPageProp
     .where(eq(persons.id, id))
     .then((result) => result[0]);
 
-  if (!person) {
-    notFound();
-  }
+  if (!person) notFound();
 
-  // Convert dateOfBirth string to Date if needed
   const personData = {
     ...person,
-    dateOfBirth: person.dateOfBirth
-      ? new Date(person.dateOfBirth)
-      : null,
+    dateOfBirth: person.dateOfBirth ? new Date(person.dateOfBirth) : null,
   };
 
-  return <PersonForm initialData={personData as any} />;
+  return <PersonSubResourceTabs personId={id} initialData={personData as any} />;
 }

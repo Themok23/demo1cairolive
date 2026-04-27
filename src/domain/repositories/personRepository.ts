@@ -15,4 +15,5 @@ export interface PersonRepository {
   claimProfile(id: string, claimedBy: string): Promise<Person | null>;
   countByTier(tier: string): Promise<number>;
   searchByName(firstName: string, lastName: string): Promise<Person[]>;
+  incrementViewCount(id: string): Promise<void>;
 }

@@ -12,6 +12,7 @@ import {
   Mail,
   Compass,
   MapPin,
+  Inbox,
   LogOut,
   Menu,
   X,
@@ -30,6 +31,7 @@ export default function AdminSidebar() {
     { href: `/${locale}/admin/people`,       label: 'People',      icon: Users },
     { href: `/${locale}/admin/articles`,     label: 'Articles',    icon: FileText },
     { href: `/${locale}/admin/submissions`,  label: 'Submissions', icon: MessageSquare },
+    { href: `/${locale}/admin/inquiries`,    label: 'Inquiries',   icon: Inbox },
     { href: `/${locale}/admin/subscribers`,  label: 'Subscribers', icon: Mail },
   ];
 
