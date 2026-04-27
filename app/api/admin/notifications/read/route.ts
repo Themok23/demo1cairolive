@@ -1,4 +1,4 @@
-import { auth } from '@/src/lib/auth';
+﻿import { auth } from '@/src/lib/auth';
 import { db } from '@/src/infrastructure/db/client';
 import { notifications } from '@/src/infrastructure/db/notificationsSchema';
 import { sql } from 'drizzle-orm';
@@ -17,8 +17,7 @@ export async function POST() {
       .where(sql`1=1`); // Update all records
 
     return Response.json({ success: true });
-  } catch (error) {
-    console.error('Error marking notifications as read:', error);
+  } catch {
     return Response.json({ success: false }, { status: 500 });
   }
 }

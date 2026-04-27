@@ -1,4 +1,4 @@
-import { auth } from '@/src/lib/auth';
+﻿import { auth } from '@/src/lib/auth';
 import { db } from '@/src/infrastructure/db/client';
 import { articles } from '@/src/infrastructure/db/schema';
 import { desc, eq } from 'drizzle-orm';
@@ -22,6 +22,9 @@ const createArticleSchema = z.object({
   category:        z.string().max(100).optional().nullable(),
   featuredImageUrl: optionalImagePath.optional(),
   status:          z.enum(['draft', 'published']).default('draft'),
+  // Article type — Path 1 from D1CL plan
+  articleType:     z.enum(['people', 'place', 'entity']).default('people'),
+  placeId:         z.string().uuid().optional().nullable(),
   malePersonId:    z.string().uuid().optional().nullable(),
   femalePersonId:  z.string().uuid().optional().nullable(),
 });
@@ -37,8 +40,7 @@ export async function GET(request: NextRequest) {
 
     const allArticles = await db.select().from(articles).orderBy(desc(articles.createdAt)).limit(limit).offset(offset);
     return NextResponse.json(allArticles);
-  } catch (error) {
-    console.error('Error fetching articles:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch articles' }, { status: 500 });
   }
 }
@@ -85,14 +87,15 @@ export async function POST(request: NextRequest) {
       category:        body.category || null,
       readTimeMinutes: 0,
       viewCount:       0,
-      malePersonId:   body.malePersonId || null,
-      femalePersonId: body.femalePersonId || null,
+      articleType:    body.articleType ?? 'people',
+      placeId:        body.articleType === 'place' ? (body.placeId || null) : null,
+      malePersonId:   body.articleType === 'people' ? (body.malePersonId || null)   : null,
+      femalePersonId: body.articleType === 'people' ? (body.femalePersonId || null) : null,
     };
 
     await db.insert(articles).values(article);
     return NextResponse.json(article, { status: 201 });
-  } catch (error) {
-    console.error('Error creating article:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to create article' }, { status: 500 });
   }
 }

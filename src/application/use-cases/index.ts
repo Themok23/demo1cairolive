@@ -26,3 +26,19 @@ export { ListSubscribersUseCase, type ListSubscribersInput, type ListSubscribers
 
 // Stats Use Cases
 export { GetDashboardStatsUseCase, type DashboardStatsResult } from './stats/getDashboardStats';
+
+// Pillars Use Cases
+export { ListPillarsUseCase, type ListPillarsInput, type ListPillarsResult } from './pillars/listPillars';
+export { GetPillarUseCase, type GetPillarResult } from './pillars/getPillar';
+export { CreatePillarUseCase, type CreatePillarInput, type CreatePillarResult } from './pillars/createPillar';
+export { UpdatePillarUseCase, type UpdatePillarInput, type UpdatePillarResult } from './pillars/updatePillar';
+export { DeletePillarUseCase, type DeletePillarResult } from './pillars/deletePillar';
+export { ReorderPillarsUseCase, type ReorderPillarsInput, type ReorderPillarsResult } from './pillars/reorderPillars';
+
+// Places Use Cases
+export { ListPlacesUseCase, type ListPlacesInput, type ListPlacesResult } from './places/listPlaces';
+export { GetPlaceUseCase, type GetPlaceResult, type GetPlaceWithPersonsResult } from './places/getPlace';
+export { CreatePlaceUseCase, type CreatePlaceInput, type CreatePlaceResult } from './places/createPlace';
+export { UpdatePlaceUseCase, type UpdatePlaceInput, type UpdatePlaceResult } from './places/updatePlace';
+export { DeletePlaceUseCase, type DeletePlaceResult } from './places/deletePlace';
+export { LinkPlacePersonUseCase, UnlinkPlacePersonUseCase, type LinkPlacePersonInput, type LinkPlacePersonResult } from './places/linkPlacePerson';

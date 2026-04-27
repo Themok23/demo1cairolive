@@ -55,8 +55,8 @@ export async function POST(request: Request) {
     await writeFile(join(uploadsDir, filename), Buffer.from(bytes));
 
     return Response.json({ url: `/uploads/${filename}`, success: true });
-  } catch (error) {
-    console.error('Upload error:', error);
+  } catch {
+
     return Response.json({ error: 'Failed to upload file' }, { status: 500 });
   }
 }

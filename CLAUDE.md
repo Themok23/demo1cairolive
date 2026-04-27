@@ -193,3 +193,26 @@ This folder contains a file called MEMORY.md. It is your external memory for thi
 **All memories are persistent.** Entries stay in MEMORY.md until the user explicitly asks to remove or change them.
 
 **Flag contradictions.** If the user asks you to remember something that conflicts with an existing memory, don't silently overwrite it. Flag the conflict and ask how to reconcile it.
+
+---
+
+## Taste Skill — Design Standards (Always Active)
+
+> Source: github.com/Leonxlnx/taste-skill
+
+All frontend and UI work in this project follows the Taste Skill design framework.
+Never produce basic, plain, or unstyled interfaces. Every output must meet premium quality standards.
+
+### Active skills
+- **design-taste-frontend** — Primary design module: layout, typography, color, spacing, motion
+- **high-end-visual-design** — Premium aesthetic: soft UI, whitespace, depth, spring animations
+- **minimalist-ui** — Editorial-style interfaces (Notion-inspired)
+- **full-output-enforcement** — No incomplete or lazy outputs — always deliver the full implementation
+- **redesign-existing-projects** — When auditing or fixing design problems in existing UI
+- **stitch-design-taste** — Google Stitch-compatible semantic design rules
+- **industrial-brutalist-ui** — Raw mechanical interfaces (use when explicitly requested)
+
+### Design settings
+- DESIGN_VARIANCE: 7/10 — moderate layout experimentation
+- MOTION_INTENSITY: 6/10 — smooth, purposeful animations
+- VISUAL_DENSITY: 5/10 — balanced content density

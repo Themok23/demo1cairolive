@@ -3,18 +3,39 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTranslations } from 'next-intl';
+import PillarsMenu from '@/components/layout/PillarsMenu';
+
+interface PillarMenuItem {
+  id: string;
+  slug: string;
+  nameEn: string;
+  nameAr: string | null;
+  iconKey: string | null;
+  descriptionEn: string | null;
+  descriptionAr: string | null;
+}
 
 export default function Header() {
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'en';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [pillars, setPillars] = useState<PillarMenuItem[]>([]);
   const t = useTranslations('nav');
+  const isAr = locale === 'ar';
+
+  // Fetch pillars once on mount
+  useEffect(() => {
+    fetch('/api/pillars')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => Array.isArray(data) && setPillars(data))
+      .catch(() => setPillars([]));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +69,24 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden gap-8 md:flex">
+          <div className="hidden gap-8 md:flex items-center">
+            <PillarsMenu
+              pillars={pillars}
+              locale={locale}
+              label={isAr ? 'محاور' : 'Explore'}
+            />
+            <Link
+              href={`/${locale}/places`}
+              className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
+            >
+              {isAr ? 'أماكن' : 'Places'}
+            </Link>
+            <Link
+              href={`/${locale}/map`}
+              className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
+            >
+              {isAr ? 'خريطة' : 'Map'}
+            </Link>
             <Link
               href={`/${locale}/people`}
               className="text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
@@ -98,7 +136,32 @@ export default function Header() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="animate-in fade-in slide-in-from-top-2 border-t border-border/30 bg-surface/95 backdrop-blur-lg pb-4 md:hidden">
-            <div className="flex flex-col gap-4 py-4">
+            <div className="flex flex-col gap-1 py-4">
+              {/* Pillars accordion section */}
+              {pillars.length > 0 && (
+                <div className="px-4 py-2">
+                  <p className="text-xs font-bold text-text-secondary/60 uppercase tracking-wider mb-2">
+                    {isAr ? 'محاور' : 'Explore'}
+                  </p>
+                  <div className="space-y-1">
+                    {pillars.map((p) => {
+                      const name = isAr && p.nameAr ? p.nameAr : p.nameEn;
+                      return (
+                        <Link
+                          key={p.id}
+                          href={`/${locale}/pillars/${p.slug}` as any}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-3 py-2 text-sm font-medium text-text-primary hover:text-gold hover:bg-gold/5 rounded transition-colors"
+                          lang={locale}
+                        >
+                          {name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              <div className="border-t border-border/20 my-2 mx-4" />
               <Link
                 href={`/${locale}/people`}
                 onClick={() => setIsMenuOpen(false)}

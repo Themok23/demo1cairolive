@@ -1,4 +1,4 @@
-import { auth } from '@/src/lib/auth';
+﻿import { auth } from '@/src/lib/auth';
 
 import { db } from '@/src/infrastructure/db/client';
 import { persons, articles, submissions, subscribers } from '@/src/infrastructure/db/schema';
@@ -27,8 +27,7 @@ export async function GET() {
     };
 
     return NextResponse.json(stats);
-  } catch (error) {
-    console.error('Error fetching stats:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });
   }
 }

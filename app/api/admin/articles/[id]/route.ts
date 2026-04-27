@@ -20,6 +20,8 @@ const updateArticleSchema = z.object({
   category:        z.string().max(100).optional().nullable(),
   featuredImageUrl: optionalImagePath.optional(),
   status:          z.enum(['draft', 'published']).default('draft'),
+  articleType:     z.enum(['people', 'place', 'entity']).default('people'),
+  placeId:         optionalPersonId.optional(),
   malePersonId:    optionalPersonId.optional(),
   femalePersonId:  optionalPersonId.optional(),
 });
@@ -40,8 +42,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const found = article[0];
     if (!found) return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     return NextResponse.json(found);
-  } catch (error) {
-    console.error('Error fetching article:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to fetch article' }, { status: 500 });
   }
 }
@@ -71,15 +73,17 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       publishedAt: body.status === 'published' ? new Date() : null,
       category:        body.category ?? null,
       featuredImageUrl: body.featuredImageUrl ?? null,
-      malePersonId:   body.malePersonId ?? null,
-      femalePersonId: body.femalePersonId ?? null,
+      articleType:    body.articleType ?? 'people',
+      placeId:        body.articleType === 'place'  ? (body.placeId ?? null) : null,
+      malePersonId:   body.articleType === 'people' ? (body.malePersonId ?? null)   : null,
+      femalePersonId: body.articleType === 'people' ? (body.femalePersonId ?? null) : null,
       updatedAt: new Date(),
     };
 
     await db.update(articles).set(updatedArticle).where(eq(articles.id, id));
     return NextResponse.json(updatedArticle);
-  } catch (error) {
-    console.error('Error updating article:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to update article' }, { status: 500 });
   }
 }
@@ -92,8 +96,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     await db.delete(articles).where(eq(articles.id, id));
     return NextResponse.json({ message: 'Article deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting article:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 });
   }
 }
