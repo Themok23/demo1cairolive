@@ -34,3 +34,4 @@ out/
 .sqlite3
 drizzle/
 .vercel
+.env*.local
