@@ -23,9 +23,27 @@ export async function GET(
   const base = process.env.NEXTAUTH_URL ?? 'https://cairolive.com';
   const profileUrl = `${base}/${locale}/krtk/${person.id}`;
 
+  const isPremium = person.tier === 'premium';
+  const pdfPerson = {
+    firstNameEn: person.firstNameEn,
+    lastNameEn: person.lastNameEn,
+    firstNameAr: person.firstNameAr ?? null,
+    lastNameAr: person.lastNameAr ?? null,
+    currentTitleEn: person.currentPositionEn ?? null,
+    currentEmployerEn: person.currentCompanyEn ?? null,
+    bioEn: person.bioEn ?? null,
+    profileImageUrl: person.profileImageUrl ?? null,
+    isVerified: person.isVerified ?? false,
+    tier: person.tier ?? 'free',
+    contactEmail: isPremium ? (person.email ?? null) : null,
+    contactPhone: isPremium ? (person.phoneNumber ?? null) : null,
+    website: isPremium ? (person.websiteUrl ?? null) : null,
+    linkedin: isPremium ? (person.linkedinUrl ?? null) : null,
+  };
+
   const buffer = await renderToBuffer(
     <KrtkPdfDocument
-      person={{ ...person, isVerified: person.isVerified ?? false, tier: person.tier ?? 'free' }}
+      person={pdfPerson}
       achievements={achievements.data ?? []}
       profileUrl={profileUrl}
     />,

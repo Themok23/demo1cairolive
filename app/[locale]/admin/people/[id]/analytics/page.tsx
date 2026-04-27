@@ -1,8 +1,8 @@
-import { db } from '@/src/infrastructure/db/client';
-import { persons, krtkInquiries } from '@/src/infrastructure/db/schema';
-import { eq, count } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 import { auth } from '@/src/lib/auth';
+import { GetPersonAnalyticsUseCase } from '@/src/application/use-cases/people/getPersonAnalytics';
+import { DrizzlePersonRepository } from '@/src/infrastructure/repositories/drizzlePersonRepository';
+import { DrizzleKrtkInquiryRepository } from '@/src/infrastructure/repositories/drizzleKrtkInquiryRepository';
 import Link from 'next/link';
 import { ArrowLeft, Eye, Share2, MessageSquare } from 'lucide-react';
 import AnalyticsChart from '@/components/admin/analytics-chart';
@@ -18,38 +18,23 @@ export default async function PersonAnalyticsPage({ params }: Props) {
   const { locale, id } = await params;
   const isAr = locale === 'ar';
 
-  const person = await db.select().from(persons).where(eq(persons.id, id)).then((r) => r[0]);
-  if (!person) notFound();
+  const result = await new GetPersonAnalyticsUseCase(
+    new DrizzlePersonRepository(),
+    new DrizzleKrtkInquiryRepository(),
+  ).execute(id);
 
-  const [inquiryCount] = await db
-    .select({ count: count() })
-    .from(krtkInquiries)
-    .where(eq(krtkInquiries.krtkSlug, id));
+  if (!result.success || !result.data) notFound();
+  const { data } = result;
 
   const stats = [
-    {
-      label: isAr ? 'مشاهدات' : 'Profile Views',
-      value: person.viewCount ?? 0,
-      icon: Eye,
-      color: 'text-blue-400',
-    },
-    {
-      label: isAr ? 'مشاركات' : 'Shares',
-      value: person.shareCount ?? 0,
-      icon: Share2,
-      color: 'text-green-400',
-    },
-    {
-      label: isAr ? 'استفسارات' : 'Inquiries',
-      value: inquiryCount?.count ?? 0,
-      icon: MessageSquare,
-      color: 'text-gold',
-    },
+    { label: isAr ? 'مشاهدات' : 'Profile Views', value: data.viewCount, icon: Eye, color: 'text-blue-400' },
+    { label: isAr ? 'مشاركات' : 'Shares', value: data.shareCount, icon: Share2, color: 'text-green-400' },
+    { label: isAr ? 'استفسارات' : 'Inquiries', value: data.inquiryCount, icon: MessageSquare, color: 'text-gold' },
   ];
 
-  const name = isAr && person.firstNameAr
-    ? `${person.firstNameAr} ${person.lastNameAr ?? ''}`.trim()
-    : `${person.firstNameEn} ${person.lastNameEn}`.trim();
+  const name = isAr && data.firstNameAr
+    ? `${data.firstNameAr} ${data.lastNameAr ?? ''}`.trim()
+    : `${data.firstNameEn} ${data.lastNameEn}`.trim();
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -67,7 +52,6 @@ export default async function PersonAnalyticsPage({ params }: Props) {
           {isAr ? 'تحليلات الملف الشخصي' : 'Profile Analytics'}
         </p>
 
-        {/* Stat cards */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           {stats.map((s) => {
             const Icon = s.icon;
@@ -81,11 +65,10 @@ export default async function PersonAnalyticsPage({ params }: Props) {
           })}
         </div>
 
-        {/* Chart — client component */}
         <AnalyticsChart
-          views={person.viewCount ?? 0}
-          shares={person.shareCount ?? 0}
-          inquiries={inquiryCount?.count ?? 0}
+          views={data.viewCount}
+          shares={data.shareCount}
+          inquiries={data.inquiryCount}
           locale={isAr ? 'ar' : 'en'}
         />
       </div>

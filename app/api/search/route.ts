@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UnifiedSearchUseCase } from '@/src/application/use-cases/search/unifiedSearch';
+import { DrizzleSearchRepository } from '@/src/infrastructure/repositories/drizzleSearchRepository';
 import { checkRateLimit } from '@/src/lib/rateLimit';
 
 export async function GET(req: NextRequest) {
@@ -8,6 +9,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, data: [], error: 'Too many requests' }, { status: 429 });
   const q = req.nextUrl.searchParams.get('q') ?? '';
   const limit = Math.min(Number(req.nextUrl.searchParams.get('limit') ?? '20'), 40);
-  const result = await new UnifiedSearchUseCase().execute({ q, limit });
+  const result = await new UnifiedSearchUseCase(new DrizzleSearchRepository()).execute({ q, limit });
   return NextResponse.json(result);
 }

@@ -11,9 +11,10 @@ const ADMIN_PASSWORD_PLAIN = process.env.ADMIN_PASSWORD;
 const AUTH_SECRET = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
 
 if (!ADMIN_PASSWORD_HASH && !ADMIN_PASSWORD_PLAIN) {
-  console.warn(
-    '[auth] Neither ADMIN_PASSWORD_HASH nor ADMIN_PASSWORD is set. Admin login will not work.'
-  );
+  console.warn('[auth] Neither ADMIN_PASSWORD_HASH nor ADMIN_PASSWORD is set. Admin login will not work.');
+}
+if (process.env.NODE_ENV === 'production' && !ADMIN_PASSWORD_HASH) {
+  throw new Error('[auth] ADMIN_PASSWORD_HASH must be set in production. Plain-text fallback is not allowed.');
 }
 if (!AUTH_SECRET) {
   console.warn(
@@ -58,12 +59,9 @@ const authConfig: NextAuthConfig = {
             }
           }
 
-          // Plaintext fallback — prefer ADMIN_PASSWORD_HASH in production.
+          // Plaintext fallback — dev only (production throws at startup if hash is missing).
           if (ADMIN_PASSWORD_PLAIN) {
-            if (process.env.NODE_ENV === 'production') {
-              console.warn('[auth] Plain password used in production — set ADMIN_PASSWORD_HASH instead');
-            }
-            if (password === ADMIN_PASSWORD_PLAIN || password.trim() === ADMIN_PASSWORD_PLAIN.trim()) {
+            if (password === ADMIN_PASSWORD_PLAIN) {
               return { id: '1', email: ADMIN_EMAIL, name: 'Admin' };
             }
             console.warn('[auth] Password mismatch');

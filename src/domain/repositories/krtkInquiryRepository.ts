@@ -15,6 +15,7 @@ export interface KrtkInquiryRepository {
   listBySlug(krtkSlug: string, limit?: number, offset?: number): Promise<KrtkInquiry[]>;
   listAll(limit?: number, offset?: number): Promise<KrtkInquiry[]>;
   countAll(): Promise<number>;
+  countBySlug(krtkSlug: string): Promise<number>;
   findById(id: string): Promise<KrtkInquiry | null>;
   markRead(id: string): Promise<KrtkInquiry>;
   markForwarded(id: string, forwardedTo: string): Promise<KrtkInquiry>;
