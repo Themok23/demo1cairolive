@@ -1,19 +1,94 @@
-name: Deploy to Vercel
+name: Vercel Deploy
+
+# Deploys to Vercel only when code lands on staging or master/main.
+#
+# Flow:
+#   PR opened          -> ci.yml runs (build check only, no Vercel deploy)
+#   PR merged into staging -> this workflow deploys to staging preview URL
+#   staging merged into master/main -> this workflow deploys to production
+#
+# Vercel's built-in Git integration must be disabled via "Ignored Build Step"
+# set to "exit 1" in Settings -> Build and Deployment. Without that, every
+# branch push triggers its own Vercel preview regardless of this workflow.
+#
+# TOKEN STRATEGY:
+# Vercel OAuth tokens (vca_*) expire every ~24 hours. Storing the full
+# auth.json (token + refreshToken) lets the workflow auto-refresh on every run.
+# The refreshToken is long-lived — this self-maintains for months.
 
 on:
   push:
     branches:
-      - master
       - staging
+      - master
+      - main
 
 jobs:
   deploy:
+    name: Deploy to Vercel
     runs-on: ubuntu-latest
-    steps:
-      - name: Deploy master to production
-        if: github.ref == 'refs/heads/master'
-        run: curl -X POST "${{ secrets.VERCEL_MASTER_DEPLOY_HOOK }}"
 
-      - name: Deploy staging to preview
-        if: github.ref == 'refs/heads/staging'
-        run: curl -X POST "${{ secrets.VERCEL_STAGING_DEPLOY_HOOK }}"
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Refresh Vercel token
+        id: auth
+        run: |
+          mkdir -p ~/.local/share/com.vercel.cli
+          echo '${{ secrets.VERCEL_AUTH_JSON }}' > ~/.local/share/com.vercel.cli/auth.json
+          npx vercel whoami
+          FRESH_TOKEN=$(node -e "const a=require(require('os').homedir()+'/.local/share/com.vercel.cli/auth.json'); console.log(a.token)")
+          echo "token=$FRESH_TOKEN" >> $GITHUB_OUTPUT
+          echo "Token refreshed"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Pull Vercel environment
+        # --git-branch is required when env vars are scoped to a specific
+        # preview branch in Vercel. Without it, branch-scoped vars are skipped
+        # silently and the build fails on missing DATABASE_URL etc.
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ] || [ "${{ github.ref_name }}" = "main" ]; then
+            npx vercel pull --yes --environment=production --token=${{ steps.auth.outputs.token }}
+          else
+            npx vercel pull --yes --environment=preview --git-branch=${{ github.ref_name }} --token=${{ steps.auth.outputs.token }}
+          fi
+
+      - name: Build
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ] || [ "${{ github.ref_name }}" = "main" ]; then
+            npx vercel build --prod --token=${{ steps.auth.outputs.token }}
+          else
+            npx vercel build --token=${{ steps.auth.outputs.token }}
+          fi
+
+      - name: Deploy
+        id: deploy
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ] || [ "${{ github.ref_name }}" = "main" ]; then
+            DEPLOY_URL=$(npx vercel deploy --prebuilt --prod --token=${{ steps.auth.outputs.token }})
+          else
+            DEPLOY_URL=$(npx vercel deploy --prebuilt --token=${{ steps.auth.outputs.token }})
+          fi
+          echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $DEPLOY_URL"
+
+      - name: Summary
+        run: |
+          echo "### Vercel Deploy" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **By:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
