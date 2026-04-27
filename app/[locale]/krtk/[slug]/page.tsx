@@ -19,6 +19,7 @@ import { ListPersonAchievementsUseCase } from '@/src/application/use-cases/perso
 import { ListPersonServicesUseCase } from '@/src/application/use-cases/person-services/listByPerson';
 import { ListPersonProductsUseCase } from '@/src/application/use-cases/person-products/listByPerson';
 
+import InquiryForm from '@/components/micro-krtk/InquiryForm';
 import EducationSection from '@/components/micro-krtk/sections/EducationSection';
 import WorkplacesSection from '@/components/micro-krtk/sections/WorkplacesSection';
 import AchievementsSection from '@/components/micro-krtk/sections/AchievementsSection';
@@ -98,19 +99,16 @@ export default async function KrtkProfilePage({ params }: KrtkPageProps) {
         <ServicesSection items={services} locale={isAr ? 'ar' : 'en'} />
         <ProductsSection items={products} locale={isAr ? 'ar' : 'en'} />
 
-        {/* Inquiry CTA — form mounts in Phase 4 */}
         <div className="w-full max-w-2xl mx-auto px-4 py-8">
-          <div className="rounded-xl border border-gold/20 bg-surface-elevated p-6 text-center">
-            <p className="text-text-primary font-medium mb-1">
-              {isAr ? 'تواصل مع ' : 'Get in touch with '}
-              {isAr && rawPerson.firstNameAr
+          <InquiryForm
+            krtkSlug={rawPerson.id}
+            personName={
+              isAr && rawPerson.firstNameAr
                 ? `${rawPerson.firstNameAr} ${rawPerson.lastNameAr ?? ''}`.trim()
-                : `${rawPerson.firstNameEn} ${rawPerson.lastNameEn}`.trim()}
-            </p>
-            <p className="text-sm text-text-secondary">
-              {isAr ? 'نموذج التواصل قادم قريباً' : 'Inquiry form coming soon'}
-            </p>
-          </div>
+                : `${rawPerson.firstNameEn} ${rawPerson.lastNameEn}`.trim()
+            }
+            locale={isAr ? 'ar' : 'en'}
+          />
         </div>
       </div>
     </div>
