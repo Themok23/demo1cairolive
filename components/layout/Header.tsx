@@ -9,6 +9,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTranslations } from 'next-intl';
 import PillarsMenu from '@/components/layout/PillarsMenu';
+import SearchBar from '@/components/layout/SearchBar';
 
 interface PillarMenuItem {
   id: string;
@@ -109,6 +110,7 @@ export default function Header() {
 
           {/* CTA Buttons & Controls */}
           <div className="hidden gap-2 md:flex items-center">
+            <SearchBar locale={locale} />
             <ThemeToggle />
             <LanguageSwitcher />
             <Button variant="outline" size="sm">
