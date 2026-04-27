@@ -18,8 +18,11 @@ import { ListPersonWorkplacesUseCase } from '@/src/application/use-cases/person-
 import { ListPersonAchievementsUseCase } from '@/src/application/use-cases/person-achievements/listByPerson';
 import { ListPersonServicesUseCase } from '@/src/application/use-cases/person-services/listByPerson';
 import { ListPersonProductsUseCase } from '@/src/application/use-cases/person-products/listByPerson';
+import { DrizzlePersonRepository } from '@/src/infrastructure/repositories/drizzlePersonRepository';
+import { IncrementViewCountUseCase } from '@/src/application/use-cases/people/incrementViewCount';
 
 import InquiryForm from '@/components/micro-krtk/InquiryForm';
+import KrtkQrCode from '@/components/micro-krtk/KrtkQrCode';
 import EducationSection from '@/components/micro-krtk/sections/EducationSection';
 import WorkplacesSection from '@/components/micro-krtk/sections/WorkplacesSection';
 import AchievementsSection from '@/components/micro-krtk/sections/AchievementsSection';
@@ -46,6 +49,9 @@ export default async function KrtkProfilePage({ params }: KrtkPageProps) {
     isClaimed: rawPerson.isClaimed ?? undefined,
   };
   const isAr = locale === 'ar';
+
+  // Fire-and-forget: non-blocking view count increment
+  void new IncrementViewCountUseCase(new DrizzlePersonRepository()).execute(rawPerson.id);
 
   const educationRepo = new DrizzlePersonEducationRepository();
   const workplaceRepo = new DrizzlePersonWorkplaceRepository();
@@ -91,6 +97,12 @@ export default async function KrtkProfilePage({ params }: KrtkPageProps) {
           <FadeIn>
             <KrtkBusinessCard person={currentPerson} locale={locale} />
           </FadeIn>
+          <div className="flex justify-end mt-4 pr-1">
+            <KrtkQrCode
+              url={`${process.env.NEXTAUTH_URL ?? 'https://cairolive.com'}/${locale}/krtk/${rawPerson.id}`}
+              size={96}
+            />
+          </div>
         </div>
 
         <EducationSection items={education} locale={isAr ? 'ar' : 'en'} />
