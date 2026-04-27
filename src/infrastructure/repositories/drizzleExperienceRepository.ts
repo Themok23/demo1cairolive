@@ -33,12 +33,13 @@ export class DrizzleExperienceRepository implements ExperienceRepository {
     return rows.map((r) => this.parse(r as Record<string, unknown>));
   }
 
-  async listByStatus(status: ExperienceStatus): Promise<Experience[]> {
+  async listByStatus(status: ExperienceStatus, opts: { limit?: number } = {}): Promise<Experience[]> {
     const rows = await db
       .select()
       .from(experiences)
       .where(eq(experiences.status, status))
-      .orderBy(desc(experiences.createdAt));
+      .orderBy(desc(experiences.createdAt))
+      .limit(opts.limit ?? 100);
     return rows.map((r) => this.parse(r as Record<string, unknown>));
   }
 

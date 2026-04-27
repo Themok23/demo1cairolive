@@ -9,7 +9,7 @@ export interface ListPublishedParams {
 
 export interface ExperienceRepository {
   listPublished(params?: ListPublishedParams): Promise<Experience[]>;
-  listByStatus(status: ExperienceStatus): Promise<Experience[]>;
+  listByStatus(status: ExperienceStatus, opts?: { limit?: number }): Promise<Experience[]>;
   findBySlug(slug: string): Promise<Experience | null>;
   findById(id: string): Promise<Experience | null>;
   create(data: Omit<Experience, 'id' | 'likeCount' | 'viewCount' | 'createdAt' | 'updatedAt' | 'publishedAt'>): Promise<Experience>;
