@@ -1,4 +1,4 @@
-import { auth } from '@/src/lib/auth';
+﻿import { auth } from '@/src/lib/auth';
 import { db } from '@/src/infrastructure/db/client';
 import { persons } from '@/src/infrastructure/db/schema';
 import { desc, eq } from 'drizzle-orm';
@@ -50,8 +50,7 @@ export async function GET(request: NextRequest) {
 
     const allPersons = await db.select().from(persons).orderBy(desc(persons.createdAt)).limit(limit).offset(offset);
     return NextResponse.json(allPersons);
-  } catch (error) {
-    console.error('Error fetching people:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch people' }, { status: 500 });
   }
 }
@@ -112,8 +111,7 @@ export async function POST(request: NextRequest) {
 
     await db.insert(persons).values(person);
     return NextResponse.json(person, { status: 201 });
-  } catch (error) {
-    console.error('Error creating person:', error);
+  } catch {
     return NextResponse.json({ error: 'Failed to create person' }, { status: 500 });
   }
 }

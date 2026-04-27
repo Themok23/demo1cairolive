@@ -53,8 +53,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const found = person[0];
     if (!found) return NextResponse.json({ error: 'Person not found' }, { status: 404 });
     return NextResponse.json(found);
-  } catch (error) {
-    console.error('Error fetching person:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to fetch person' }, { status: 500 });
   }
 }
@@ -103,8 +103,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     await db.update(persons).set(updatedPerson).where(eq(persons.id, id));
     return NextResponse.json(updatedPerson);
-  } catch (error) {
-    console.error('Error updating person:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to update person' }, { status: 500 });
   }
 }
@@ -117,8 +117,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     await db.delete(persons).where(eq(persons.id, id));
     return NextResponse.json({ message: 'Person deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting person:', error);
+  } catch {
+
     return NextResponse.json({ error: 'Failed to delete person' }, { status: 500 });
   }
 }

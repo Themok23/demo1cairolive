@@ -10,6 +10,8 @@ import {
   FileText,
   MessageSquare,
   Mail,
+  Compass,
+  MapPin,
   LogOut,
   Menu,
   X,
@@ -23,6 +25,8 @@ export default function AdminSidebar() {
 
   const navItems = [
     { href: `/${locale}/admin`,              label: 'Dashboard',   icon: LayoutDashboard },
+    { href: `/${locale}/admin/pillars`,      label: 'Pillars',     icon: Compass },
+    { href: `/${locale}/admin/places`,       label: 'Places',      icon: MapPin },
     { href: `/${locale}/admin/people`,       label: 'People',      icon: Users },
     { href: `/${locale}/admin/articles`,     label: 'Articles',    icon: FileText },
     { href: `/${locale}/admin/submissions`,  label: 'Submissions', icon: MessageSquare },
