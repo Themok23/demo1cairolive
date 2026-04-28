@@ -1,33 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-/* Simple in-memory rate limiter */
-const attempts = new Map<string, { count: number; resetAt: number }>();
-const MAX_ATTEMPTS = 5;
-const WINDOW_MS = 15 * 60 * 1000;
-
-function getClientIp(req: NextRequest): string {
-  return (
-    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-    req.headers.get('x-real-ip') ||
-    'unknown'
-  );
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const record = attempts.get(ip);
-  if (!record || now > record.resetAt) {
-    attempts.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return false;
-  }
-  record.count += 1;
-  return record.count > MAX_ATTEMPTS;
-}
+import { checkRateLimit } from '@/src/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req);
+  const ip =
+    req.headers.get('x-real-ip') ??
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    'unknown';
 
-  if (isRateLimited(ip)) {
+  if (!await checkRateLimit(`unlock:${ip}`, 5, 15 * 60 * 1000)) {
     return NextResponse.json(
       { error: 'Too many attempts. Try again in 15 minutes.' },
       { status: 429 }

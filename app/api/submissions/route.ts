@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     'unknown';
 
-  if (!checkRateLimit(`profile-submit:${ip}`, 3, 3_600_000)) {
+  if (!await checkRateLimit(`profile-submit:${ip}`, 3, 3_600_000)) {
     return NextResponse.json(
       errorResponse('Too many submissions. Please try again later.'),
       { status: 429 }

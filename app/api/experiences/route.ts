@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-real-ip') ?? req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-  if (!checkRateLimit(`exp-submit:${ip}`, 3, 3_600_000))
+  if (!await checkRateLimit(`exp-submit:${ip}`, 3, 3_600_000))
     return NextResponse.json({ success: false, error: 'Too many submissions. Try again later.' }, { status: 429 });
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 400 });
