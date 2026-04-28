@@ -13,7 +13,10 @@ const Schema = z.object({
   summaryAr: z.string().max(500).optional().nullable(),
   contentEn: z.string().min(20, 'Content must be at least 20 characters').max(10000),
   contentAr: z.string().max(10000).optional().nullable(),
-  coverImageUrl: z.string().url().refine((u) => u.startsWith('https://'), 'Cover image must be an HTTPS URL').optional().nullable(),
+  coverImageUrl: z.string().refine(
+    (u) => u.startsWith('/uploads/') || u.startsWith('https://'),
+    'Cover image must be an HTTPS URL or an uploaded file path'
+  ).optional().nullable(),
   submittedByName: z.string().min(2).max(200),
   submittedByEmail: z.string().email().max(200),
 });

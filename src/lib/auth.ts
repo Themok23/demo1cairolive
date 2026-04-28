@@ -47,7 +47,7 @@ const authConfig: NextAuthConfig = {
           const password = String(credentials.password);
 
           if (email !== ADMIN_EMAIL) {
-            console.warn(`[auth] Email mismatch. Got: ${email}, expected: ${ADMIN_EMAIL}`);
+            console.warn('[auth] Login attempt with unrecognized email');
             return null;
           }
 

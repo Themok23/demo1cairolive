@@ -14,11 +14,20 @@ export async function GET(req: NextRequest) {
     limit: Number(searchParams.get('limit') ?? 20),
     offset: Number(searchParams.get('offset') ?? 0),
   });
+  if (result.success && Array.isArray(result.data)) {
+    const publicData = result.data.map((exp) => {
+      // Strip submitter PII from public response
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { submittedByEmail: _email, submittedByName: _name, ...pub } = exp;
+      return pub;
+    });
+    return NextResponse.json({ ...result, data: publicData });
+  }
   return NextResponse.json(result);
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-real-ip') ?? req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ?? 'unknown';
+  const ip = req.headers.get('x-real-ip') ?? req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
   if (!checkRateLimit(`exp-submit:${ip}`, 3, 3_600_000))
     return NextResponse.json({ success: false, error: 'Too many submissions. Try again later.' }, { status: 429 });
   const body = await req.json().catch(() => null);

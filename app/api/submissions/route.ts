@@ -3,8 +3,15 @@ import { successResponse, errorResponse } from '@/lib/apiResponse';
 import { DrizzleSubmissionRepository } from '@/src/infrastructure/repositories/drizzleSubmissionRepository';
 import { ListSubmissionsUseCase } from '@/src/application/use-cases/submissions/listSubmissions';
 import { SubmitProfileUseCase } from '@/src/application/use-cases/submissions/submitProfile';
+import { auth } from '@/src/lib/auth';
+import { checkRateLimit } from '@/src/lib/rateLimit';
 
 export async function GET(request: NextRequest) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json(errorResponse('Unauthorized'), { status: 401 });
+  }
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get('limit') || '20', 10);
@@ -34,14 +41,24 @@ export async function GET(request: NextRequest) {
       })
     );
   } catch (error) {
-    return NextResponse.json(
-      errorResponse(error instanceof Error ? error.message : 'Failed to fetch submissions'),
-      { status: 500 }
-    );
+    console.error('[submissions] GET error:', error);
+    return NextResponse.json(errorResponse('Failed to fetch submissions'), { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get('x-real-ip') ??
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    'unknown';
+
+  if (!checkRateLimit(`profile-submit:${ip}`, 3, 3_600_000)) {
+    return NextResponse.json(
+      errorResponse('Too many submissions. Please try again later.'),
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
 
@@ -58,9 +75,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(successResponse(result.data), { status: 201 });
   } catch (error) {
-    return NextResponse.json(
-      errorResponse(error instanceof Error ? error.message : 'Failed to create submission'),
-      { status: 500 }
-    );
+    console.error('[submissions] POST error:', error);
+    return NextResponse.json(errorResponse('Failed to create submission'), { status: 500 });
   }
 }

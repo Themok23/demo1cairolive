@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Inter, Noto_Sans_Arabic } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const notoArabic = Noto_Sans_Arabic({ subsets: ['arabic'], variable: '--font-arabic', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'Cairo Live - Every Egyptian Has a Story',
@@ -35,8 +39,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning>
-      <body>{children}</body>
+    <html lang="en" dir="ltr" suppressHydrationWarning className={`${inter.variable} ${notoArabic.variable}`}>
+      <head>
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=(t==='light'||t==='dark')?t:(t==='system'?(m?'dark':'light'):'dark');document.documentElement.classList.add(resolved);}catch(e){document.documentElement.classList.add('dark');}})();`,
+          }}
+        />
+      </head>
+      <body suppressHydrationWarning className="bg-background text-text-primary transition-colors duration-300">
+        {children}
+      </body>
     </html>
   );
 }
