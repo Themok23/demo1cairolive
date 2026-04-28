@@ -12,7 +12,7 @@ function buildUserIdentifier(req: NextRequest): string {
 export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const ip = req.headers.get('x-real-ip') ?? req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-  if (!checkRateLimit(`react:${ip}`, 60, 60_000))
+  if (!await checkRateLimit(`react:${ip}`, 60, 60_000))
     return NextResponse.json({ success: false, error: 'Too many requests' }, { status: 429 });
 
   const repo = new DrizzleExperienceRepository();

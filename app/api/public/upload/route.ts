@@ -2,22 +2,7 @@ import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 import { NextRequest } from 'next/server';
-
-const ipHits = new Map<string, { count: number; resetAt: number }>();
-const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const MAX_UPLOADS = 5;
-
-function checkRate(ip: string): boolean {
-  const now = Date.now();
-  const entry = ipHits.get(ip);
-  if (!entry || now > entry.resetAt) {
-    ipHits.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return true;
-  }
-  if (entry.count >= MAX_UPLOADS) return false;
-  entry.count += 1;
-  return true;
-}
+import { checkRateLimit } from '@/src/lib/rateLimit';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
@@ -42,7 +27,7 @@ export async function POST(request: NextRequest) {
   const ip =
     request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
 
-  if (!checkRate(ip)) {
+  if (!await checkRateLimit(`upload:${ip}`, 5, 15 * 60 * 1000)) {
     return Response.json(
       { error: 'Too many uploads. Try again in 15 minutes.' },
       { status: 429 }

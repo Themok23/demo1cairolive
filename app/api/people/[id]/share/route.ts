@@ -10,7 +10,7 @@ export async function POST(
 ) {
   const { id } = await params;
   const ip = req.headers.get('x-real-ip') ?? req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-  if (!checkRateLimit(`share:${ip}:${id}`, 5, 3_600_000))
+  if (!await checkRateLimit(`share:${ip}:${id}`, 5, 3_600_000))
     return NextResponse.json({ success: false, error: 'Too many requests' }, { status: 429 });
 
   const existing = await db.select({ id: persons.id }).from(persons).where(eq(persons.id, id)).limit(1);
