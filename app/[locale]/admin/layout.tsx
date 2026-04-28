@@ -31,7 +31,7 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
   // The login page renders without sidebar — it's a centered standalone form.
   if (isLoginPage) {
     return (
-      <div className="dark min-h-screen bg-background text-text-primary">
+      <div className="dark min-h-dvh bg-background text-text-primary">
         {children}
       </div>
     );
@@ -39,7 +39,7 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
 
   return (
     // Force dark theme in admin regardless of user's public-site preference.
-    <div className="dark flex h-screen bg-background">
+    <div className="dark flex h-dvh bg-background">
       <AdminSidebar />
       <main className="flex-1 overflow-auto bg-background text-text-primary">
         {children}

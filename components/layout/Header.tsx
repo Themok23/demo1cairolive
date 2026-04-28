@@ -118,6 +118,7 @@ export default function Header() {
 
           {/* Mobile: controls + hamburger */}
           <div className="md:hidden flex items-center gap-2">
+            <SearchBar locale={locale} />
             <ThemeToggle />
             <LanguageSwitcher />
             <button

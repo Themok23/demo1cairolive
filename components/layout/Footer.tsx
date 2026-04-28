@@ -108,18 +108,18 @@ export default function Footer() {
             <p className="text-sm text-text-secondary mb-4">
               {t('newsletterText') || 'Stay updated with the latest stories.'}
             </p>
-            <form onSubmit={handleSubscribe} className="flex gap-2">
+            <form onSubmit={handleSubscribe} className="flex flex-col gap-2 sm:flex-row">
               <input
                 type="email"
                 value={subscriberEmail}
                 onChange={(e) => setSubscriberEmail(e.target.value)}
                 placeholder={t('email_placeholder') || 'your@email.com'}
-                className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-gold focus:outline-none transition-colors"
+                className="w-full flex-1 rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/50 focus:border-gold focus:outline-none transition-colors"
               />
               <button
                 type="submit"
                 disabled={subscriberLoading}
-                className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-background hover:bg-amber transition-colors disabled:opacity-50"
+                className="w-full rounded-lg bg-gold px-4 py-2.5 text-sm font-semibold text-background hover:bg-amber transition-colors disabled:opacity-50 sm:w-auto"
               >
                 {subscriberLoading ? '...' : (t('subscribe_btn') || 'Go')}
               </button>

@@ -16,7 +16,7 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
   return (
     <PageTransitionProvider>
       <Header />
-      <main className="min-h-screen">{children}</main>
+      <main className="min-h-dvh">{children}</main>
       <Footer />
     </PageTransitionProvider>
   );

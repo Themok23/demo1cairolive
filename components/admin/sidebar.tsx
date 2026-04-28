@@ -55,7 +55,7 @@ export default function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative w-60 h-screen flex flex-col bg-surface border-r border-border/60 z-40 transition-transform duration-300 ${
+        className={`fixed md:relative w-60 h-dvh flex flex-col bg-surface border-r border-border/60 z-40 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >

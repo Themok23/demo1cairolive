@@ -28,6 +28,9 @@
   --gold:              184 134 11;     /* #B8860B */
   --gold-light:        212 168 83;     /* #D4A853 */
   --amber:             217 119 6;      /* #D97706 */
+
+  /* Muted / tertiary text */
+  --text-tertiary:     113 113 122;    /* #71717A */
 }
 
 /* ─── Dark mode ──────────────────────────────────────────────────────── */
@@ -48,6 +51,9 @@
   --gold:              212 168 83;     /* #D4A853 */
   --gold-light:        232 201 122;    /* #E8C97A */
   --amber:             245 158 11;     /* #F59E0B */
+
+  /* Muted / tertiary text */
+  --text-tertiary:     82 82 91;       /* #52525B */
 }
 
 * {
@@ -162,21 +168,25 @@ button,
   scrollbar-width: thin;
 }
 
-/* Heading styles */
+/* Heading styles — fluid base sizes, pages override with their own responsive classes */
 h1, h2, h3, h4, h5, h6 {
   @apply font-semibold tracking-tight;
 }
 
-h1 {
-  @apply text-4xl;
-}
+h1 { font-size: clamp(1.75rem, 5vw, 2.25rem); }
+h2 { font-size: clamp(1.375rem, 3.5vw, 1.875rem); }
+h3 { font-size: clamp(1.125rem, 2.5vw, 1.5rem); }
 
-h2 {
-  @apply text-3xl;
-}
-
-h3 {
-  @apply text-2xl;
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Text utility classes */

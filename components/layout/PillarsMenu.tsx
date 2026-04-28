@@ -69,7 +69,7 @@ export default function PillarsMenu({ pillars, locale, label, featured = false }
 
       {open && (
         <div
-          className={`absolute top-full mt-3 ${isAr ? 'right-0' : 'left-0'} z-50 min-w-[480px] max-w-[640px] rounded-xl border border-gold/20 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/30 p-2 animate-in fade-in slide-in-from-top-2 duration-200`}
+          className={`absolute top-full mt-3 ${isAr ? 'right-0' : 'left-0'} z-50 w-[640px] max-w-[calc(100vw-2rem)] rounded-xl border border-gold/20 bg-surface/95 backdrop-blur-xl shadow-2xl shadow-black/30 p-2 animate-in fade-in slide-in-from-top-2 duration-200`}
           onMouseLeave={() => setOpen(false)}
         >
           <div className="grid grid-cols-2 gap-1">
