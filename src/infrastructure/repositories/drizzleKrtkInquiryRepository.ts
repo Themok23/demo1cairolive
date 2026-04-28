@@ -68,6 +68,11 @@ export class DrizzleKrtkInquiryRepository implements KrtkInquiryRepository {
     return result[0].count;
   }
 
+  async countBySlug(krtkSlug: string): Promise<number> {
+    const result = await db.select({ count: sql<number>`count(*)::int` }).from(krtkInquiries).where(eq(krtkInquiries.krtkSlug, krtkSlug));
+    return result[0].count;
+  }
+
   async findById(id: string): Promise<KrtkInquiry | null> {
     const rows = await db.select().from(krtkInquiries).where(eq(krtkInquiries.id, id)).limit(1);
     return rows.length ? this.parse(rows[0]) : null;

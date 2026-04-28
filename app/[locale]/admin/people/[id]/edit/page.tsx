@@ -2,14 +2,15 @@ import { db } from '@/src/infrastructure/db/client';
 import { persons } from '@/src/infrastructure/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import PersonSubResourceTabs from '@/components/admin/person-sub-resource-tabs';
 
 interface EditPersonPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ locale: string; id: string }>;
 }
 
 export default async function AdminEditPersonPage({ params }: EditPersonPageProps) {
-  const { id } = await params;
+  const { locale, id } = await params;
   const person = await db
     .select()
     .from(persons)
@@ -23,5 +24,17 @@ export default async function AdminEditPersonPage({ params }: EditPersonPageProp
     dateOfBirth: person.dateOfBirth ? new Date(person.dateOfBirth) : null,
   };
 
-  return <PersonSubResourceTabs personId={id} initialData={personData as any} />;
+  return (
+    <div>
+      <div className="flex justify-end px-4 pt-4">
+        <Link
+          href={`/${locale}/admin/people/${id}/analytics` as any}
+          className="text-xs text-text-secondary hover:text-gold transition-colors border border-border/40 rounded-lg px-3 py-1.5"
+        >
+          View Analytics
+        </Link>
+      </div>
+      <PersonSubResourceTabs personId={id} initialData={personData as any} />
+    </div>
+  );
 }

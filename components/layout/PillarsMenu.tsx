@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Compass } from 'lucide-react';
 import * as Icons from 'lucide-react';
 
 interface PillarMenuItem {
@@ -19,9 +19,10 @@ interface PillarsMenuProps {
   pillars: PillarMenuItem[];
   locale: string;
   label: string;
+  featured?: boolean;
 }
 
-export default function PillarsMenu({ pillars, locale, label }: PillarsMenuProps) {
+export default function PillarsMenu({ pillars, locale, label, featured = false }: PillarsMenuProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isAr = locale === 'ar';
@@ -50,14 +51,19 @@ export default function PillarsMenu({ pillars, locale, label }: PillarsMenuProps
       <button
         onClick={() => setOpen((v) => !v)}
         onMouseEnter={() => setOpen(true)}
-        className="flex items-center gap-1 text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200"
         aria-haspopup="true"
         aria-expanded={open}
+        className={
+          featured
+            ? `inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-gold/10 border border-gold/25 text-gold hover:bg-gold/20 hover:border-gold/40 transition-all duration-200`
+            : `flex items-center gap-1 text-sm font-medium text-text-secondary hover:text-gold transition-colors duration-200`
+        }
       >
+        {featured && <Compass size={14} className="opacity-80" />}
         {label}
         <ChevronDown
-          size={14}
-          className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          size={12}
+          className={`transition-transform duration-200 ${open ? 'rotate-180' : ''} ${featured ? 'opacity-70' : ''}`}
         />
       </button>
 

@@ -57,7 +57,7 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-6 space-y-6">
       {pendingDelete && (
         <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center justify-between gap-4">
           <div>
@@ -67,7 +67,7 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
           <div className="flex gap-2 shrink-0">
             <button
               onClick={handleDeleteCancel}
-              className="px-4 py-2 text-sm rounded-lg bg-[#1a1a1f] text-gray-300 hover:bg-[#D4A853]/10 transition-colors"
+              className="px-4 py-2 text-sm rounded-lg bg-surface-elevated text-text-secondary hover:bg-gold/10 transition-colors"
             >
               Cancel
             </button>
@@ -82,33 +82,31 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
         </div>
       )}
 
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Pillars</h1>
-          <p className="text-gray-400">Top-level categories shown in the public nav menu.</p>
+          <h1 className="text-2xl font-bold text-text-primary">Pillars</h1>
+          <p className="text-text-secondary text-sm mt-1">Top-level categories shown in the public nav menu.</p>
         </div>
         <Link
           href={`/${locale}/admin/pillars/new`}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#D4A853] text-[#0a0a0f] font-semibold hover:bg-[#e8b967] transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gold text-background font-semibold hover:bg-gold/80 transition-colors text-sm"
         >
-          <Plus size={20} />
+          <Plus size={18} />
           New Pillar
         </Link>
       </div>
 
-      {/* Table */}
       {pillars.length > 0 ? (
-        <div className="rounded-lg bg-[#1a1a1f] border border-[#D4A853]/10 overflow-hidden">
+        <div className="rounded-xl bg-surface-elevated border border-gold/10 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#D4A853]/10 bg-[#0a0a0f]">
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Order</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Pillar</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Slug</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium text-sm">Status</th>
-                  <th className="text-right py-4 px-6 text-gray-400 font-medium text-sm">Actions</th>
+                <tr className="border-b border-gold/10 bg-surface">
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Order</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Pillar</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Slug</th>
+                  <th className="text-left py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Status</th>
+                  <th className="text-right py-3 px-6 text-text-secondary font-medium text-xs uppercase tracking-wide">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -119,8 +117,8 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
                         | undefined)
                     : undefined;
                   return (
-                    <tr key={p.id} className="border-b border-[#D4A853]/5 hover:bg-[#D4A853]/5">
-                      <td className="py-4 px-6 text-gray-400">{p.displayOrder}</td>
+                    <tr key={p.id} className="border-b border-gold/5 hover:bg-gold/5 transition-colors">
+                      <td className="py-4 px-6 text-text-secondary">{p.displayOrder}</td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
                           {p.coverImageUrl ? (
@@ -130,22 +128,22 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
                               className="w-10 h-10 rounded-lg object-cover"
                             />
                           ) : Icon ? (
-                            <div className="w-10 h-10 rounded-lg bg-[#D4A853]/10 flex items-center justify-center">
-                              <Icon size={20} className="text-[#D4A853]" />
+                            <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center">
+                              <Icon size={20} className="text-gold" />
                             </div>
                           ) : (
-                            <div className="w-10 h-10 rounded-lg bg-[#D4A853]/5" />
+                            <div className="w-10 h-10 rounded-lg bg-gold/5" />
                           )}
                           <div>
-                            <p className="text-white font-medium">{p.nameEn}</p>
+                            <p className="text-text-primary font-medium">{p.nameEn}</p>
                             {p.nameAr && (
-                              <p className="text-gray-500 text-sm" lang="ar" dir="rtl">{p.nameAr}</p>
+                              <p className="text-text-secondary/70 text-sm" lang="ar" dir="rtl">{p.nameAr}</p>
                             )}
                           </div>
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <code className="text-sm text-gray-400">{p.slug}</code>
+                        <code className="text-sm text-text-secondary">{p.slug}</code>
                       </td>
                       <td className="py-4 px-6">
                         {p.isActive ? (
@@ -153,7 +151,7 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
                             Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-500/15 text-gray-400">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-500/15 text-text-secondary">
                             Inactive
                           </span>
                         )}
@@ -162,16 +160,16 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             href={`/${locale}/admin/pillars/${p.id}/edit`}
-                            className="p-2 rounded-lg text-gray-400 hover:text-[#D4A853] hover:bg-[#D4A853]/10 transition-colors"
+                            className="p-2 rounded-lg text-text-secondary hover:text-gold hover:bg-gold/10 transition-colors"
                           >
-                            <Edit2 size={18} />
+                            <Edit2 size={16} />
                           </Link>
                           <button
                             onClick={() => handleDeleteClick(p.id, p.nameEn)}
                             disabled={isDeleting !== null}
-                            className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50"
+                            className="p-2 rounded-lg text-text-secondary hover:text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50"
                           >
-                            <Trash2 size={18} />
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </td>
@@ -183,11 +181,11 @@ export default function AdminPillarsList({ pillars, locale }: PillarsListProps) 
           </div>
         </div>
       ) : (
-        <div className="rounded-lg bg-[#1a1a1f] border border-[#D4A853]/10 p-12 text-center">
-          <p className="text-gray-400 mb-4">No pillars yet.</p>
+        <div className="rounded-xl bg-surface-elevated border border-gold/10 p-12 text-center">
+          <p className="text-text-secondary mb-4">No pillars yet.</p>
           <Link
             href={`/${locale}/admin/pillars/new`}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#D4A853] text-[#0a0a0f] font-semibold hover:bg-[#e8b967] transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gold text-background font-semibold hover:bg-gold/80 transition-colors text-sm"
           >
             <Plus size={18} />
             Create the first pillar

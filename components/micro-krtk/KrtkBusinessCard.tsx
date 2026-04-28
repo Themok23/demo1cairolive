@@ -118,6 +118,7 @@ export default function KrtkBusinessCard({ person, locale }: KrtkBusinessCardPro
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/${locale}/krtk/${person.id}`;
+    void fetch(`/api/people/${person.id}/share`, { method: 'POST' });
     if (navigator.share) {
       try {
         await navigator.share({
