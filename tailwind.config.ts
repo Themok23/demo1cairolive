@@ -25,6 +25,7 @@ const config: Config = {
         'text-secondary':    token('text-secondary'),
         gold:                token('gold'),
         amber:               token('amber'),
+        'text-tertiary':     token('text-tertiary'),
       },
     },
   },
